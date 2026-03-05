@@ -4,12 +4,12 @@
 Squad-404
 
 ## Team Members
-1. Rambabu (Team Lead)
-2. Devasena
-3. Anasuya Ramlingam
-4. Rajamatha
-5. Hasini
-6. Kattappa
+1. RAM CHARAN (Team Lead)
+2. HARSHA
+3. GOWTHAMI
+4. PRASANNA
+5. ANUSHA
+6. PUSHPA
 
 ## Project Description
 The Placement Management System (PMS) is a web application that helps manage the placement process in a college. It connects students, companies, and administrators in one platform.
