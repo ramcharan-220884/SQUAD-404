@@ -13,6 +13,6 @@ export const registerStudent = async (data) => {
 };
 
 export const getAppliedJobs = async (id) => {
-  const res = await fetch(`${API_BASE}/students/${id}/applications`);
+  const res = await fetch(`${API_BASE}/applications/student/${id}`);
   return res.json();
 };
