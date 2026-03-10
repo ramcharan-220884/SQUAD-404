@@ -1,62 +1,81 @@
 import express from "express";
 import { pool } from "../config/db.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
 router.post("/login", async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, role } = req.body; // Expecting role from frontend
 
-    // Check student
-    const [students] = await pool.query(
-      "SELECT * FROM students WHERE email=?",
-      [email]
+    if (!email || !password || !role) {
+      return res.status(400).json({ message: "Email, password, and role are required" });
+    }
+
+    let users = [];
+    let roleName = "";
+    let userIdField = "";
+
+    // Determine which table to query
+    if (role === "student") {
+      [users] = await pool.query("SELECT * FROM students WHERE email=?", [email]);
+      roleName = "student";
+      userIdField = "user_id";
+    } else if (role === "company") {
+      [users] = await pool.query("SELECT * FROM companies WHERE email=?", [email]);
+      roleName = "company";
+      userIdField = "company_id";
+    } else if (role === "admin") {
+      [users] = await pool.query("SELECT * FROM admins WHERE email=?", [email]);
+      roleName = "admin";
+      userIdField = "admin_id";
+    } else {
+      return res.status(400).json({ message: "Invalid role specified" });
+    }
+
+    if (users.length === 0) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    const user = users[0];
+
+    // Check account status if applicable
+    if (user.status === "Pending") {
+      return res.status(403).json({ message: "Your account is pending approval." });
+    }
+    if (user.status === "Blocked") {
+      return res.status(403).json({ message: "Your account has been blocked." });
+    }
+
+    // Verify password
+    const isMatch = await bcrypt.compare(password, user.password_hash);
+    
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    // Generate JWT
+    const token = jwt.sign(
+      { id: user[userIdField], role: roleName },
+      process.env.JWT_SECRET,
+      { expiresIn: "10h" } // Token expires in 10 hours
     );
 
-    if (students.length > 0) {
-      const student = students[0];
-
-      if (password === student.password_hash) {
-        return res.json({
-          message: "Login successful",
-          role: "student",
-        });
+    res.json({
+      message: "Login successful",
+      token,
+      user: {
+        id: user[userIdField],
+        name: user.name,
+        email: user.email,
+        role: roleName,
       }
-    }
-
-    // Check company
-    const [companies] = await pool.query(
-      "SELECT * FROM companies WHERE email=?",
-      [email]
-    );
-
-    if (companies.length > 0) {
-      const company = companies[0];
-
-      if (password === company.password_hash) {
-        return res.json({
-          message: "Login successful",
-          role: "company",
-        });
-      }
-    }
-
-    // Admin login (temporary hardcoded)
-    if (email === "admin@pms.com" && password === "admin123") {
-      return res.json({
-        message: "Login successful",
-        role: "admin",
-      });
-    }
-
-    res.status(401).json({
-      message: "Invalid email or password",
     });
+
   } catch (err) {
-    console.error(err);
-    res.status(500).json({
-      message: "Server error",
-    });
+    console.error("Login error:", err);
+    res.status(500).json({ message: "Server error" });
   }
 });
 

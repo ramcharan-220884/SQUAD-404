@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 
 // Register new student
 export const registerStudent = async (req, res) => {
-  const { name, email, password, cgpa, backlogs } = req.body;
+  const { name, email, password } = req.body;
 
   try {
     // Check if email already exists
@@ -18,8 +18,8 @@ export const registerStudent = async (req, res) => {
 
     // Insert into DB
     const [result] = await pool.query(
-      `INSERT INTO students (name, email, password_hash, cgpa, backlogs, status) VALUES (?, ?, ?, ?, ?, 'Pending')`,
-      [name, email, hash, cgpa, backlogs]
+      `INSERT INTO students (name, email, password_hash, status) VALUES (?, ?, ?, 'Pending')`,
+      [name, email, hash]
     );
 
     res.status(201).json({ message: "Student registered successfully", userId: result.insertId });
@@ -43,6 +43,44 @@ export const loginStudent = async (req, res) => {
 
     // You can add JWT token here later for auth
     res.json({ message: "Login successful", userId: user.user_id, name: user.name });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Get student profile
+export const getStudentProfile = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const [rows] = await pool.query(
+      "SELECT user_id, name, email, cgpa, skills, projects, internships, resume_url FROM students WHERE user_id = ?",
+      [id]
+    );
+    if (rows.length === 0) return res.status(404).json({ message: "Student not found" });
+    res.json(rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Update student profile
+export const updateStudentProfile = async (req, res) => {
+  const { id } = req.params;
+  const { name, cgpa, skills, projects } = req.body;
+  
+  try {
+    const [result] = await pool.query(
+      "UPDATE students SET name = ?, cgpa = ?, skills = ?, projects = ? WHERE user_id = ?",
+      [name, cgpa, skills, projects, id]
+    );
+    
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+    
+    res.json({ message: "Profile updated successfully" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });

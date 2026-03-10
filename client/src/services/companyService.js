@@ -5,6 +5,17 @@ export const getPostedJobs = async () => {
   return res.json();
 };
 
+export const registerCompany = async (data) => {
+  const res = await fetch(`${API_BASE}/companies/register`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  });
+  return res.json();
+};
+
 export const postJob = async (data) => {
   const res = await fetch(`${API_BASE}/company/jobs`, {
     method: "POST",

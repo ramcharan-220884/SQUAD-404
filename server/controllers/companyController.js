@@ -19,7 +19,7 @@ export const registerCompany = async (req, res) => {
 
     // Insert into DB
     const [result] = await pool.query(
-      `INSERT INTO companies (name, email, password_hash, description) VALUES (?, ?, ?, ?)`,
+      `INSERT INTO companies (name, email, password_hash, description, status) VALUES (?, ?, ?, ?, 'Pending')`,
       [name, email, hash, description]
     );
 
