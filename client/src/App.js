@@ -1,10 +1,9 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import Home from "./pages/Home";
 import StudentDashboard from "./pages/StudentDashboard";
-import AdminDashboard from "./pages/AdminDashboard";
+import AdminDashboard from "./pages/AdminDashBoard";
 import CompanyDashboard from "./pages/CompanyDashboard";
 import JobBoard from "./pages/JobBoard";
 import Profile from "./pages/Profile";
@@ -14,11 +13,14 @@ function App() {
     <Router>
       <Routes>
 
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Home />} />
 
-        <Route path="/login" element={<Login />} />
+        <Route path="/home" element={<Home />} />
 
-        <Route path="/register" element={<Register />} />
+        {/* Old login/register pages disabled — replaced by modal popups on the Home page */}
+        <Route path="/login" element={<Navigate to="/" replace />} />
+
+        <Route path="/register" element={<Navigate to="/" replace />} />
 
         <Route path="/student-dashboard" element={<StudentDashboard />} />
 
