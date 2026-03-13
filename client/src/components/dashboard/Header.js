@@ -1,0 +1,42 @@
+import React from 'react';
+import { studentProfile } from '../../assets/images/dashboardData';
+
+export default function Header() {
+  return (
+    <header className="db-header">
+      <div className="db-header-left">
+        <h2>Welcome back, {studentProfile.name} 👋</h2>
+        <p>Thursday, March 2025 · RGUKT Portal</p>
+      </div>
+
+      <div className="db-header-right">
+        {/* Search Bar */}
+        <div className="db-search-bar">
+          <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 15.803a7.5 7.5 0 0010.607 0z" />
+          </svg>
+          <input type="text" placeholder="Search anything..." />
+        </div>
+
+        {/* Notification */}
+        <button className="db-notif-btn" title="Notifications">
+          <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.9}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+          </svg>
+          <span className="db-notif-badge" />
+        </button>
+
+        {/* Avatar — uses real image with fallback to initials */}
+        <div className="db-avatar" title={studentProfile.name}>
+          <img
+            src={studentProfile.avatar}
+            alt={studentProfile.name}
+            className="db-avatar-img"
+            onError={(e) => { e.currentTarget.style.display = 'none'; }}
+          />
+          <span className="db-avatar-fallback">{studentProfile.initials}</span>
+        </div>
+      </div>
+    </header>
+  );
+}
