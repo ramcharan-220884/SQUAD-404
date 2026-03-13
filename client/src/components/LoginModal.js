@@ -1,10 +1,7 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import LoginForm from './LoginForm';
 
 const LoginModal = ({ isOpen, onClose, onSwitchToRegister, initialRole = "student" }) => {
-  const navigate = useNavigate();
-
   if (!isOpen) return null;
 
   return (
@@ -47,17 +44,10 @@ const LoginModal = ({ isOpen, onClose, onSwitchToRegister, initialRole = "studen
                 initialRole={initialRole}
                 onSuccess={(role) => {
                     onClose();
-                    if (role === "student") {
-                        navigate("/student-dashboard");
-                    } else if (role === "company") {
-                        navigate("/company-dashboard");
-                    } else if (role === "admin") {
-                        navigate("/admin-dashboard");
-                    }
                 }}
                 onSwitchToRegister={(role) => {
                     onClose();
-                    if (onSwitchToRegister) onSwitchToRegister(role);
+                    onSwitchToRegister(role);
                 }}
             />
         </div>
