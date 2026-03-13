@@ -32,10 +32,15 @@ const Home = () => {
 
   return (
     <div className="scroll-smooth">
-      <Navbar onLoginClick={() => {
-        setInitialLoginRole("student");
-        setIsLoginModalOpen(true);
-      }} />
+      <Navbar 
+        onLoginClick={() => {
+          setInitialLoginRole("student");
+          setIsLoginModalOpen(true);
+        }} 
+        onRegisterClick={() => {
+          setIsRegisterModalOpen(true);
+        }}
+      />
       <main>
         <HeroSection onGetStarted={() => openAuthModal("Student")} />
         <StakeholderSection

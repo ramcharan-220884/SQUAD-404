@@ -1,12 +1,15 @@
 import React from 'react';
 import LoginForm from './LoginForm';
+import { useNavigate } from 'react-router-dom';
 
 const LoginModal = ({ isOpen, onClose, onSwitchToRegister, initialRole = "student" }) => {
+  const navigate = useNavigate();
+
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md transition-all duration-300 overflow-hidden">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all animate-in fade-in zoom-in duration-300 relative border border-white/20 flex flex-col h-auto">
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md max-h-[95vh] overflow-y-auto transform transition-all animate-in fade-in zoom-in duration-300 relative border border-white/20 flex flex-col">
         
         {/* Close Button */}
         <button 
@@ -44,6 +47,9 @@ const LoginModal = ({ isOpen, onClose, onSwitchToRegister, initialRole = "studen
                 initialRole={initialRole}
                 onSuccess={(role) => {
                     onClose();
+                    if (role === "student") navigate("/student-dashboard");
+                    else if (role === "company") navigate("/company-dashboard");
+                    else if (role === "admin") navigate("/admin-dashboard");
                 }}
                 onSwitchToRegister={(role) => {
                     onClose();
