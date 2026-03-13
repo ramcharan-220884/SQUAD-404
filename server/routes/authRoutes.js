@@ -5,49 +5,6 @@ import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
-router.post("/register", async (req, res) => {
-  try {
-    const { name, email, password, role } = req.body;
-
-    if (!name || !email || !password || !role) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
-
-    if (role !== "student" && role !== "company") {
-      return res.status(400).json({ message: "Invalid role specified for registration" });
-    }
-
-    const tableName = role === "student" ? "students" : "companies";
-
-    // Check if email already exists
-    const [existing] = await pool.query(`SELECT * FROM ${tableName} WHERE email=?`, [email]);
-    if (existing.length > 0) {
-      return res.status(400).json({ message: "Email already registered" });
-    }
-
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Insert user with 'Pending' status
-    if (role === "student") {
-      await pool.query(
-        "INSERT INTO students (name, email, password_hash, status) VALUES (?, ?, ?, 'Pending')",
-        [name, email, hashedPassword]
-      );
-    } else {
-      await pool.query(
-        "INSERT INTO companies (name, email, password_hash, status) VALUES (?, ?, ?, 'Pending')",
-        [name, email, hashedPassword]
-      );
-    }
-
-    res.status(201).json({ message: "Registration successful. Please wait for admin approval." });
-  } catch (err) {
-    console.error("Registration error:", err);
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
 router.post("/login", async (req, res) => {
   try {
     const { email, password, role } = req.body; // Expecting role from frontend
