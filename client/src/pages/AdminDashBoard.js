@@ -1,210 +1,388 @@
-import React, { useEffect, useState } from "react";
-import { getStats, getUsers, updateUserStatus, sendNotification, getPendingUsers, approveUser, rejectUser } from "../services/adminService";
+import React, { useState } from "react";
+import {
+  LayoutDashboard,
+  Users,
+  Briefcase,
+  Calendar,
+  FileCheck,
+  Settings,
+  HelpCircle,
+  TrendingUp,
+  Activity,
+  UserPlus,
+  Building,
+  CheckCircle,
+  XCircle
+} from "lucide-react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  Legend
+} from "recharts";
+
+// Mock Data
+const MOCK_STATS = [
+  { title: "Total Students", value: "12,450", icon: <Users className="w-6 h-6 text-green-600" />, change: "+12%" },
+  { title: "Total Recruiters", value: "320", icon: <Building className="w-6 h-6 text-green-600" />, change: "+5%" },
+  { title: "Active Jobs", value: "1,245", icon: <Briefcase className="w-6 h-6 text-green-600" />, change: "+18%" },
+  { title: "Upcoming Events", value: "24", icon: <Calendar className="w-6 h-6 text-green-600" />, change: "+2%" },
+  { title: "Pending Applications", value: "156", icon: <FileCheck className="w-6 h-6 text-green-600" />, change: "-4%" },
+  { title: "System Health Status", value: "99.9%", icon: <Activity className="w-6 h-6 text-green-600" />, change: "Optimal" },
+];
+
+const YEARLY_PLACEMENTS = [
+  { year: "2020", placements: 400 },
+  { year: "2021", placements: 650 },
+  { year: "2022", placements: 850 },
+  { year: "2023", placements: 1200 },
+  { year: "2024", placements: 1450 },
+];
+
+const APPLICATION_STATUS = [
+  { name: "Approved", value: 6500 },
+  { name: "Pending", value: 1200 },
+  { name: "Rejected", value: 300 },
+];
+
+const PIE_COLORS = ["#16a34a", "#facc15", "#dc2626"];
+
+const INITIAL_PENDING_STUDENTS = [
+  { id: 1, name: "Rahul Kumar", email: "rahul@example.com", college: "IIT Delhi", date: "2024-03-12" },
+  { id: 2, name: "Sneha Patel", email: "sneha@example.com", college: "VIT Vellore", date: "2024-03-11" },
+  { id: 3, name: "Amit Singh", email: "amit@example.com", college: "NIT Trichy", date: "2024-03-10" },
+];
+
+const INITIAL_PENDING_RECRUITERS = [
+  { id: 1, company: "TechNova", email: "hr@technova.com", org: "IT Services", date: "2024-03-12" },
+  { id: 2, company: "GlobalCorp", email: "careers@globalcorp.net", org: "Manufacturing", date: "2024-03-11" },
+];
 
 export default function AdminDashboard() {
-  const [stats, setStats] = useState({});
-  const [users, setUsers] = useState([]);
-  const [pendingUsers, setPendingUsers] = useState([]);
-  const [message, setMessage] = useState("");
-  const [notification, setNotification] = useState("");
+  const [pendingStudents, setPendingStudents] = useState(INITIAL_PENDING_STUDENTS);
+  const [pendingRecruiters, setPendingRecruiters] = useState(INITIAL_PENDING_RECRUITERS);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const statsData = await getStats();
-        setStats(statsData);
-        const usersData = await getUsers();
-        setUsers(usersData);
-        const pendingData = await getPendingUsers();
-        setPendingUsers(pendingData);
-      } catch (err) {
-        console.error(err);
-        setMessage("Error loading initial data.");
-      }
-    };
-    fetchData();
-  }, []);
-
-  const handleUserStatus = async (userId, status, role) => {
-    try {
-      await updateUserStatus(userId, status, role);
-      setMessage("User status updated!");
-      setUsers(users.map(u => u.id === userId && u.role === role ? { ...u, status } : u));
-    } catch (err) {
-      setMessage("Error updating user status.");
-    }
+  const handleStudentAction = (id, action) => {
+    // Fake action for mock data
+    setPendingStudents(pendingStudents.filter(s => s.id !== id));
+    alert(`Student ${action}ed successfully.`);
   };
 
-  const handleNotification = async () => {
-    try {
-      await sendNotification(notification);
-      setMessage("Notification sent!");
-      setNotification("");
-    } catch (err) {
-      setMessage("Error sending notification.");
-    }
-  };
-
-  const handleApprove = async (id, type) => {
-    try {
-      await approveUser(id, type);
-      setMessage(`${type.charAt(0).toUpperCase() + type.slice(1)} approved successfully!`);
-      // Remove from pending
-      setPendingUsers(pendingUsers.filter(u => !(u.id === id && u.type === type)));
-      // Refresh user list if we want them to show down there
-      const usersData = await getUsers();
-      setUsers(usersData);
-    } catch (err) {
-      setMessage("Error approving user.");
-    }
-  };
-
-  const handleReject = async (id, type) => {
-    if (!window.confirm("Are you sure you want to reject and delete this registration?")) return;
-    try {
-      await rejectUser(id, type);
-      setMessage(`${type.charAt(0).toUpperCase() + type.slice(1)} registration rejected!`);
-      setPendingUsers(pendingUsers.filter(u => !(u.id === id && u.type === type)));
-    } catch (err) {
-      setMessage("Error rejecting user.");
-    }
+  const handleRecruiterAction = (id, action) => {
+    // Fake action for mock data
+    setPendingRecruiters(pendingRecruiters.filter(r => r.id !== id));
+    alert(`Recruiter ${action}ed successfully.`);
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
-
-      {message && <p className="text-green-500 mb-4">{message}</p>}
-
-      {/* Analytics Section */}
-      <section className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white p-4 rounded shadow">
-          <h2 className="font-bold text-lg">Total Students</h2>
-          <p>{stats.totalStudents || 0}</p>
+    <div className="flex h-screen bg-gray-50 font-sans overflow-hidden">
+      {/* Sidebar */}
+      <aside className="w-64 bg-green-900 text-green-50 flex flex-col hidden md:flex shrink-0">
+        <div className="p-6">
+          <h1 className="text-2xl font-bold tracking-wider text-white flex items-center gap-2">
+            <span className="bg-white text-green-900 p-1 rounded">E</span>DUVATE
+          </h1>
+          <p className="text-sm text-green-300 mt-1 uppercase tracking-widest font-semibold">Admin Portal</p>
         </div>
-        <div className="bg-white p-4 rounded shadow">
-          <h2 className="font-bold text-lg">Placed Students</h2>
-          <p>{stats.placedStudents || 0}</p>
-        </div>
-        <div className="bg-white p-4 rounded shadow">
-          <h2 className="font-bold text-lg">Active Companies</h2>
-          <p>{stats.activeCompanies || 0}</p>
-        </div>
-      </section>
-
-      {/* Pending Approvals Section */}
-      <section className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Students Approvals */}
-        <div>
-          <h2 className="text-xl font-semibold mb-4 text-orange-600">Pending Students</h2>
-          <div className="bg-white p-4 rounded shadow border-l-4 border-orange-400">
-            {pendingUsers.filter(u => u.type === 'student').length === 0 ? (
-              <p className="text-gray-500">No pending students at this time.</p>
-            ) : (
-              <ul className="divide-y divide-gray-200">
-                {pendingUsers.filter(u => u.type === 'student').map(user => (
-                  <li key={`${user.type}-${user.id}`} className="py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div>
-                      <p className="font-semibold text-gray-800">{user.name}</p>
-                      <p className="text-sm text-gray-500">{user.email}</p>
-                    </div>
-                    <div className="flex gap-2 shrink-0">
-                      <button
-                        onClick={() => handleApprove(user.id, user.type)}
-                        className="bg-green-500 hover:bg-green-600 text-white font-bold py-1.5 px-3 rounded transition-colors text-sm"
-                      >
-                        Approve
-                      </button>
-                      <button
-                        onClick={() => handleReject(user.id, user.type)}
-                        className="bg-red-500 hover:bg-red-600 text-white font-bold py-1.5 px-3 rounded transition-colors text-sm"
-                      >
-                        Disapprove
-                      </button>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </div>
-
-        {/* Company Approvals */}
-        <div>
-          <h2 className="text-xl font-semibold mb-4 text-purple-600">Pending Recruiters</h2>
-          <div className="bg-white p-4 rounded shadow border-l-4 border-purple-400">
-            {pendingUsers.filter(u => u.type === 'company').length === 0 ? (
-              <p className="text-gray-500">No pending recruiters at this time.</p>
-            ) : (
-              <ul className="divide-y divide-gray-200">
-                {pendingUsers.filter(u => u.type === 'company').map(user => (
-                  <li key={`${user.type}-${user.id}`} className="py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div>
-                      <p className="font-semibold text-gray-800">{user.name}</p>
-                      <p className="text-sm text-gray-500">{user.email}</p>
-                    </div>
-                    <div className="flex gap-2 shrink-0">
-                      <button
-                        onClick={() => handleApprove(user.id, user.type)}
-                        className="bg-green-500 hover:bg-green-600 text-white font-bold py-1.5 px-3 rounded transition-colors text-sm"
-                      >
-                        Approve
-                      </button>
-                      <button
-                        onClick={() => handleReject(user.id, user.type)}
-                        className="bg-red-500 hover:bg-red-600 text-white font-bold py-1.5 px-3 rounded transition-colors text-sm"
-                      >
-                        Disapprove
-                      </button>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* User Management Section */}
-      <section className="mb-6">
-        <h2 className="text-xl font-semibold mb-4">User Management</h2>
-        <div className="bg-white p-4 rounded shadow">
-          {users.map((user) => (
-            <div key={user.id} className="flex justify-between items-center mb-2 p-2 border-b last:border-0 hover:bg-gray-50">
-              <span className="font-medium text-gray-700">{user.name} <span className="text-xs bg-gray-200 px-2 py-1 rounded ml-2">{user.role}</span></span>
-              <select
-                value={user.status}
-                onChange={(e) => handleUserStatus(user.id, e.target.value, user.role)}
-                className="border border-gray-300 rounded p-1 text-sm bg-white"
-              >
-                <option value="Pending">Pending</option>
-                <option value="Active">Active</option>
-                <option value="Blocked">Blocked</option>
-              </select>
+        
+        <nav className="flex-1 mt-6 px-4 space-y-2 overflow-y-auto">
+          <a href="#" className="flex items-center gap-3 px-4 py-3 bg-green-800 text-white rounded-xl shadow-inner font-medium transition-all">
+            <LayoutDashboard className="w-5 h-5" />
+            Dashboard
+          </a>
+          <a href="#" className="flex items-center gap-3 px-4 py-3 text-green-200 hover:text-white hover:bg-green-800/50 rounded-xl transition-all font-medium">
+            <Users className="w-5 h-5" />
+            User Management
+          </a>
+          <a href="#" className="flex items-center gap-3 px-4 py-3 text-green-200 hover:text-white hover:bg-green-800/50 rounded-xl transition-all font-medium">
+            <Briefcase className="w-5 h-5" />
+            Jobs & Placement Admin
+          </a>
+          <a href="#" className="flex items-center gap-3 px-4 py-3 text-green-200 hover:text-white hover:bg-green-800/50 rounded-xl transition-all font-medium">
+            <Calendar className="w-5 h-5" />
+            Events & Fests Admin
+          </a>
+          <a href="#" className="flex items-center gap-3 px-4 py-3 text-green-200 hover:text-white hover:bg-green-800/50 rounded-xl transition-all font-medium">
+            <FileCheck className="w-5 h-5" />
+            Assessments & Results
+          </a>
+          <a href="#" className="flex items-center gap-3 px-4 py-3 text-green-200 hover:text-white hover:bg-green-800/50 rounded-xl transition-all font-medium">
+            <Settings className="w-5 h-5" />
+            Settings & Configurations
+          </a>
+          <a href="#" className="flex items-center gap-3 px-4 py-3 text-green-200 hover:text-white hover:bg-green-800/50 rounded-xl transition-all font-medium">
+            <HelpCircle className="w-5 h-5" />
+            Support & Reports
+          </a>
+        </nav>
+        
+        <div className="p-4 mt-auto">
+          <div className="bg-green-800 rounded-xl p-4 shadow-sm border border-green-700/50">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-10 h-10 rounded-full bg-white text-green-800 flex items-center justify-center font-bold text-lg">
+                A
+              </div>
+              <div>
+                <p className="text-sm font-bold text-white">Super Admin</p>
+                <p className="text-xs text-green-300">admin@eduvate.com</p>
+              </div>
             </div>
-          ))}
+            <a href="/" className="block mt-4 text-center text-sm text-green-100 bg-green-900/50 hover:bg-green-700 py-2 rounded-lg font-medium transition-colors border border-green-700/50 hover:border-green-600">
+              Logout
+            </a>
+          </div>
         </div>
-      </section>
+      </aside>
 
-      {/* Notifications Section */}
-      <section>
-        <h2 className="text-xl font-semibold mb-4">Send Notification</h2>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            placeholder="Enter notification message"
-            value={notification}
-            onChange={(e) => setNotification(e.target.value)}
-            className="p-2 border rounded w-full"
-          />
-          <button
-            onClick={handleNotification}
-            className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition"
-          >
-            Send
+      {/* Main Content */}
+      <main className="flex-1 overflow-y-auto w-full">
+        {/* Mobile Header */}
+        <header className="bg-white shadow-sm px-6 py-4 flex items-center justify-between md:hidden sticky top-0 z-10">
+          <h1 className="text-xl font-bold tracking-wider text-green-900 flex items-center gap-2">
+            <span className="bg-green-900 text-white p-1 rounded text-sm">E</span>DUVATE
+          </h1>
+          <button className="text-green-900 p-2">
+            <LayoutDashboard className="w-6 h-6" />
           </button>
+        </header>
+
+        <div className="p-6 lg:p-10 max-w-7xl mx-auto space-y-8">
+          
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+              <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">Overview Dashboard</h2>
+              <p className="text-gray-500 font-medium mt-1">Welcome back. Here is what's happening today.</p>
+            </div>
+            <div className="flex gap-3">
+               <button className="flex items-center gap-2 px-4 py-2.5 bg-white border-2 border-green-100 text-green-700 font-bold rounded-xl hover:bg-green-50 hover:border-green-200 transition-all shadow-sm">
+                  <Calendar className="w-4 h-4" /> Selected Date: Today
+               </button>
+               <button className="flex items-center gap-2 px-4 py-2.5 bg-green-600 text-white font-bold rounded-xl hover:bg-green-700 transition-all shadow-lg shadow-green-600/20 active:scale-95">
+                  <Activity className="w-4 h-4" /> Download Report
+               </button>
+            </div>
+          </div>
+
+          {/* Stat Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {MOCK_STATS.map((stat, i) => (
+              <div key={i} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md transition-shadow">
+                <div className="absolute -right-6 -top-6 w-24 h-24 bg-green-50 rounded-full group-hover:scale-150 transition-transform duration-500 ease-out opacity-50 pointer-events-none"></div>
+                <div className="flex justify-between items-start mb-4 relative z-10">
+                  <div className="p-3 bg-green-50 rounded-xl text-green-600 border border-green-100">
+                    {stat.icon}
+                  </div>
+                  <span className={`text-sm font-bold px-2.5 py-1 rounded-full ${stat.change.startsWith("-") || stat.change === "Optimal" ? (stat.change === "Optimal" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-600") : "bg-green-100 text-green-700"}`}>
+                    {stat.change}
+                  </span>
+                </div>
+                <div className="relative z-10">
+                  <h3 className="text-gray-500 font-medium text-sm mb-1">{stat.title}</h3>
+                  <p className="text-3xl font-black text-gray-900 tracking-tight">{stat.value}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Charts Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col h-[450px]">
+              <div className="mb-6 flex justify-between items-center">
+                <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5 text-green-600" />
+                  Student Placements – Yearly Trend
+                </h3>
+              </div>
+              <div className="flex-1 w-full min-h-0">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={YEARLY_PLACEMENTS} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
+                    <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{ fill: '#6b7280', fontSize: 13, fontWeight: 500 }} dy={10} />
+                    <YAxis axisLine={false} tickLine={false} tick={{ fill: '#6b7280', fontSize: 13, fontWeight: 500 }} />
+                    <Tooltip 
+                      cursor={{ fill: '#f0fdf4' }}
+                      contentStyle={{ borderRadius: '12px', borderColor: '#dcfce3', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', padding: '12px 16px', fontWeight: 600, color: '#166534' }}
+                    />
+                    <Bar dataKey="placements" fill="#16a34a" radius={[6, 6, 0, 0]} maxBarSize={60} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col h-[450px]">
+              <div className="mb-6 flex justify-between items-center">
+                <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                  <FileCheck className="w-5 h-5 text-green-600" />
+                  Application Submission Status
+                </h3>
+              </div>
+              <div className="flex-1 w-full flex items-center justify-center min-h-0">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={APPLICATION_STATUS}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={80}
+                      outerRadius={120}
+                      paddingAngle={5}
+                      dataKey="value"
+                      stroke="none"
+                    >
+                      {APPLICATION_STATUS.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip 
+                      contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontWeight: 'bold' }}
+                      itemStyle={{ color: '#111827' }}
+                    />
+                    <Legend 
+                      verticalAlign="bottom" 
+                      height={36} 
+                      iconType="circle"
+                      formatter={(value) => <span className="text-gray-700 font-semibold ml-1">{value}</span>}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </div>
+
+          {/* Approvals Section */}
+          <div className="space-y-8">
+            {/* Pending Students Table */}
+            <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+              <div className="px-6 py-5 border-b border-gray-100 bg-gray-50/50 flex flex-wrap justify-between items-center gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="bg-orange-100 p-2 rounded-lg">
+                    <UserPlus className="w-5 h-5 text-orange-600" />
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900">Pending Students</h3>
+                </div>
+                <span className="bg-orange-100 text-orange-700 py-1.5 px-3 rounded-full text-xs font-black tracking-wide uppercase">
+                  {pendingStudents.length} actions required
+                </span>
+              </div>
+              
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-white border-b border-gray-100 text-gray-500 text-xs uppercase tracking-widest">
+                      <th className="px-6 py-4 font-bold">Name</th>
+                      <th className="px-6 py-4 font-bold">Email</th>
+                      <th className="px-6 py-4 font-bold">College</th>
+                      <th className="px-6 py-4 font-bold">Registration Date</th>
+                      <th className="px-6 py-4 font-bold w-48 text-right">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-50">
+                    {pendingStudents.length === 0 ? (
+                       <tr>
+                         <td colSpan="5" className="px-6 py-8 text-center text-gray-500 font-medium">No pending student approvals.</td>
+                       </tr>
+                    ) : pendingStudents.map((student) => (
+                      <tr key={student.id} className="hover:bg-gray-50/50 transition-colors">
+                        <td className="px-6 py-4 font-bold text-gray-900">{student.name}</td>
+                        <td className="px-6 py-4 text-gray-600 font-medium">{student.email}</td>
+                        <td className="px-6 py-4 text-gray-600 font-medium">{student.college}</td>
+                        <td className="px-6 py-4 text-gray-500 text-sm font-medium">{student.date}</td>
+                        <td className="px-6 py-4 flex gap-2 justify-end">
+                          <button 
+                            onClick={() => handleStudentAction(student.id, "Approve")}
+                            className="p-2 sm:px-3 sm:py-2 bg-green-50 text-green-600 hover:bg-green-600 hover:text-white rounded-lg flex items-center justify-center gap-1.5 font-bold transition-colors border border-green-200 hover:border-green-600"
+                            title="Approve"
+                          >
+                            <CheckCircle className="w-4 h-4" />
+                            <span className="hidden sm:inline text-sm">Approve</span>
+                          </button>
+                          <button 
+                            onClick={() => handleStudentAction(student.id, "Reject")}
+                            className="p-2 sm:px-3 sm:py-2 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-lg flex items-center justify-center gap-1.5 font-bold transition-colors border border-red-200 hover:border-red-600"
+                            title="Reject"
+                          >
+                            <XCircle className="w-4 h-4" />
+                            <span className="hidden sm:inline text-sm">Reject</span>
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Pending Recruiters Table */}
+            <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+              <div className="px-6 py-5 border-b border-gray-100 bg-gray-50/50 flex flex-wrap justify-between items-center gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="bg-purple-100 p-2 rounded-lg">
+                    <Building className="w-5 h-5 text-purple-600" />
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900">Pending Recruiters</h3>
+                </div>
+                <span className="bg-purple-100 text-purple-700 py-1.5 px-3 rounded-full text-xs font-black tracking-wide uppercase">
+                  {pendingRecruiters.length} actions required
+                </span>
+              </div>
+              
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-white border-b border-gray-100 text-gray-500 text-xs uppercase tracking-widest">
+                      <th className="px-6 py-4 font-bold">Company Name</th>
+                      <th className="px-6 py-4 font-bold">Email</th>
+                      <th className="px-6 py-4 font-bold">Organization</th>
+                      <th className="px-6 py-4 font-bold">Registration Date</th>
+                      <th className="px-6 py-4 font-bold w-48 text-right">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-50">
+                    {pendingRecruiters.length === 0 ? (
+                       <tr>
+                         <td colSpan="5" className="px-6 py-8 text-center text-gray-500 font-medium">No pending recruiter approvals.</td>
+                       </tr>
+                    ) : pendingRecruiters.map((recruiter) => (
+                      <tr key={recruiter.id} className="hover:bg-gray-50/50 transition-colors">
+                        <td className="px-6 py-4 font-bold text-gray-900">{recruiter.company}</td>
+                        <td className="px-6 py-4 text-gray-600 font-medium">{recruiter.email}</td>
+                        <td className="px-6 py-4 text-gray-600 font-medium">{recruiter.org}</td>
+                        <td className="px-6 py-4 text-gray-500 text-sm font-medium">{recruiter.date}</td>
+                        <td className="px-6 py-4 flex gap-2 justify-end">
+                          <button 
+                            onClick={() => handleRecruiterAction(recruiter.id, "Approve")}
+                            className="p-2 sm:px-3 sm:py-2 bg-green-50 text-green-600 hover:bg-green-600 hover:text-white rounded-lg flex items-center justify-center gap-1.5 font-bold transition-colors border border-green-200 hover:border-green-600"
+                            title="Approve"
+                          >
+                            <CheckCircle className="w-4 h-4" />
+                            <span className="hidden sm:inline text-sm">Approve</span>
+                          </button>
+                          <button 
+                            onClick={() => handleRecruiterAction(recruiter.id, "Reject")}
+                            className="p-2 sm:px-3 sm:py-2 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-lg flex items-center justify-center gap-1.5 font-bold transition-colors border border-red-200 hover:border-red-600"
+                            title="Reject"
+                          >
+                            <XCircle className="w-4 h-4" />
+                            <span className="hidden sm:inline text-sm">Reject</span>
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          
         </div>
-      </section>
+      </main>
     </div>
   );
 }

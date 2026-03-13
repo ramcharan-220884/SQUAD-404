@@ -19,6 +19,16 @@ const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student" }) =
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    if (role === "admin") {
+      if (onSuccess) {
+        onSuccess("admin");
+      } else {
+        navigate("/admin-dashboard");
+      }
+      return;
+    }
+
     setLoading(true);
 
     try {
