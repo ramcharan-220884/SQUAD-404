@@ -5,9 +5,52 @@ import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
+// Unified registration route
+router.post("/register", async (req, res) => {
+  try {
+    const { name, email, password, role, ...otherFields } = req.body;
+
+    if (!name || !email || !password || !role) {
+      return res.status(400).json({ message: "Name, email, password, and role are required" });
+    }
+
+    // Hash password
+    const hash = await bcrypt.hash(password, 10);
+
+    if (role === "student") {
+      // Check if email exists in students
+      const [existing] = await pool.query("SELECT * FROM students WHERE email = ?", [email]);
+      if (existing.length > 0) return res.status(400).json({ message: "Email already registered" });
+
+      // Insert into students
+      await pool.query(
+        "INSERT INTO students (name, email, password_hash, cgpa, status) VALUES (?, ?, ?, ?, 'Pending')",
+        [name, email, hash, otherFields.cgpa || 0.0]
+      );
+    } else if (role === "company") {
+      // Check if email exists in companies
+      const [existing] = await pool.query("SELECT * FROM companies WHERE email = ?", [email]);
+      if (existing.length > 0) return res.status(400).json({ message: "Email already registered" });
+
+      // Insert into companies
+      await pool.query(
+        "INSERT INTO companies (name, email, password_hash, description, status) VALUES (?, ?, ?, ?, 'Pending')",
+        [name, email, hash, otherFields.description || ""]
+      );
+    } else {
+      return res.status(400).json({ message: "Invalid role for registration" });
+    }
+
+    res.status(201).json({ message: "Registration successful. Please wait for admin approval." });
+  } catch (err) {
+    console.error("Registration error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 router.post("/login", async (req, res) => {
   try {
-    const { email, password, role } = req.body; // Expecting role from frontend
+    const { email, password, role } = req.body;
 
     if (!email || !password || !role) {
       return res.status(400).json({ message: "Email, password, and role are required" });
@@ -40,12 +83,14 @@ router.post("/login", async (req, res) => {
 
     const user = users[0];
 
-    // Check account status if applicable
-    if (user.status === "Pending") {
-      return res.status(403).json({ message: "Your account is pending approval." });
-    }
-    if (user.status === "Blocked") {
-      return res.status(403).json({ message: "Your account has been blocked." });
+    // Check account status (except for admins)
+    if (role !== "admin") {
+      if (user.status === "Pending") {
+        return res.status(403).json({ message: "Your account is pending approval." });
+      }
+      if (user.status === "Blocked") {
+        return res.status(403).json({ message: "Your account has been blocked." });
+      }
     }
 
     // Verify password
@@ -59,7 +104,7 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign(
       { id: user[userIdField], role: roleName },
       process.env.JWT_SECRET,
-      { expiresIn: "10h" } // Token expires in 10 hours
+      { expiresIn: "10h" }
     );
 
     res.json({
@@ -79,4 +124,4 @@ router.post("/login", async (req, res) => {
   }
 });
 
-export default router;
+export default router;
