@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
   Users,
@@ -12,7 +13,9 @@ import {
   UserPlus,
   Building,
   CheckCircle,
-  XCircle
+  XCircle,
+  Megaphone,
+  LogOut
 } from "lucide-react";
 import {
   BarChart,
@@ -68,6 +71,16 @@ const INITIAL_PENDING_RECRUITERS = [
 export default function AdminDashboard() {
   const [pendingStudents, setPendingStudents] = useState(INITIAL_PENDING_STUDENTS);
   const [pendingRecruiters, setPendingRecruiters] = useState(INITIAL_PENDING_RECRUITERS);
+  const location = useLocation();
+
+  const menuItems = [
+    { id: 1, name: "Dashboard", path: "/admin-dashboard", icon: LayoutDashboard },
+    { id: 2, name: "Student Management", path: "/admin-dashboard/students", icon: Users },
+    { id: 3, name: "Company Management", path: "/admin-dashboard/companies", icon: Building },
+    { id: 4, name: "Analytics", path: "/admin-dashboard/analytics", icon: TrendingUp },
+    { id: 5, name: "Announcements", path: "/admin-dashboard/announcements", icon: Megaphone },
+    { id: 6, name: "Settings", path: "/admin-dashboard/settings", icon: Settings }
+  ];
 
   const handleStudentAction = (id, action) => {
     // Fake action for mock data
@@ -93,50 +106,43 @@ export default function AdminDashboard() {
         </div>
 
         <nav className="flex-1 mt-6 px-4 space-y-2 overflow-y-auto">
-          <a href="#" className="flex items-center gap-3 px-4 py-3 bg-green-800 text-white rounded-xl shadow-inner font-medium transition-all">
-            <LayoutDashboard className="w-5 h-5" />
-            Dashboard
-          </a>
-          <a href="#" className="flex items-center gap-3 px-4 py-3 text-green-200 hover:text-white hover:bg-green-800/50 rounded-xl transition-all font-medium">
-            <Users className="w-5 h-5" />
-            User Management
-          </a>
-          <a href="#" className="flex items-center gap-3 px-4 py-3 text-green-200 hover:text-white hover:bg-green-800/50 rounded-xl transition-all font-medium">
-            <Briefcase className="w-5 h-5" />
-            Jobs & Placement Admin
-          </a>
-          <a href="#" className="flex items-center gap-3 px-4 py-3 text-green-200 hover:text-white hover:bg-green-800/50 rounded-xl transition-all font-medium">
-            <Calendar className="w-5 h-5" />
-            Events & Fests Admin
-          </a>
-          <a href="#" className="flex items-center gap-3 px-4 py-3 text-green-200 hover:text-white hover:bg-green-800/50 rounded-xl transition-all font-medium">
-            <FileCheck className="w-5 h-5" />
-            Assessments & Results
-          </a>
-          <a href="#" className="flex items-center gap-3 px-4 py-3 text-green-200 hover:text-white hover:bg-green-800/50 rounded-xl transition-all font-medium">
-            <Settings className="w-5 h-5" />
-            Settings & Configurations
-          </a>
-          <a href="#" className="flex items-center gap-3 px-4 py-3 text-green-200 hover:text-white hover:bg-green-800/50 rounded-xl transition-all font-medium">
-            <HelpCircle className="w-5 h-5" />
-            Support & Reports
-          </a>
+          {menuItems.map((item) => {
+            const isActive = location.pathname === item.path;
+            return (
+              <Link
+                key={item.id}
+                to={item.path}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium ${
+                  isActive
+                    ? "bg-green-800 text-white shadow-inner"
+                    : "text-green-200 hover:text-white hover:bg-green-800/50"
+                }`}
+              >
+                <item.icon className="w-5 h-5" />
+                {item.name}
+              </Link>
+            );
+          })}
         </nav>
 
-        <div className="p-4 mt-auto">
-          <div className="bg-green-800 rounded-xl p-4 shadow-sm border border-green-700/50">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-full bg-white text-green-800 flex items-center justify-center font-bold text-lg">
-                A
-              </div>
-              <div>
-                <p className="text-sm font-bold text-white">Super Admin</p>
-                <p className="text-xs text-green-300">admin@eduvate.com</p>
-              </div>
-            </div>
-            <a href="/" className="block mt-4 text-center text-sm text-green-100 bg-green-900/50 hover:bg-green-700 py-2 rounded-lg font-medium transition-colors border border-green-700/50 hover:border-green-600">
-              Logout
-            </a>
+        <div className="mt-auto px-4 py-6 space-y-6 border-t border-green-800/50">
+          <div className="space-y-2">
+            <p className="px-4 text-[11px] font-bold text-green-400 uppercase tracking-widest opacity-70">Support</p>
+            <nav className="space-y-1">
+              <Link to="/admin-dashboard/help" className="flex items-center gap-3 px-4 py-3 text-green-200 hover:text-white hover:bg-green-800/50 rounded-xl transition-all font-medium">
+                <HelpCircle className="w-5 h-5" />
+                Help & Support
+              </Link>
+              <Link to="/" className="flex items-center gap-3 px-4 py-3 text-green-200 hover:text-white hover:bg-green-800/50 rounded-xl transition-all font-medium">
+                <LogOut className="w-5 h-5" />
+                Logout
+              </Link>
+            </nav>
+          </div>
+
+          <div className="px-4 py-3 bg-green-800/40 rounded-xl border border-green-700/30">
+            <p className="text-[10px] font-bold text-green-300 uppercase tracking-widest mb-1">Academic Year</p>
+            <p className="text-sm font-bold text-white tracking-wider">2024 – 2025</p>
           </div>
         </div>
       </aside>
