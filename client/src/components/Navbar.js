@@ -30,11 +30,11 @@ const Navbar = ({ onLoginClick }) => {
         {/* Logo */}
         <Link
           to="/home"
-          className={`text-2xl font-extrabold tracking-tight transition-colors duration-300 ${
+          className={`text-3xl font-extrabold tracking-tight transition-colors duration-300 ${
             scrolled ? "text-indigo-700" : "text-white"
           }`}
         >
-          Campus<span className="text-blue-400">Connect</span>
+          EDU<span className="text-blue-400">VATE</span>
         </Link>
 
         {/* Desktop Nav */}
