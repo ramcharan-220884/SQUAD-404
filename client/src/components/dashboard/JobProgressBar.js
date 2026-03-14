@@ -38,7 +38,7 @@ const JobProgressBar = ({ steps, currentStep, isRejected }) => {
           className="job-progress-line" 
           style={{ 
             width: `${(currentStep / (steps.length - 1)) * 100}%`,
-            backgroundColor: isRejected && currentStep === steps.length - 1 ? '#ef4444' : '#1a73e8'
+            backgroundColor: isRejected && currentStep === steps.length - 1 ? '#ef4444' : '#800000'
           }}
         ></div>
         <div className="job-progress-line-bg"></div>

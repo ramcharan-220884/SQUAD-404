@@ -102,7 +102,7 @@ export default function Profile({ isPortal = false }) {
                     value={profile.name}
                     onChange={handleChange}
                     required
-                    className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#346b41] focus:border-transparent outline-none transition-all"
+                    className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#800000] focus:border-transparent outline-none transition-all"
                   />
                 </div>
               </div>
@@ -121,7 +121,7 @@ export default function Profile({ isPortal = false }) {
                     value={profile.email}
                     onChange={handleChange}
                     required
-                    className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#346b41] focus:border-transparent outline-none transition-all"
+                    className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#800000] focus:border-transparent outline-none transition-all"
                   />
                 </div>
               </div>
@@ -139,7 +139,7 @@ export default function Profile({ isPortal = false }) {
                     name="cgpa"
                     value={profile.cgpa}
                     onChange={handleChange}
-                    className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#346b41] focus:border-transparent outline-none transition-all"
+                    className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#800000] focus:border-transparent outline-none transition-all"
                   />
                 </div>
               </div>
@@ -157,7 +157,7 @@ export default function Profile({ isPortal = false }) {
                     name="skills"
                     value={profile.skills}
                     onChange={handleChange}
-                    className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#346b41] focus:border-transparent outline-none transition-all"
+                    className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#800000] focus:border-transparent outline-none transition-all"
                   />
                 </div>
               </div>
@@ -170,14 +170,14 @@ export default function Profile({ isPortal = false }) {
                 value={profile.projects}
                 onChange={handleChange}
                 rows="4"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#346b41] focus:border-transparent outline-none transition-all resize-y"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#800000] focus:border-transparent outline-none transition-all resize-y"
               ></textarea>
             </div>
 
             <div className="flex justify-end pt-4 border-t border-gray-100">
               <button
                 type="submit"
-                className="bg-[#346b41] hover:bg-[#285232] text-white font-bold py-2.5 px-8 rounded-lg shadow-sm transition-colors flex items-center gap-2"
+                className="bg-[#800000] hover:bg-[#4a0000] text-white font-bold py-2.5 px-8 rounded-lg shadow-sm transition-colors flex items-center gap-2"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
