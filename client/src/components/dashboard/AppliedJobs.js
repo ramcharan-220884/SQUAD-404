@@ -2,7 +2,9 @@ import React from 'react';
 import { appliedJobsData } from '../../data/appliedJobsData';
 import AppliedJobsList from './AppliedJobsList';
 
-const AppliedJobs = () => {
+const AppliedJobs = ({ jobs = [] }) => {
+  const displayJobs = jobs.length > 0 ? jobs : appliedJobsData;
+  
   return (
     <div className="applied-jobs-section">
       <div className="section-header">
@@ -12,19 +14,19 @@ const AppliedJobs = () => {
         </div>
         <div className="section-stats">
           <div className="stat-pill">
-            <span className="stat-value">{appliedJobsData.length}</span>
+            <span className="stat-value">{displayJobs.length}</span>
             <span className="stat-label">Total Applications</span>
           </div>
           <div className="stat-pill active">
             <span className="stat-value">
-              {appliedJobsData.filter(j => !j.isRejected && j.status !== 'Selected').length}
+              {displayJobs.filter(j => !j.isRejected && j.status !== 'Selected').length}
             </span>
             <span className="stat-label">In Progress</span>
           </div>
         </div>
       </div>
 
-      <AppliedJobsList jobs={appliedJobsData} />
+      <AppliedJobsList jobs={displayJobs} />
     </div>
   );
 };

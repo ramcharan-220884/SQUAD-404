@@ -47,13 +47,13 @@
 .db-sidebar-logo-icon {
   width: 42px;
   height: 42px;
-  background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+  background: linear-gradient(135deg, #800000 0%, #4a0000 100%);
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 4px 14px rgba(26, 115, 232, 0.4);
+  box-shadow: 0 4px 14px rgba(128, 0, 0, 0.4);
 }
 
 .db-sidebar-logo-icon svg {
@@ -119,9 +119,9 @@
 }
 
 .db-nav-item.active {
-  background: linear-gradient(90deg, rgba(26,115,232,0.25) 0%, rgba(26,115,232,0.08) 100%);
+  background: linear-gradient(90deg, rgba(128,0,0,0.25) 0%, rgba(128,0,0,0.08) 100%);
   color: #fff;
-  border-left: 3px solid #1a73e8;
+  border-left: 3px solid #800000;
   padding-left: 9px;
 }
 
@@ -134,7 +134,7 @@
 
 .db-nav-item.active .nav-icon {
   opacity: 1;
-  color: #4da3ff;
+  color: #ff9999;
 }
 
 /* Support section */
@@ -256,8 +256,8 @@
 /* Academic Year Card */
 .db-academic-card {
   margin: 12px;
-  background: linear-gradient(135deg, rgba(26,115,232,0.2) 0%, rgba(13,71,161,0.3) 100%);
-  border: 1px solid rgba(26,115,232,0.25);
+  background: linear-gradient(135deg, rgba(128,0,0,0.2) 0%, rgba(74,0,0,0.3) 100%);
+  border: 1px solid rgba(128,0,0,0.25);
   border-radius: 12px;
   padding: 14px;
 }
@@ -336,7 +336,7 @@
 }
 
 .db-search-bar:focus-within {
-  border-color: #1a73e8;
+  border-color: #800000;
   background: #fff;
 }
 
@@ -375,9 +375,9 @@
 }
 
 .db-notif-btn:hover {
-  background: #e8effc;
-  border-color: #b3ccf8;
-  color: #1a73e8;
+  background: #fdf2f2;
+  border-color: #ffcccc;
+  color: #800000;
 }
 
 .db-notif-badge {
@@ -395,7 +395,7 @@
   width: 42px;
   height: 42px;
   border-radius: 10px;
-  background: linear-gradient(135deg, #1a73e8, #0d47a1);
+  background: linear-gradient(135deg, #800000, #4a0000);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -404,7 +404,7 @@
   font-weight: 700;
   cursor: pointer;
   letter-spacing: 0.5px;
-  box-shadow: 0 2px 8px rgba(26,115,232,0.3);
+  box-shadow: 0 2px 8px rgba(128,0,0,0.3);
   flex-shrink: 0;
   overflow: hidden;
   position: relative;
@@ -413,7 +413,7 @@
 
 .db-avatar:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(26,115,232,0.4);
+  box-shadow: 0 4px 14px rgba(128, 0, 0, 0.4);
 }
 
 .db-avatar-img {
@@ -457,13 +457,13 @@
 .home-content-icon {
   width: 68px;
   height: 68px;
-  background: linear-gradient(135deg, #e8effc, #c4d8fc);
+  background: linear-gradient(135deg, #fdf2f2, #ffcccc);
   border-radius: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 20px;
-  color: #1a73e8;
+  color: #800000;
 }
 
 .home-content-card h2 {
@@ -530,7 +530,7 @@
   flex-shrink: 0;
 }
 
-.home-stat-icon.blue { background: #e8effc; color: #1a73e8; }
+.home-stat-icon.maroon { background: #fdf2f2; color: #800000; }
 .home-stat-icon.green { background: #e6f4ea; color: #1e7e34; }
 .home-stat-icon.purple { background: #f0ebfc; color: #7c3aed; }
 
@@ -572,13 +572,13 @@
 .db-placeholder-icon {
   width: 60px;
   height: 60px;
-  background: linear-gradient(135deg, #e8effc, #c4d8fc);
+  background: linear-gradient(135deg, #fdf2f2, #ffcccc);
   border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 18px;
-  color: #1a73e8;
+  color: #800000;
 }
 
 /* ── RIGHT PANEL ───────────────────────────────── */
@@ -593,7 +593,7 @@
 }
 
 .rp-university-card {
-  background: linear-gradient(145deg, #0f3460, #16213e);
+  background: linear-gradient(135deg, #2b0000, #800000);
   border-radius: 16px;
   padding: 20px;
   color: #fff;
@@ -787,21 +787,21 @@
 }
 
 .bj-filter-pill:hover {
-  border-color: #1a73e8;
-  color: #1a73e8;
-  background: #eaf1fd;
+  border-color: #800000;
+  color: #800000;
+  background: #fdf2f2;
 }
 
 .bj-filter-pill.active {
-  background: #1a73e8;
+  background: #800000;
   color: #fff;
-  border-color: #1a73e8;
+  border-color: #800000;
 }
 
 .bj-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
 }
 
 .bj-card {
@@ -900,10 +900,10 @@
 .bj-skill {
   font-size: 11px;
   font-weight: 600;
-  color: #1a73e8;
-  background: #eaf1fd;
-  padding: 3px 10px;
-  border-radius: 6px;
+  color: #800000;
+  background: #fdf2f2;
+  padding: 4px 12px;
+  border-radius: 20px;
 }
 
 .bj-info-row {
@@ -923,22 +923,23 @@
 
 .bj-apply-btn {
   margin-top: auto;
-  background: linear-gradient(90deg, #1a73e8, #0d47a1);
+  background: #800000;
   color: #fff;
   border: none;
   border-radius: 10px;
-  padding: 10px 18px;
+  padding: 12px 18px;
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
   font-family: 'Inter', sans-serif;
-  transition: opacity 0.18s, transform 0.18s;
+  transition: all 0.2s ease;
   letter-spacing: 0.3px;
 }
 
 .bj-apply-btn:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
+  background: #4a0000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(128, 0, 0, 0.2);
 }
 
 .bj-empty {
@@ -1085,7 +1086,7 @@
 
 .hs-faq-icon.rotate {
   transform: rotate(180deg);
-  color: #1a73e8;
+  color: #800000;
 }
 
 .hs-faq-answer {
@@ -1102,12 +1103,12 @@
 
 /* Support Banner */
 .hs-support-banner {
-  background: linear-gradient(135deg, #1a73e8, #0d47a1);
+  background: linear-gradient(135deg, #800000, #4a0000);
   border-radius: 16px;
   padding: 30px;
   text-align: center;
   color: #fff;
-  box-shadow: 0 8px 24px rgba(26,115,232,0.25);
+  box-shadow: 0 8px 24px rgba(128,0,0,0.25);
 }
 
 .hs-support-banner h3 {
@@ -1118,7 +1119,7 @@
 
 .hs-contact-btn {
   background: #fff;
-  color: #1a73e8;
+  color: #800000;
   border: none;
   border-radius: 20px;
   padding: 10px 24px;
@@ -1225,7 +1226,7 @@
 
 .home-opp-btn {
   margin-top: auto;
-  background: linear-gradient(90deg, #1a73e8, #0d47a1);
+  background: linear-gradient(90deg, #800000, #4a0000);
   color: #fff;
   border: none;
   border-radius: 10px;
@@ -1289,8 +1290,8 @@
 }
 
 .applied-jobs-section .stat-pill.active {
-  background: #eaf1fd;
-  border-color: #1a73e8;
+  background: #fdf2f2;
+  border-color: #800000;
 }
 
 .applied-jobs-section .stat-value {
@@ -1346,7 +1347,7 @@
 .job-icon {
   width: 48px;
   height: 48px;
-  background: linear-gradient(135deg, #1a73e8, #0d47a1);
+  background: linear-gradient(135deg, #800000, #4a0000);
   color: #fff;
   border-radius: 12px;
   display: flex;
@@ -1392,8 +1393,8 @@
 }
 
 .job-status-badge.active {
-  background: #e0f2fe;
-  color: #0284c7;
+  background: #fdf2f2;
+  color: #800000;
 }
 
 .job-status-badge.selected {
@@ -1454,13 +1455,13 @@
 }
 
 .job-progress-step.active .step-point {
-  background: #1a73e8;
-  border-color: #1a73e8;
+  background: #800000;
+  border-color: #800000;
   color: #fff;
 }
 
 .job-progress-step.current .step-point {
-  box-shadow: 0 0 0 4px rgba(26, 115, 232, 0.2);
+  box-shadow: 0 0 0 4px rgba(128, 0, 0, 0.2);
 }
 
 .job-progress-step.rejected.active .step-point {
@@ -1511,7 +1512,7 @@
   border-radius: 8px;
   background: #fff;
   border: 1.5px solid #e2e8f0;
-  color: #1a73e8;
+  color: #800000;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -1519,8 +1520,8 @@
 }
 
 .view-details-btn:hover {
-  background: #f8fafc;
-  border-color: #1a73e8;
+  background: #fdf2f2;
+  border-color: #800000;
 }
 
 @media (max-width: 600px) {

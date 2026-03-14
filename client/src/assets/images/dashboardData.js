@@ -75,7 +75,7 @@ export const jobListings = [
     skills: ['Python', 'Django', 'REST APIs'],
     deadline: '2025-04-15',
     badge: 'New',
-    badgeColor: '#1a73e8',
+    badgeColor: '#800000',
     logoColor: '#007cc2',
   },
   {
@@ -120,7 +120,7 @@ export const jobListings = [
     skills: ['Python', 'Tableau', 'ML'],
     deadline: '2025-05-01',
     badge: 'New',
-    badgeColor: '#1a73e8',
+    badgeColor: '#800000',
     logoColor: '#00897b',
   },
   {

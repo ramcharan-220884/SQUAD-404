@@ -67,7 +67,6 @@ export default function Sidebar({ activeItem, onItemClick }) {
   };
 
   const confirmLogout = () => {
-    // Clear session and redirect to login
     localStorage.removeItem('token');
     sessionStorage.clear();
     navigate('/login');
@@ -77,12 +76,24 @@ export default function Sidebar({ activeItem, onItemClick }) {
     setShowLogoutModal(false);
   };
 
+  const handleNavClick = (id) => {
+    if (id === 'profile') {
+      navigate('/student-profile');
+    } else {
+      if (onItemClick) {
+        onItemClick(id);
+      } else {
+        navigate('/student-dashboard');
+      }
+    }
+  };
+
   return (
     <>
-      <aside className="db-sidebar">
+      <aside className="db-sidebar" style={{ background: 'linear-gradient(180deg, #2b0000, #800000)' }}>
         {/* Logo */}
         <div className="db-sidebar-logo">
-          <div className="db-sidebar-logo-icon">
+          <div className="db-sidebar-logo-icon" style={{ background: 'linear-gradient(135deg, #a00000, #800000)' }}>
             <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5" />
             </svg>
@@ -100,7 +111,12 @@ export default function Sidebar({ activeItem, onItemClick }) {
           <button
             key={item.id}
             className={`db-nav-item${activeItem === item.id ? ' active' : ''}`}
-            onClick={() => onItemClick(item.id)}
+            onClick={() => handleNavClick(item.id)}
+            style={activeItem === item.id ? { 
+              background: 'linear-gradient(90deg, rgba(160,0,0,0.25) 0%, rgba(160,0,0,0.08) 100%)',
+              borderLeft: '3px solid #ff4d4d',
+              color: '#fff'
+            } : {}}
           >
             {item.icon}
             {item.label}
@@ -113,7 +129,12 @@ export default function Sidebar({ activeItem, onItemClick }) {
         <div className="db-sidebar-section-label">Support</div>
         <button 
           className={`db-nav-item${activeItem === 'help' ? ' active' : ''}`}
-          onClick={() => onItemClick('help')}
+          onClick={() => handleNavClick('help')}
+          style={activeItem === 'help' ? { 
+            background: 'linear-gradient(90deg, rgba(160,0,0,0.25) 0%, rgba(160,0,0,0.08) 100%)',
+            borderLeft: '3px solid #ff4d4d',
+            color: '#fff'
+          } : {}}
         >
           <svg className="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
@@ -135,7 +156,7 @@ export default function Sidebar({ activeItem, onItemClick }) {
       </div>
 
       {/* Academic Year Card */}
-      <div className="db-academic-card">
+      <div className="db-academic-card" style={{ background: 'linear-gradient(135deg, rgba(128,0,0,0.2) 0%, rgba(128,0,0,0.3) 100%)', border: '1px solid rgba(128,0,0,0.25)' }}>
         <div className="db-academic-card-label">Academic Year</div>
         <div className="db-academic-card-year">2024 – 2025</div>
         <div className="db-academic-card-sub">Semester II · Active</div>

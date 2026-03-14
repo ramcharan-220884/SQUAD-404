@@ -2,11 +2,19 @@ import React from 'react';
 import { studentProfile } from '../../assets/images/dashboardData';
 
 export default function Header() {
+  const currentDate = new Date().toLocaleDateString("en-IN", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "Asia/Kolkata"
+  });
+
   return (
     <header className="db-header">
       <div className="db-header-left">
         <h2>Welcome back, {studentProfile.name} 👋</h2>
-        <p>Thursday, March 2025 · RGUKT Portal</p>
+        <p>{currentDate} · RGUKT Portal</p>
       </div>
 
       <div className="db-header-right">

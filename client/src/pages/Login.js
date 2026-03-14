@@ -81,7 +81,7 @@ export default function Login() {
             type="button"
             onClick={() => handleRoleChange("student")}
             className={`flex-1 py-1.5 text-sm font-semibold text-center transition-colors border-r border-gray-800 ${
-              role === "student" ? "bg-[#346b41] text-white" : "bg-white text-gray-800 hover:bg-gray-50"
+              role === "student" ? "bg-[#800000] text-white" : "bg-white text-gray-800 hover:bg-gray-50"
             }`}
           >
             Student
@@ -90,7 +90,7 @@ export default function Login() {
             type="button"
             onClick={() => handleRoleChange("admin")}
             className={`flex-1 py-1.5 text-sm font-semibold text-center transition-colors border-r border-gray-800 ${
-              role === "admin" ? "bg-[#346b41] text-white" : "bg-white text-gray-800 hover:bg-gray-50"
+              role === "admin" ? "bg-[#800000] text-white" : "bg-white text-gray-800 hover:bg-gray-50"
             }`}
           >
             Admin
@@ -99,7 +99,7 @@ export default function Login() {
             type="button"
             onClick={() => handleRoleChange("company")}
             className={`flex-1 py-1.5 text-sm font-semibold text-center transition-colors ${
-              role === "company" ? "bg-[#346b41] text-white" : "bg-white text-gray-800 hover:bg-gray-50"
+              role === "company" ? "bg-[#800000] text-white" : "bg-white text-gray-800 hover:bg-gray-50"
             }`}
           >
             Recruiter
@@ -128,7 +128,7 @@ export default function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-[#346b41] focus:border-[#346b41] outline-none transition-colors"
+                className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-[#800000] focus:border-[#800000] outline-none transition-colors"
                 placeholder=""
               />
             </div>
@@ -149,12 +149,12 @@ export default function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-[#346b41] focus:border-[#346b41] outline-none transition-colors"
+                className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-[#800000] focus:border-[#800000] outline-none transition-colors"
                 placeholder=""
               />
             </div>
             <div className="flex justify-end mt-1.5">
-              <button type="button" className="text-sm font-medium text-[#346b41] hover:underline bg-transparent border-none p-0 cursor-pointer">
+              <button type="button" className="text-sm font-medium text-[#800000] hover:underline bg-transparent border-none p-0 cursor-pointer">
                 Forgot Password?
               </button>
             </div>
@@ -164,7 +164,7 @@ export default function Login() {
             type="submit"
             disabled={loading}
             className={`w-full py-2.5 px-4 rounded-md text-white font-medium transition-colors ${
-              loading ? "bg-gray-400 cursor-not-allowed" : "bg-[#346b41] hover:bg-[#264e2f]"
+              loading ? "bg-gray-400 cursor-not-allowed" : "bg-[#800000] hover:bg-[#4a0000]"
             } mt-2`}
           >
             {loading ? "Logging in..." : "Login"}
@@ -176,12 +176,12 @@ export default function Login() {
       <div className="absolute bottom-12 w-full text-center z-10 flex flex-col gap-1 items-center">
         <p className="text-gray-900 font-medium text-[15px]">
           Don't have an account?{" "}
-          <Link to="/register" className="text-[#346b41] font-semibold hover:underline">
+          <Link to="/register" className="text-[#800000] font-semibold hover:underline">
             Sign Up
           </Link>
         </p>
         <p className="text-gray-900 font-medium text-[15px]">
-          Student <Link to="/register?role=student" className="text-[#346b41] font-semibold hover:underline">Sign Up</Link> or Recruiter <Link to="/register?role=company" className="text-[#346b41] font-semibold hover:underline">Sign Up</Link>
+          Student <Link to="/register?role=student" className="text-[#800000] font-semibold hover:underline">Sign Up</Link> or Recruiter <Link to="/register?role=company" className="text-[#800000] font-semibold hover:underline">Sign Up</Link>
         </p>
       </div>
     </div>
