@@ -44,6 +44,13 @@ const LoginModal = ({ isOpen, onClose, onSwitchToRegister, initialRole = "studen
                 initialRole={initialRole}
                 onSuccess={(role) => {
                     onClose();
+                    if (role === "student") {
+                        window.location.href = "/student-dashboard";
+                    } else if (role === "admin") {
+                        window.location.href = "/admin-dashboard";
+                    } else if (role === "company") {
+                        window.location.href = "/company-dashboard";
+                    }
                 }}
                 onSwitchToRegister={(role) => {
                     onClose();

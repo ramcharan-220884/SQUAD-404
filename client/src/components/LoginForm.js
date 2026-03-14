@@ -20,15 +20,6 @@ const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student" }) =
     e.preventDefault();
     setError("");
 
-    if (role === "admin") {
-      if (onSuccess) {
-        onSuccess("admin");
-      } else {
-        navigate("/admin-dashboard");
-      }
-      return;
-    }
-
     setLoading(true);
 
     try {
@@ -42,16 +33,6 @@ const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student" }) =
 
       if (onSuccess) {
         onSuccess(response.user.role);
-      } else {
-        if (response.user.role === "student") {
-          navigate("/student-dashboard");
-        } else if (response.user.role === "company") {
-          navigate("/company-dashboard");
-        } else if (response.user.role === "admin") {
-          navigate("/admin-dashboard");
-        } else {
-          setError("Invalid user role provided by server.");
-        }
       }
     } catch (err) {
       setError(err.message || "Login failed. Please verify your credentials.");

@@ -19,12 +19,20 @@ export const loginUser = async (data) => {
 };
 
 export const registerUser = async (data) => {
-  const res = await fetch(`${API_BASE}/auth/register`, {
+  const { role, ...rest } = data;
+  
+  // Dispatch to the correct endpoint based on role
+  let endpoint = `${API_BASE}/students/register`;
+  if (role === 'company') {
+    endpoint = `${API_BASE}/companies/register`;
+  }
+
+  const res = await fetch(endpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify(rest),
   });
 
   const result = await res.json();
