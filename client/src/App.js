@@ -7,6 +7,7 @@ import AdminDashboard from "./pages/AdminDashBoard";
 import CompanyDashboard from "./pages/CompanyDashboard";
 import JobBoard from "./pages/JobBoard";
 import Profile from "./pages/Profile";
+import StudentProfile from "./pages/StudentProfile";
 
 function App() {
   return (
@@ -31,6 +32,8 @@ function App() {
         <Route path="/jobs" element={<JobBoard />} />
 
         <Route path="/profile" element={<Profile />} />
+
+        <Route path="/student-profile" element={<StudentProfile />} />
 
       </Routes>
     </Router>

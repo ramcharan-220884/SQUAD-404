@@ -174,14 +174,20 @@ const StudentProfile = () => {
                   type="checkbox" name="termsAccepted" checked={formData.termsAccepted} onChange={handleInputChange}
                   className="mt-1 w-4 h-4 accent-[#800000]"
                 />
-                <span className={`text-sm font-semibold group-hover:text-[#800000] transition-colors ${errors.termsAccepted ? 'text-red-500' : 'text-gray-600'}`}>I agree to the Terms & Conditions</span>
+                <div>
+                  <span className={`text-sm font-semibold group-hover:text-[#800000] transition-colors ${errors.termsAccepted ? 'text-red-500' : 'text-gray-600'}`}>I agree to the Terms & Conditions</span>
+                  {errors.termsAccepted && <p className="text-red-500 text-xs mt-1 italic">{errors.termsAccepted}</p>}
+                </div>
               </label>
               <label className="flex items-start gap-3 cursor-pointer group">
                 <input 
                   type="checkbox" name="notARobot" checked={formData.notARobot} onChange={handleInputChange}
                   className="mt-1 w-4 h-4 accent-[#800000]"
                 />
-                <span className={`text-sm font-semibold group-hover:text-[#800000] transition-colors ${errors.notARobot ? 'text-red-500' : 'text-gray-600'}`}>I am not a robot</span>
+                <div>
+                  <span className={`text-sm font-semibold group-hover:text-[#800000] transition-colors ${errors.notARobot ? 'text-red-500' : 'text-gray-600'}`}>I am not a robot</span>
+                  {errors.notARobot && <p className="text-red-500 text-xs mt-1 italic">{errors.notARobot}</p>}
+                </div>
               </label>
             </div>
           </div>
