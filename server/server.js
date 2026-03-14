@@ -1,5 +1,8 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import { pool } from "./config/db.js";
 import jobRoutes from "./routes/jobRoutes.js";
 
@@ -12,8 +15,9 @@ import adminRoutes from "./routes/adminRoutes.js";
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+app.use(cors({ origin: process.env.FRONTEND_URL || "http://localhost:3000", credentials: true }));
 app.use(express.json());
+app.use(cookieParser());
 
 // Routes
 app.use("/api/students", studentRoutes);
@@ -36,14 +40,14 @@ async function testDB() {
 
 testDB();
 
-// Test API
-app.get("/test-db", async (req, res) => {
-  try {
-    const [rows] = await pool.query("SELECT * FROM students LIMIT 5");
-    res.json(rows);
-  } catch (err) {
-    res.status(500).send("Database connection failed");
-  }
+// Express Error Handling Middleware
+app.use((err, req, res, next) => {
+  console.error("Server Error:", err);
+  const status = err.status || 500;
+  res.status(status).json({ 
+    message: err.message || "Internal Server Error",
+    error: process.env.NODE_ENV === "development" ? err : {}
+  });
 });
 
 app.listen(PORT, () => {

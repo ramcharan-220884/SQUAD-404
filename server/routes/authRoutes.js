@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
-router.post("/login", async (req, res) => {
+router.post("/login", async (req, res, next) => {
   try {
     const { email, password, role } = req.body; // Expecting role from frontend
 
@@ -40,27 +40,31 @@ router.post("/login", async (req, res) => {
 
     const user = users[0];
 
-    // Check account status if applicable
-    if (user.status === "Pending") {
-      return res.status(403).json({ message: "Your account is pending approval." });
-    }
-    if (user.status === "Blocked") {
-      return res.status(403).json({ message: "Your account has been blocked." });
-    }
-
-    // Verify password
+    // Step 1: Verify credentials first
     const isMatch = await bcrypt.compare(password, user.password_hash);
     
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    // Generate JWT
+    // Step 2: After validation, check if approved
+    if (user.approved === false || user.approved === 0) {
+      return res.status(403).json({ error: "Account pending approval" });
+    }
+
+    // Step 4: Generate JWT and set in secure cookie
     const token = jwt.sign(
       { id: user[userIdField], role: roleName },
       process.env.JWT_SECRET,
-      { expiresIn: "10h" } // Token expires in 10 hours
+      { expiresIn: "10h" }
     );
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
+      maxAge: 36000000
+    });
 
     res.json({
       message: "Login successful",
@@ -75,7 +79,7 @@ router.post("/login", async (req, res) => {
 
   } catch (err) {
     console.error("Login error:", err);
-    res.status(500).json({ message: "Server error" });
+    next(err);
   }
 });
 

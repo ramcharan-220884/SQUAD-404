@@ -4,9 +4,18 @@ import { pool } from "../config/db.js";
 export const getStats = async (req, res) => {
   try {
     const [[{ totalStudents }]] = await pool.query("SELECT COUNT(*) as totalStudents FROM students");
-    const [[{ placedStudents }]] = await pool.query("SELECT COUNT(*) as placedStudents FROM applications WHERE status='Selected'");
-    const [[{ activeCompanies }]] = await pool.query("SELECT COUNT(*) as activeCompanies FROM companies WHERE status='Active'");
-    res.json({ totalStudents, placedStudents, activeCompanies });
+    const [[{ activeCompanies }]] = await pool.query("SELECT COUNT(*) as activeCompanies FROM companies WHERE approved = 1");
+    const [[{ totalJobs }]] = await pool.query("SELECT COUNT(*) as totalJobs FROM jobs");
+    const [[{ pendingApprovals }]] = await pool.query(
+      "SELECT (SELECT COUNT(*) FROM students WHERE status = 'Pending') + (SELECT COUNT(*) FROM companies WHERE status = 'Pending') as pendingApprovals"
+    );
+
+    res.json({ 
+      totalStudents, 
+      activeCompanies, 
+      totalJobs,
+      pendingApprovals
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -84,12 +93,12 @@ export const approveUser = async (req, res) => {
     let result;
     if (type === "student") {
       [result] = await pool.query(
-        "UPDATE students SET status = 'Active' WHERE user_id = ?",
+        "UPDATE students SET status = 'Active', approved = 1 WHERE user_id = ?",
         [id]
       );
     } else if (type === "company") {
       [result] = await pool.query(
-        "UPDATE companies SET status = 'Active' WHERE company_id = ?",
+        "UPDATE companies SET status = 'Active', approved = 1 WHERE company_id = ?",
         [id]
       );
     } else {

@@ -2,8 +2,11 @@ import { pool } from "../config/db.js";
 import bcrypt from "bcrypt";
 
 // Register new student
-export const registerStudent = async (req, res) => {
+export const registerStudent = async (req, res, next) => {
   const { name, email, password } = req.body;
+  if (!name || !email || !password) {
+    return res.status(400).json({ message: "Name, email, and password are required" });
+  }
 
   try {
     // Check if email already exists
@@ -16,36 +19,37 @@ export const registerStudent = async (req, res) => {
     // Hash password
     const hash = await bcrypt.hash(password, 10);
 
-    // Insert into DB
+    // Insert into DB with approved = false
     const [result] = await pool.query(
-      `INSERT INTO students (name, email, password_hash, status) VALUES (?, ?, ?, 'Pending')`,
+      `INSERT INTO students (name, email, password_hash, approved) VALUES (?, ?, ?, false)`,
       [name, email, hash]
     );
 
-    res.status(201).json({ message: "Student registered successfully", userId: result.insertId });
+    res.status(201).json({ message: "Student registered successfully, pending approval", userId: result.insertId });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
+    next(err);
   }
 };
 
 // Login student
-export const loginStudent = async (req, res) => {
-  const { email, password } = req.body;
-
+export const loginStudent = async (req, res, next) => {
   try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email and password are required" });
+    }
+
     const [rows] = await pool.query("SELECT * FROM students WHERE email = ?", [email]);
-    if (rows.length === 0) return res.status(400).json({ message: "Invalid credentials" });
+    if (rows.length === 0) return res.status(401).json({ message: "Invalid credentials" });
 
     const user = rows[0];
     const match = await bcrypt.compare(password, user.password_hash);
-    if (!match) return res.status(400).json({ message: "Invalid credentials" });
+    if (!match) return res.status(401).json({ message: "Invalid credentials" });
 
-    // You can add JWT token here later for auth
-    res.json({ message: "Login successful", userId: user.user_id, name: user.name });
+    // Login logic moved to authRoutes for JWT handling
+    res.json({ message: "Use /api/auth/login for token-based authentication", userId: user.user_id, name: user.name });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
+    next(err);
   }
 };
 

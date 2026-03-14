@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { loginUser } from "../services/authService";
 
 const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student" }) => {
@@ -9,8 +9,6 @@ const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student" }) =
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate();
-
   const handleRoleChange = (newRole) => {
     setRole(newRole);
     setError("");
@@ -19,6 +17,8 @@ const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student" }) =
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+
 
     setLoading(true);
 
@@ -50,11 +50,10 @@ const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student" }) =
             key={r}
             type="button"
             onClick={() => handleRoleChange(r)}
-            className={`flex-1 py-2.5 text-[11px] font-bold uppercase tracking-[0.1em] text-center transition-all duration-300 rounded-xl ${
-              role === r 
-                ? "bg-[#346b41] text-white shadow-md scale-100" 
+            className={`flex-1 py-2.5 text-[11px] font-bold uppercase tracking-[0.1em] text-center transition-all duration-300 rounded-xl ${role === r
+                ? "bg-[#346b41] text-white shadow-md scale-100"
                 : "bg-transparent text-gray-400 hover:text-gray-600 hover:bg-white/60 scale-95"
-            }`}
+              }`}
           >
             {r === "company" ? "Recruiter" : r}
           </button>
@@ -78,7 +77,7 @@ const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student" }) =
           <div className="relative group">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-300 group-focus-within:text-[#346b41] transition-colors duration-300">
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </div>
             <input
@@ -98,7 +97,7 @@ const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student" }) =
           <div className="relative group">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-300 group-focus-within:text-[#346b41] transition-colors duration-300">
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
             </div>
             <input
@@ -121,11 +120,10 @@ const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student" }) =
         <button
           type="submit"
           disabled={loading}
-          className={`w-full py-4.5 px-6 rounded-2xl text-white text-sm font-extrabold uppercase tracking-[0.2em] shadow-xl shadow-[#346b41]/20 transition-all active:scale-[0.98] ${
-            loading 
-              ? "bg-gray-300 cursor-not-allowed" 
+          className={`w-full py-4.5 px-6 rounded-2xl text-white text-sm font-extrabold uppercase tracking-[0.2em] shadow-xl shadow-[#346b41]/20 transition-all active:scale-[0.98] ${loading
+              ? "bg-gray-300 cursor-not-allowed"
               : "bg-gradient-to-r from-[#346b41] to-[#4caf50] hover:shadow-2xl hover:shadow-[#346b41]/30 hover:-translate-y-1"
-          }`}
+            }`}
           style={{ padding: '1.125rem' }}
         >
           {loading ? "Verifying..." : role === "admin" ? "Login as Admin" : "Login to Portal"}

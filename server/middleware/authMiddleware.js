@@ -1,15 +1,10 @@
 import jwt from "jsonwebtoken";
 
 export const verifyToken = (req, res, next) => {
-  const authHeader = req.headers["authorization"];
-  if (!authHeader) {
-    return res.status(403).json({ message: "No token provided, authorization denied." });
-  }
+  const token = req.cookies?.token || (req.headers["authorization"] && req.headers["authorization"].split(" ")[1]);
 
-  // Expecting format "Bearer <token>"
-  const token = authHeader.split(" ")[1];
   if (!token) {
-    return res.status(403).json({ message: "Token format invalid, authorization denied." });
+    return res.status(401).json({ message: "Access denied. No token provided." });
   }
 
   try {
@@ -17,6 +12,15 @@ export const verifyToken = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (err) {
-    return res.status(401).json({ message: "Invalid or expired token." });
+    res.status(401).json({ message: "Invalid or expired token." });
   }
+};
+
+export const requireRole = (requiredRole) => {
+  return (req, res, next) => {
+    if (!req.user || req.user.role !== requiredRole) {
+      return res.status(403).json({ message: `Access denied. ${requiredRole} role required.` });
+    }
+    next();
+  };
 };
