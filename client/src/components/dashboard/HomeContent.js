@@ -1,5 +1,5 @@
-import React from 'react';
-import { openOpportunities } from '../../assets/images/dashboardData';
+import React, { useEffect, useState } from 'react';
+import API_BASE from '../../services/api';
 
 function StatCard({ value, label, iconClass, icon }) {
   return (
@@ -14,28 +14,21 @@ function StatCard({ value, label, iconClass, icon }) {
 }
 
 function CompanyLogo({ opp }) {
-  if (opp.logoType === 'image' && opp.logo) {
-    return (
-      <div className="job-logo-wrap" style={{ width: '40px', height: '40px' }}>
-        <img src={opp.logo} alt={opp.company} className="job-logo-img" />
-      </div>
-    );
-  }
   return (
     <div
       className="job-logo-abbr"
-      style={{ background: opp.logoColor || '#800000', width: '40px', height: '40px', fontSize: '13px' }}
+      style={{ background: '#800000', width: '40px', height: '40px', fontSize: '13px' }}
     >
-      {opp.company.slice(0, 2).toUpperCase()}
+      {(opp.company_name || opp.company || 'CO').slice(0, 2).toUpperCase()}
     </div>
   );
 }
 
 function getDeadlineInfo(dateString) {
+  if (!dateString) return { text: 'Open', color: '#38a169', bg: '#c6f6d5' };
   const deadline = new Date(dateString);
   const now = new Date();
-  
-  // Set times to midnight to calculate strict day difference
+
   deadline.setHours(0, 0, 0, 0);
   now.setHours(0, 0, 0, 0);
 
@@ -43,19 +36,88 @@ function getDeadlineInfo(dateString) {
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
   if (diffDays < 0) return { text: 'Closed', color: '#8492a6', bg: '#f4f7fb' };
-  if (diffDays === 0) return { text: 'Last Day', color: '#e53e3e', bg: '#fed7d7' }; // Red
-  if (diffDays < 3) return { text: `${diffDays} Days Left`, color: '#e53e3e', bg: '#fed7d7' }; // Red
-  if (diffDays <= 6) return { text: `${diffDays} Days Left`, color: '#d69e2e', bg: '#fefcbf' }; // Yellow
-  return { text: `${diffDays} Days Left`, color: '#38a169', bg: '#c6f6d5' }; // Green
+  if (diffDays === 0) return { text: 'Last Day', color: '#e53e3e', bg: '#fed7d7' };
+  if (diffDays < 3) return { text: `${diffDays} Days Left`, color: '#e53e3e', bg: '#fed7d7' };
+  if (diffDays <= 6) return { text: `${diffDays} Days Left`, color: '#d69e2e', bg: '#fefcbf' };
+  return { text: `${diffDays} Days Left`, color: '#38a169', bg: '#c6f6d5' };
 }
 
 export default function HomeContent() {
+  const [stats, setStats] = useState({ applicationsSent: 0, shortlisted: 0, openJobs: 0 });
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userId = localStorage.getItem("userId");
+
+        // Fetch jobs
+        const jobsRes = await fetch(`${API_BASE}/jobs/all`);
+        const jobsData = await jobsRes.json();
+        setJobs(Array.isArray(jobsData) ? jobsData.slice(0, 5) : []);
+
+        // Fetch student application stats
+        if (userId) {
+          const appsRes = await fetch(`${API_BASE}/applications/student/${userId}`);
+          const appsData = await appsRes.json();
+          const apps = Array.isArray(appsData) ? appsData : [];
+          setStats({
+            applicationsSent: apps.length,
+            shortlisted: apps.filter(a => a.status === 'Shortlisted' || a.status === 'Selected').length,
+            openJobs: Array.isArray(jobsData) ? jobsData.length : 0
+          });
+        } else {
+          setStats(prev => ({ ...prev, openJobs: Array.isArray(jobsData) ? jobsData.length : 0 }));
+        }
+      } catch (err) {
+        console.error("Error fetching home data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleApply = async (jobId) => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      alert("Please log in to apply for jobs.");
+      return;
+    }
+    try {
+      const res = await fetch(`${API_BASE}/applications/apply`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ student_id: parseInt(userId), job_id: jobId })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        alert("Application submitted successfully!");
+        setStats(prev => ({ ...prev, applicationsSent: prev.applicationsSent + 1 }));
+      } else {
+        alert(data.message || "Failed to apply.");
+      }
+    } catch (err) {
+      console.error("Error applying:", err);
+      alert("Error submitting application.");
+    }
+  };
+
+  if (loading) {
+    return (
+      <div style={{ padding: '40px', textAlign: 'center' }}>
+        <p style={{ color: '#888', fontWeight: 600 }}>Loading dashboard...</p>
+      </div>
+    );
+  }
+
   return (
     <div>
-      {/* Quick Stats */}
+      {/* Quick Stats — Live Data */}
       <div className="home-stats-grid">
         <StatCard
-          value="3"
+          value={String(stats.applicationsSent)}
           label="Applications Sent"
           iconClass="maroon"
           icon={
@@ -65,7 +127,7 @@ export default function HomeContent() {
           }
         />
         <StatCard
-          value="1"
+          value={String(stats.shortlisted)}
           label="Shortlisted"
           iconClass="green"
           icon={
@@ -75,7 +137,7 @@ export default function HomeContent() {
           }
         />
         <StatCard
-          value="5"
+          value={String(stats.openJobs)}
           label="Open Opportunities"
           iconClass="purple"
           icon={
@@ -86,39 +148,44 @@ export default function HomeContent() {
         />
       </div>
 
-      {/* Open Opportunities Section */}
+      {/* Open Opportunities — Live from Database */}
       <div className="home-opp-section">
         <h2 className="home-opp-title">Open Opportunities</h2>
-        <div className="home-opp-grid">
-          {openOpportunities.map(opp => {
-            const deadlineInfo = getDeadlineInfo(opp.deadline);
-            return (
-              <div key={opp.id} className="home-opp-card">
-                <div className="home-opp-header">
-                  <CompanyLogo opp={opp} />
-                  <div className="home-opp-meta">
-                    <h3 className="home-opp-comp">{opp.company}</h3>
-                    <p className="home-opp-role">{opp.role}</p>
+        {jobs.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '40px', color: '#888' }}>
+            <p style={{ fontWeight: 600 }}>No open opportunities at the moment.</p>
+          </div>
+        ) : (
+          <div className="home-opp-grid">
+            {jobs.map(opp => {
+              const deadlineInfo = getDeadlineInfo(opp.deadline || opp.created_at);
+              return (
+                <div key={opp.job_id} className="home-opp-card">
+                  <div className="home-opp-header">
+                    <CompanyLogo opp={opp} />
+                    <div className="home-opp-meta">
+                      <h3 className="home-opp-comp">{opp.company_name || 'Company'}</h3>
+                      <p className="home-opp-role">{opp.title}</p>
+                    </div>
+                    <div 
+                      className="home-opp-deadline" 
+                      style={{ color: deadlineInfo.color, backgroundColor: deadlineInfo.bg }}
+                    >
+                      {deadlineInfo.text}
+                    </div>
                   </div>
-                  <div 
-                    className="home-opp-deadline" 
-                    style={{ color: deadlineInfo.color, backgroundColor: deadlineInfo.bg }}
-                  >
-                    {deadlineInfo.text}
+
+                  <div className="home-opp-details">
+                    <div className="home-opp-pill">🎓 Min CGPA: {opp.min_cgpa || 'Any'}</div>
+                    <div className="home-opp-pill">💰 {opp.ctc || 'Not specified'}</div>
                   </div>
-                </div>
 
-                <div className="home-opp-details">
-                  <div className="home-opp-pill">🎓 {opp.eligibility}</div>
-                  <div className="home-opp-pill">💻 {opp.mode}</div>
-                  <div className="home-opp-pill">📅 {new Date(opp.deadline).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
+                  <button className="home-opp-btn" onClick={() => handleApply(opp.job_id)}>Apply Now →</button>
                 </div>
-
-                <button className="home-opp-btn">Apply Now →</button>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

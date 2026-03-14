@@ -83,4 +83,58 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
+// ─── Student / Company Registration ────────────────────────────────
+router.post("/register", async (req, res, next) => {
+  try {
+    const { name, email, password, role } = req.body;
+
+    if (!name || !email || !password || !role) {
+      return res.status(400).json({ message: "Name, email, password, and role are required" });
+    }
+
+    if (role === "student") {
+      // Check duplicate
+      const [existing] = await pool.query("SELECT user_id FROM students WHERE email = ?", [email]);
+      if (existing.length > 0) {
+        return res.status(400).json({ message: "Email already registered" });
+      }
+
+      const hash = await bcrypt.hash(password, 10);
+      const [result] = await pool.query(
+        "INSERT INTO students (name, email, password_hash, approved, status) VALUES (?, ?, ?, 0, 'Pending')",
+        [name, email, hash]
+      );
+
+      return res.status(201).json({
+        message: "Student registered successfully, pending admin approval.",
+        userId: result.insertId
+      });
+
+    } else if (role === "company") {
+      // Check duplicate
+      const [existing] = await pool.query("SELECT company_id FROM companies WHERE email = ?", [email]);
+      if (existing.length > 0) {
+        return res.status(400).json({ message: "Email already registered" });
+      }
+
+      const hash = await bcrypt.hash(password, 10);
+      const [result] = await pool.query(
+        "INSERT INTO companies (name, email, password_hash, approved, status) VALUES (?, ?, ?, 0, 'Pending')",
+        [name, email, hash]
+      );
+
+      return res.status(201).json({
+        message: "Company registered successfully, pending admin approval.",
+        companyId: result.insertId
+      });
+
+    } else {
+      return res.status(400).json({ message: "Invalid role. Must be 'student' or 'company'." });
+    }
+  } catch (err) {
+    console.error("Registration error:", err);
+    next(err);
+  }
+});
+
 export default router;

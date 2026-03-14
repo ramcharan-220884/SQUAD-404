@@ -29,6 +29,7 @@ const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student" }) =
         localStorage.setItem("token", response.token);
         localStorage.setItem("userRole", response.user.role);
         localStorage.setItem("userId", response.user.id);
+        localStorage.setItem("userName", response.user.name || "Student");
       }
 
       if (onSuccess) {

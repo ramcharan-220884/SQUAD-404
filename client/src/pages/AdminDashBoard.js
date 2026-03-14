@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   LayoutDashboard,
   Users,
@@ -27,16 +27,7 @@ import {
   Cell,
   Legend
 } from "recharts";
-
-// Mock Data
-const MOCK_STATS = [
-  { title: "Total Students", value: "12,450", icon: <Users className="w-6 h-6 text-green-600" />, change: "+12%" },
-  { title: "Total Recruiters", value: "320", icon: <Building className="w-6 h-6 text-green-600" />, change: "+5%" },
-  { title: "Active Jobs", value: "1,245", icon: <Briefcase className="w-6 h-6 text-green-600" />, change: "+18%" },
-  { title: "Upcoming Events", value: "24", icon: <Calendar className="w-6 h-6 text-green-600" />, change: "+2%" },
-  { title: "Pending Applications", value: "156", icon: <FileCheck className="w-6 h-6 text-green-600" />, change: "-4%" },
-  { title: "System Health Status", value: "99.9%", icon: <Activity className="w-6 h-6 text-green-600" />, change: "Optimal" },
-];
+import { getStats, getPendingUsers, approveUser, rejectUser } from "../services/adminService";
 
 const YEARLY_PLACEMENTS = [
   { year: "2020", placements: 400 },
@@ -46,40 +37,102 @@ const YEARLY_PLACEMENTS = [
   { year: "2024", placements: 1450 },
 ];
 
-const APPLICATION_STATUS = [
-  { name: "Approved", value: 6500 },
-  { name: "Pending", value: 1200 },
-  { name: "Rejected", value: 300 },
-];
-
 const PIE_COLORS = ["#16a34a", "#facc15", "#dc2626"];
 
-const INITIAL_PENDING_STUDENTS = [
-  { id: 1, name: "Rahul Kumar", email: "rahul@example.com", college: "IIT Delhi", date: "2024-03-12" },
-  { id: 2, name: "Sneha Patel", email: "sneha@example.com", college: "VIT Vellore", date: "2024-03-11" },
-  { id: 3, name: "Amit Singh", email: "amit@example.com", college: "NIT Trichy", date: "2024-03-10" },
-];
-
-const INITIAL_PENDING_RECRUITERS = [
-  { id: 1, company: "TechNova", email: "hr@technova.com", org: "IT Services", date: "2024-03-12" },
-  { id: 2, company: "GlobalCorp", email: "careers@globalcorp.net", org: "Manufacturing", date: "2024-03-11" },
-];
-
 export default function AdminDashboard() {
-  const [pendingStudents, setPendingStudents] = useState(INITIAL_PENDING_STUDENTS);
-  const [pendingRecruiters, setPendingRecruiters] = useState(INITIAL_PENDING_RECRUITERS);
+  const [stats, setStats] = useState(null);
+  const [pendingStudents, setPendingStudents] = useState([]);
+  const [pendingRecruiters, setPendingRecruiters] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState(null);
 
-  const handleStudentAction = (id, action) => {
-    // Fake action for mock data
-    setPendingStudents(pendingStudents.filter(s => s.id !== id));
-    alert(`Student ${action}ed successfully.`);
+  // Fetch live data on mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [statsData, pendingData] = await Promise.all([
+          getStats(),
+          getPendingUsers()
+        ]);
+        setStats(statsData);
+        setPendingStudents(pendingData.filter(u => u.type === "student"));
+        setPendingRecruiters(pendingData.filter(u => u.type === "company"));
+      } catch (err) {
+        console.error("Error fetching admin data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleStudentAction = async (id, action) => {
+    setActionLoading(`student-${id}-${action}`);
+    try {
+      if (action === "Approve") {
+        await approveUser(id, "student");
+      } else {
+        await rejectUser(id, "student");
+      }
+      setPendingStudents(prev => prev.filter(s => s.id !== id));
+      // Refresh stats
+      const updatedStats = await getStats();
+      setStats(updatedStats);
+    } catch (err) {
+      console.error(`Failed to ${action} student:`, err);
+      alert(`Failed to ${action} student. Please try again.`);
+    } finally {
+      setActionLoading(null);
+    }
   };
 
-  const handleRecruiterAction = (id, action) => {
-    // Fake action for mock data
-    setPendingRecruiters(pendingRecruiters.filter(r => r.id !== id));
-    alert(`Recruiter ${action}ed successfully.`);
+  const handleRecruiterAction = async (id, action) => {
+    setActionLoading(`recruiter-${id}-${action}`);
+    try {
+      if (action === "Approve") {
+        await approveUser(id, "company");
+      } else {
+        await rejectUser(id, "company");
+      }
+      setPendingRecruiters(prev => prev.filter(r => r.id !== id));
+      // Refresh stats
+      const updatedStats = await getStats();
+      setStats(updatedStats);
+    } catch (err) {
+      console.error(`Failed to ${action} recruiter:`, err);
+      alert(`Failed to ${action} recruiter. Please try again.`);
+    } finally {
+      setActionLoading(null);
+    }
   };
+
+  // Build stat cards from live data
+  const statCards = stats ? [
+    { title: "Total Students", value: String(stats.totalStudents || 0), icon: <Users className="w-6 h-6 text-green-600" />, change: "Live" },
+    { title: "Total Recruiters", value: String(stats.activeCompanies || 0), icon: <Building className="w-6 h-6 text-green-600" />, change: "Live" },
+    { title: "Active Jobs", value: String(stats.totalJobs || 0), icon: <Briefcase className="w-6 h-6 text-green-600" />, change: "Live" },
+    { title: "Pending Approvals", value: String(stats.pendingApprovals || 0), icon: <FileCheck className="w-6 h-6 text-green-600" />, change: `${pendingStudents.length + pendingRecruiters.length} pending` },
+    { title: "Pending Students", value: String(pendingStudents.length), icon: <UserPlus className="w-6 h-6 text-green-600" />, change: "Live" },
+    { title: "Pending Recruiters", value: String(pendingRecruiters.length), icon: <Building className="w-6 h-6 text-green-600" />, change: "Live" },
+  ] : [];
+
+  // Build pie chart from live data
+  const applicationStatus = stats ? [
+    { name: "Active Students", value: Math.max(0, (stats.totalStudents || 0) - pendingStudents.length) },
+    { name: "Pending", value: stats.pendingApprovals || 0 },
+    { name: "Active Companies", value: stats.activeCompanies || 0 },
+  ] : [];
+
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="w-8 h-8 border-4 border-green-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-500 font-semibold">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen bg-gray-50 font-sans overflow-hidden">
@@ -170,16 +223,16 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          {/* Stat Cards */}
+          {/* Stat Cards — Live Data */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {MOCK_STATS.map((stat, i) => (
+            {statCards.map((stat, i) => (
               <div key={i} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md transition-shadow">
                 <div className="absolute -right-6 -top-6 w-24 h-24 bg-green-50 rounded-full group-hover:scale-150 transition-transform duration-500 ease-out opacity-50 pointer-events-none"></div>
                 <div className="flex justify-between items-start mb-4 relative z-10">
                   <div className="p-3 bg-green-50 rounded-xl text-green-600 border border-green-100">
                     {stat.icon}
                   </div>
-                  <span className={`text-sm font-bold px-2.5 py-1 rounded-full ${stat.change.startsWith("-") || stat.change === "Optimal" ? (stat.change === "Optimal" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-600") : "bg-green-100 text-green-700"}`}>
+                  <span className="text-sm font-bold px-2.5 py-1 rounded-full bg-green-100 text-green-700">
                     {stat.change}
                   </span>
                 </div>
@@ -220,14 +273,14 @@ export default function AdminDashboard() {
               <div className="mb-6 flex justify-between items-center">
                 <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
                   <FileCheck className="w-5 h-5 text-green-600" />
-                  Application Submission Status
+                  Platform Overview
                 </h3>
               </div>
               <div className="flex-1 w-full flex items-center justify-center min-h-0">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
-                      data={APPLICATION_STATUS}
+                      data={applicationStatus}
                       cx="50%"
                       cy="50%"
                       innerRadius={80}
@@ -236,7 +289,7 @@ export default function AdminDashboard() {
                       dataKey="value"
                       stroke="none"
                     >
-                      {APPLICATION_STATUS.map((entry, index) => (
+                      {applicationStatus.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
                       ))}
                     </Pie>
@@ -256,7 +309,7 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          {/* Approvals Section */}
+          {/* Approvals Section — Live Data */}
           <div className="space-y-8">
             {/* Pending Students Table */}
             <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
@@ -278,7 +331,6 @@ export default function AdminDashboard() {
                     <tr className="bg-white border-b border-gray-100 text-gray-500 text-xs uppercase tracking-widest">
                       <th className="px-6 py-4 font-bold">Name</th>
                       <th className="px-6 py-4 font-bold">Email</th>
-                      <th className="px-6 py-4 font-bold">College</th>
                       <th className="px-6 py-4 font-bold">Registration Date</th>
                       <th className="px-6 py-4 font-bold w-48 text-right">Action</th>
                     </tr>
@@ -286,30 +338,35 @@ export default function AdminDashboard() {
                   <tbody className="divide-y divide-gray-50">
                     {pendingStudents.length === 0 ? (
                       <tr>
-                        <td colSpan="5" className="px-6 py-8 text-center text-gray-500 font-medium">No pending student approvals.</td>
+                        <td colSpan="4" className="px-6 py-8 text-center text-gray-500 font-medium">No pending student approvals.</td>
                       </tr>
                     ) : pendingStudents.map((student) => (
                       <tr key={student.id} className="hover:bg-gray-50/50 transition-colors">
                         <td className="px-6 py-4 font-bold text-gray-900">{student.name}</td>
                         <td className="px-6 py-4 text-gray-600 font-medium">{student.email}</td>
-                        <td className="px-6 py-4 text-gray-600 font-medium">{student.college}</td>
-                        <td className="px-6 py-4 text-gray-500 text-sm font-medium">{student.date}</td>
+                        <td className="px-6 py-4 text-gray-500 text-sm font-medium">{new Date(student.created_at).toLocaleDateString()}</td>
                         <td className="px-6 py-4 flex gap-2 justify-end">
                           <button
                             onClick={() => handleStudentAction(student.id, "Approve")}
-                            className="p-2 sm:px-3 sm:py-2 bg-green-50 text-green-600 hover:bg-green-600 hover:text-white rounded-lg flex items-center justify-center gap-1.5 font-bold transition-colors border border-green-200 hover:border-green-600"
+                            disabled={actionLoading === `student-${student.id}-Approve`}
+                            className="p-2 sm:px-3 sm:py-2 bg-green-50 text-green-600 hover:bg-green-600 hover:text-white rounded-lg flex items-center justify-center gap-1.5 font-bold transition-colors border border-green-200 hover:border-green-600 disabled:opacity-50"
                             title="Approve"
                           >
                             <CheckCircle className="w-4 h-4" />
-                            <span className="hidden sm:inline text-sm">Approve</span>
+                            <span className="hidden sm:inline text-sm">
+                              {actionLoading === `student-${student.id}-Approve` ? "..." : "Approve"}
+                            </span>
                           </button>
                           <button
                             onClick={() => handleStudentAction(student.id, "Reject")}
-                            className="p-2 sm:px-3 sm:py-2 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-lg flex items-center justify-center gap-1.5 font-bold transition-colors border border-red-200 hover:border-red-600"
+                            disabled={actionLoading === `student-${student.id}-Reject`}
+                            className="p-2 sm:px-3 sm:py-2 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-lg flex items-center justify-center gap-1.5 font-bold transition-colors border border-red-200 hover:border-red-600 disabled:opacity-50"
                             title="Reject"
                           >
                             <XCircle className="w-4 h-4" />
-                            <span className="hidden sm:inline text-sm">Reject</span>
+                            <span className="hidden sm:inline text-sm">
+                              {actionLoading === `student-${student.id}-Reject` ? "..." : "Reject"}
+                            </span>
                           </button>
                         </td>
                       </tr>
@@ -339,7 +396,6 @@ export default function AdminDashboard() {
                     <tr className="bg-white border-b border-gray-100 text-gray-500 text-xs uppercase tracking-widest">
                       <th className="px-6 py-4 font-bold">Company Name</th>
                       <th className="px-6 py-4 font-bold">Email</th>
-                      <th className="px-6 py-4 font-bold">Organization</th>
                       <th className="px-6 py-4 font-bold">Registration Date</th>
                       <th className="px-6 py-4 font-bold w-48 text-right">Action</th>
                     </tr>
@@ -347,30 +403,35 @@ export default function AdminDashboard() {
                   <tbody className="divide-y divide-gray-50">
                     {pendingRecruiters.length === 0 ? (
                       <tr>
-                        <td colSpan="5" className="px-6 py-8 text-center text-gray-500 font-medium">No pending recruiter approvals.</td>
+                        <td colSpan="4" className="px-6 py-8 text-center text-gray-500 font-medium">No pending recruiter approvals.</td>
                       </tr>
                     ) : pendingRecruiters.map((recruiter) => (
                       <tr key={recruiter.id} className="hover:bg-gray-50/50 transition-colors">
-                        <td className="px-6 py-4 font-bold text-gray-900">{recruiter.company}</td>
+                        <td className="px-6 py-4 font-bold text-gray-900">{recruiter.name}</td>
                         <td className="px-6 py-4 text-gray-600 font-medium">{recruiter.email}</td>
-                        <td className="px-6 py-4 text-gray-600 font-medium">{recruiter.org}</td>
-                        <td className="px-6 py-4 text-gray-500 text-sm font-medium">{recruiter.date}</td>
+                        <td className="px-6 py-4 text-gray-500 text-sm font-medium">{new Date(recruiter.created_at).toLocaleDateString()}</td>
                         <td className="px-6 py-4 flex gap-2 justify-end">
                           <button
                             onClick={() => handleRecruiterAction(recruiter.id, "Approve")}
-                            className="p-2 sm:px-3 sm:py-2 bg-green-50 text-green-600 hover:bg-green-600 hover:text-white rounded-lg flex items-center justify-center gap-1.5 font-bold transition-colors border border-green-200 hover:border-green-600"
+                            disabled={actionLoading === `recruiter-${recruiter.id}-Approve`}
+                            className="p-2 sm:px-3 sm:py-2 bg-green-50 text-green-600 hover:bg-green-600 hover:text-white rounded-lg flex items-center justify-center gap-1.5 font-bold transition-colors border border-green-200 hover:border-green-600 disabled:opacity-50"
                             title="Approve"
                           >
                             <CheckCircle className="w-4 h-4" />
-                            <span className="hidden sm:inline text-sm">Approve</span>
+                            <span className="hidden sm:inline text-sm">
+                              {actionLoading === `recruiter-${recruiter.id}-Approve` ? "..." : "Approve"}
+                            </span>
                           </button>
                           <button
                             onClick={() => handleRecruiterAction(recruiter.id, "Reject")}
-                            className="p-2 sm:px-3 sm:py-2 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-lg flex items-center justify-center gap-1.5 font-bold transition-colors border border-red-200 hover:border-red-600"
+                            disabled={actionLoading === `recruiter-${recruiter.id}-Reject`}
+                            className="p-2 sm:px-3 sm:py-2 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-lg flex items-center justify-center gap-1.5 font-bold transition-colors border border-red-200 hover:border-red-600 disabled:opacity-50"
                             title="Reject"
                           >
                             <XCircle className="w-4 h-4" />
-                            <span className="hidden sm:inline text-sm">Reject</span>
+                            <span className="hidden sm:inline text-sm">
+                              {actionLoading === `recruiter-${recruiter.id}-Reject` ? "..." : "Reject"}
+                            </span>
                           </button>
                         </td>
                       </tr>
