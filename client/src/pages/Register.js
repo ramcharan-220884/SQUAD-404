@@ -89,9 +89,9 @@ export default function Register() {
         <div className="flex items-center justify-center mb-6 gap-2">
           {/* Shield SVG with Academic Cap inside */}
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#346b41" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M12 8.5L7 11l5 2.5 5-2.5-5-2.5z" stroke="#346b41" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="currentColor"/>
-            <path d="M9 12v3c0 1.5 3 2.5 3 2.5s3-1 3-2.5v-3" stroke="#346b41" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#800000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M12 8.5L7 11l5 2.5 5-2.5-5-2.5z" stroke="#800000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="currentColor"/>
+            <path d="M9 12v3c0 1.5 3 2.5 3 2.5s3-1 3-2.5v-3" stroke="#800000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
           <h1 className="text-3xl font-extrabold text-[#052c42] tracking-wider">UPMS</h1>
         </div>
@@ -102,7 +102,7 @@ export default function Register() {
             type="button"
             onClick={() => handleRoleChange("student")}
             className={`flex-1 py-1.5 text-sm font-semibold text-center transition-colors border-r border-gray-800 ${
-              role === "student" ? "bg-[#346b41] text-white" : "bg-white text-gray-800 hover:bg-gray-50"
+              role === "student" ? "bg-[#800000] text-white" : "bg-white text-gray-800 hover:bg-gray-50"
             }`}
           >
             Student
@@ -111,7 +111,7 @@ export default function Register() {
             type="button"
             onClick={() => handleRoleChange("admin")}
             className={`flex-1 py-1.5 text-sm font-semibold text-center transition-colors border-r border-gray-800 ${
-              role === "admin" ? "bg-[#346b41] text-white" : "bg-white text-gray-800 hover:bg-gray-50"
+              role === "admin" ? "bg-[#800000] text-white" : "bg-white text-gray-800 hover:bg-gray-50"
             }`}
           >
             Admin
@@ -120,7 +120,7 @@ export default function Register() {
             type="button"
             onClick={() => handleRoleChange("company")}
             className={`flex-1 py-1.5 text-sm font-semibold text-center transition-colors ${
-              role === "company" ? "bg-[#346b41] text-white" : "bg-white text-gray-800 hover:bg-gray-50"
+              role === "company" ? "bg-[#800000] text-white" : "bg-white text-gray-800 hover:bg-gray-50"
             }`}
           >
             Recruiter
@@ -145,7 +145,7 @@ export default function Register() {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-[#346b41] focus:border-[#346b41] outline-none transition-colors"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-[#800000] focus:border-[#800000] outline-none transition-colors"
                 placeholder=""
               />
             </div>
@@ -165,7 +165,7 @@ export default function Register() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-[#346b41] focus:border-[#346b41] outline-none transition-colors"
+                className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-[#800000] focus:border-[#800000] outline-none transition-colors"
                 placeholder=""
               />
             </div>
@@ -185,7 +185,7 @@ export default function Register() {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-[#346b41] focus:border-[#346b41] outline-none transition-colors"
+                className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-[#800000] focus:border-[#800000] outline-none transition-colors"
                 placeholder=""
               />
             </div>
@@ -199,7 +199,7 @@ export default function Register() {
                 value={formData.description}
                 onChange={handleChange}
                 rows="3"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-[#346b41] focus:border-[#346b41] outline-none transition-colors resize-none"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-[#800000] focus:border-[#800000] outline-none transition-colors resize-none"
               ></textarea>
             </div>
           )}
@@ -208,7 +208,7 @@ export default function Register() {
             type="submit"
             disabled={loading}
             className={`w-full py-2.5 px-4 rounded-md text-white font-medium transition-colors ${
-              loading ? "bg-gray-400 cursor-not-allowed" : "bg-[#346b41] hover:bg-[#264e2f]"
+              loading ? "bg-gray-400 cursor-not-allowed" : "bg-[#800000] hover:bg-[#4a0000]"
             } mt-2`}
           >
             {loading ? "Registering..." : `Register as ${role.charAt(0).toUpperCase() + role.slice(1)}`}
@@ -220,7 +220,7 @@ export default function Register() {
       <div className="absolute bottom-6 w-full text-center z-10 flex flex-col gap-1 items-center">
         <p className="text-gray-900 font-medium text-[15px]">
           Already have an account?{" "}
-          <Link to="/login" className="text-[#346b41] font-semibold hover:underline">
+          <Link to="/login" className="text-[#800000] font-semibold hover:underline">
             Login
           </Link>
         </p>
