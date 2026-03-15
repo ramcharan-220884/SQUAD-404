@@ -7,6 +7,7 @@ import AdminDashboard from "./pages/AdminDashBoard";
 import CompanyDashboard from "./pages/CompanyDashboard";
 import JobBoard from "./pages/JobBoard";
 import Profile from "./pages/Profile";
+import StudentProfile from "./pages/StudentProfile";
 
 function App() {
   return (
@@ -23,6 +24,8 @@ function App() {
         <Route path="/register" element={<Navigate to="/" replace />} />
 
         <Route path="/student-dashboard" element={<StudentDashboard />} />
+
+        <Route path="/student-profile" element={<StudentProfile />} />
 
         <Route path="/admin-dashboard/*" element={<AdminDashboard />} />
 
