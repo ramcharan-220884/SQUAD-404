@@ -17,6 +17,8 @@ import {
   Megaphone,
   LogOut
 } from "lucide-react";
+import StudentManagement from "../components/dashboard/StudentManagement";
+import CompanyManagement from "../components/dashboard/CompanyManagement";
 import {
   BarChart,
   Bar,
@@ -71,13 +73,31 @@ const INITIAL_PENDING_RECRUITERS = [
 export default function AdminDashboard() {
   const [pendingStudents, setPendingStudents] = useState(INITIAL_PENDING_STUDENTS);
   const [pendingRecruiters, setPendingRecruiters] = useState(INITIAL_PENDING_RECRUITERS);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const location = useLocation();
 
+  React.useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const scrollTarget = searchParams.get('scroll');
+    
+    if (scrollTarget === 'analytics') {
+      const element = document.getElementById('analytics-section');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else if (scrollTarget === 'top') {
+      const element = document.getElementById('dashboard-top');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [location]);
+
   const menuItems = [
-    { id: 1, name: "Dashboard", path: "/admin-dashboard", icon: LayoutDashboard },
+    { id: 1, name: "Home", path: "/admin-dashboard?scroll=top", icon: LayoutDashboard },
     { id: 2, name: "Student Management", path: "/admin-dashboard/students", icon: Users },
     { id: 3, name: "Company Management", path: "/admin-dashboard/companies", icon: Building },
-    { id: 4, name: "Analytics", path: "/admin-dashboard/analytics", icon: TrendingUp },
+    { id: 4, name: "Analytics", path: "/admin-dashboard?scroll=analytics", icon: TrendingUp },
     { id: 5, name: "Announcements", path: "/admin-dashboard/announcements", icon: Megaphone },
     { id: 6, name: "Settings", path: "/admin-dashboard/settings", icon: Settings }
   ];
@@ -97,46 +117,49 @@ export default function AdminDashboard() {
   return (
     <div className="flex h-screen bg-gray-50 font-sans overflow-hidden">
       {/* Sidebar */}
-      <aside className="w-64 bg-green-900 text-green-50 flex flex-col hidden md:flex shrink-0">
-        <div className="p-6">
+      <aside className="w-64 bg-green-900 text-green-50 flex flex-col hidden md:flex shrink-0 overflow-y-auto">
+        <div className="p-4">
           <h1 className="text-2xl font-bold tracking-wider text-white flex items-center gap-2">
             <span className="bg-white text-green-900 p-1 rounded">E</span>DUVATE
           </h1>
-          <p className="text-sm text-green-300 mt-1 uppercase tracking-widest font-semibold">Admin Portal</p>
+          <p className="text-[10px] text-green-300 mt-1 uppercase tracking-widest font-semibold">Admin Portal</p>
         </div>
 
-        <nav className="flex-1 mt-6 px-4 space-y-2 overflow-y-auto">
+        <nav className="flex-1 mt-2 px-4 space-y-1">
           {menuItems.map((item) => {
             const isActive = location.pathname === item.path;
             return (
               <Link
                 key={item.id}
                 to={item.path}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium ${
+                className={`flex items-center gap-3 px-4 py-2 rounded-xl transition-all font-medium text-[13px] ${
                   isActive
                     ? "bg-green-800 text-white shadow-inner"
                     : "text-green-200 hover:text-white hover:bg-green-800/50"
                 }`}
               >
-                <item.icon className="w-5 h-5" />
+                <item.icon className="w-4.5 h-4.5" />
                 {item.name}
               </Link>
             );
           })}
         </nav>
 
-        <div className="mt-auto px-4 py-6 space-y-6 border-t border-green-800/50">
+        <div className="mt-auto px-4 py-3 space-y-3 border-t border-green-800/50">
           <div className="space-y-2">
             <p className="px-4 text-[11px] font-bold text-green-400 uppercase tracking-widest opacity-70">Support</p>
             <nav className="space-y-1">
-              <Link to="/admin-dashboard/help" className="flex items-center gap-3 px-4 py-3 text-green-200 hover:text-white hover:bg-green-800/50 rounded-xl transition-all font-medium">
-                <HelpCircle className="w-5 h-5" />
+              <Link to="/admin-dashboard/help" className="flex items-center gap-3 px-4 py-1.5 text-green-200 hover:text-white hover:bg-green-800/50 rounded-xl transition-all font-medium text-[13px]">
+                <HelpCircle className="w-4.5 h-4.5" />
                 Help & Support
               </Link>
-              <Link to="/" className="flex items-center gap-3 px-4 py-3 text-green-200 hover:text-white hover:bg-green-800/50 rounded-xl transition-all font-medium">
-                <LogOut className="w-5 h-5" />
+              <button 
+                onClick={() => setShowLogoutConfirm(true)}
+                className="w-full flex items-center gap-3 px-4 py-1.5 text-green-200 hover:text-white hover:bg-green-800/50 rounded-xl transition-all font-medium text-[13px]"
+              >
+                <LogOut className="w-4.5 h-4.5" />
                 Logout
-              </Link>
+              </button>
             </nav>
           </div>
 
@@ -148,7 +171,7 @@ export default function AdminDashboard() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-y-auto w-full">
+      <main className="flex-1 overflow-y-auto w-full ml-2 scroll-smooth">
         {/* Mobile Header */}
         <header className="bg-white shadow-sm px-6 py-4 flex items-center justify-between md:hidden sticky top-0 z-10">
           <h1 className="text-xl font-bold tracking-wider text-green-900 flex items-center gap-2">
@@ -160,10 +183,15 @@ export default function AdminDashboard() {
         </header>
 
         <div className="p-6 lg:p-10 max-w-7xl mx-auto space-y-8">
-
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div>
-              <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">Overview Dashboard</h2>
+          {location.pathname === "/admin-dashboard/students" ? (
+            <StudentManagement />
+          ) : location.pathname === "/admin-dashboard/companies" ? (
+            <CompanyManagement />
+          ) : (
+            <>
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div id="dashboard-top">
+                  <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">Overview Dashboard</h2>
               <p className="text-gray-500 font-medium mt-1">Welcome back. Here is what's happening today.</p>
             </div>
             <div className="flex gap-3">
@@ -198,7 +226,7 @@ export default function AdminDashboard() {
           </div>
 
           {/* Charts Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div id="analytics-section" className="grid grid-cols-1 lg:grid-cols-2 gap-8 scroll-mt-6">
             <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col h-[450px]">
               <div className="mb-6 flex justify-between items-center">
                 <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
@@ -386,9 +414,40 @@ export default function AdminDashboard() {
               </div>
             </div>
           </div>
-
+            </>
+          )}
         </div>
       </main>
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden border border-gray-100 animate-in zoom-in duration-300">
+            <div className="p-8 text-center">
+              <div className="w-16 h-16 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <LogOut className="w-8 h-8" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Are you sure?</h3>
+              <p className="text-gray-500 font-medium">Do you want to logout of your account?</p>
+              
+              <div className="grid grid-cols-2 gap-3 mt-8">
+                <button 
+                  onClick={() => setShowLogoutConfirm(false)}
+                  className="px-6 py-3 bg-gray-50 text-gray-600 font-bold rounded-xl hover:bg-gray-100 transition-all border border-gray-200"
+                >
+                  Cancel
+                </button>
+                <Link
+                  to="/"
+                  className="px-6 py-3 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition-all shadow-lg shadow-red-600/20 text-center"
+                >
+                  Yes
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
