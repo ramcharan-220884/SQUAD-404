@@ -51,7 +51,7 @@ const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student" }) =
             type="button"
             onClick={() => handleRoleChange(r)}
             className={`flex-1 py-2.5 text-[11px] font-bold uppercase tracking-[0.1em] text-center transition-all duration-300 rounded-xl ${role === r
-                ? "bg-[#800000] text-white shadow-md scale-100"
+                ? "bg-[#166534] text-white shadow-md scale-100"
                 : "bg-transparent text-gray-400 hover:text-gray-600 hover:bg-white/60 scale-95"
               }`}
           >
@@ -75,7 +75,7 @@ const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student" }) =
             {role === "admin" ? "Admin Email or Username" : "Email Address"}
           </label>
           <div className="relative group">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-300 group-focus-within:text-[#800000] transition-colors duration-300">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-300 group-focus-within:text-[#22c55e] transition-colors duration-300">
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
@@ -86,7 +86,7 @@ const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student" }) =
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="pl-12 w-full px-5 py-4 bg-gray-50/50 border-2 border-gray-100/80 rounded-2xl focus:bg-white focus:ring-[6px] focus:ring-[#800000]/5 focus:border-[#800000] outline-none transition-all duration-300 text-sm font-medium placeholder:text-gray-300"
+              className="pl-12 w-full px-5 py-4 bg-gray-50/50 border-2 border-gray-100/80 rounded-2xl focus:bg-white focus:ring-[6px] focus:ring-[#22c55e]/5 focus:border-[#22c55e] outline-none transition-all duration-300 text-sm font-medium placeholder:text-gray-300"
               placeholder={role === "admin" ? "e.g. admin@eduvate.com" : "e.g. name@example.com"}
             />
           </div>
@@ -95,7 +95,7 @@ const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student" }) =
         <div className="space-y-2.5">
           <label className="block text-[11px] font-extrabold text-[#052c42] uppercase tracking-[0.2em] ml-1">Password</label>
           <div className="relative group">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-300 group-focus-within:text-[#800000] transition-colors duration-300">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-300 group-focus-within:text-[#22c55e] transition-colors duration-300">
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
@@ -106,12 +106,12 @@ const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student" }) =
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="pl-12 w-full px-5 py-4 bg-gray-50/50 border-2 border-gray-100/80 rounded-2xl focus:bg-white focus:ring-[6px] focus:ring-[#800000]/5 focus:border-[#800000] outline-none transition-all duration-300 text-sm font-medium placeholder:text-gray-300"
+              className="pl-12 w-full px-5 py-4 bg-gray-50/50 border-2 border-gray-100/80 rounded-2xl focus:bg-white focus:ring-[6px] focus:ring-[#22c55e]/5 focus:border-[#22c55e] outline-none transition-all duration-300 text-sm font-medium placeholder:text-gray-300"
               placeholder="••••••••"
             />
           </div>
           <div className="flex justify-end mt-2">
-            <button type="button" className="text-[11px] font-bold text-[#800000] hover:text-[#4a0000] transition-colors uppercase tracking-wider">
+            <button type="button" className="text-[11px] font-bold text-[#22c55e] hover:text-[#16a34a] transition-colors uppercase tracking-wider">
               Forgot Password?
             </button>
           </div>
@@ -120,9 +120,9 @@ const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student" }) =
         <button
           type="submit"
           disabled={loading}
-          className={`w-full py-4.5 px-6 rounded-2xl text-white text-sm font-extrabold uppercase tracking-[0.2em] shadow-xl shadow-[#800000]/20 transition-all active:scale-[0.98] ${loading
+          className={`w-full py-4.5 px-6 rounded-2xl text-white text-sm font-extrabold uppercase tracking-[0.2em] shadow-xl shadow-[#22c55e]/20 transition-all active:scale-[0.98] ${loading
               ? "bg-gray-300 cursor-not-allowed"
-              : "bg-gradient-to-r from-[#800000] to-[#4a0000] hover:shadow-2xl hover:shadow-[#800000]/30 hover:-translate-y-1"
+              : "bg-gradient-to-r from-[#22c55e] to-[#16a34a] hover:shadow-2xl hover:shadow-[#22c55e]/30 hover:-translate-y-1"
             }`}
           style={{ padding: '1.125rem' }}
         >
@@ -135,7 +135,7 @@ const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student" }) =
             <button
               type="button"
               onClick={() => onSwitchToRegister(role)}
-              className="text-[#800000] font-bold hover:underline transition-colors"
+              className="text-[#22c55e] font-bold hover:underline transition-colors"
             >
               Sign Up
             </button>
