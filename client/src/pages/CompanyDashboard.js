@@ -15,7 +15,9 @@ import {
   ChevronUp,
   Mail,
   Phone,
-  Clock
+  Clock,
+  ArrowLeft,
+  GraduationCap
 } from "lucide-react";
 import { 
   BarChart, 
@@ -37,6 +39,9 @@ export default function CompanyDashboard() {
   const [newJob, setNewJob] = useState({ title: "", min_cgpa: "", ctc: "" });
   const [message, setMessage] = useState("");
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showStudentModal, setShowStudentModal] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [viewingProfile, setViewingProfile] = useState(null);
   const [showPostJobModal, setShowPostJobModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editJobId, setEditJobId] = useState(null);
@@ -126,18 +131,121 @@ export default function CompanyDashboard() {
 
   // Sample Data for populated states
   const sampleStudents = [
-    { id: 1, name: "Arjun Mehta", email: "arjun.m@university.edu", course: "Computer Science", status: "Open for Work", cgpa: "9.2" },
-    { id: 2, name: "Priya Sharma", email: "priya.s@tech.edu", course: "Information Technology", status: "Interning", cgpa: "8.8" },
-    { id: 3, name: "Rahul Verma", email: "rahul.v@poly.edu", course: "Software Engineering", status: "Open for Work", cgpa: "8.5" },
-    { id: 4, name: "Ananya Iyer", email: "ananya.i@science.edu", course: "Data Science", status: "Placed", cgpa: "9.5" },
-    { id: 5, name: "Siddharth Malhotra", email: "sid.m@uni.edu", course: "AI & ML", status: "Open for Work", cgpa: "9.0" }
+    { 
+      id: 1, 
+      name: "Arjun Mehta", 
+      email: "arjun.m@university.edu", 
+      phone: "+91 98765 00001",
+      course: "Computer Science", 
+      branch: "Engineering",
+      status: "Open for Work", 
+      cgpa: "9.2",
+      skills: ["React", "Node.js", "MongoDB", "Tailwind CSS"],
+      description: "Highly motivated frontend developer with a strong foundation in MERN stack. Passionate about building scalable web applications and intuitive user interfaces."
+    },
+    { 
+      id: 2, 
+      name: "Priya Sharma", 
+      email: "priya.s@tech.edu", 
+      phone: "+91 98765 00002",
+      course: "Information Technology", 
+      branch: "Design",
+      status: "Interning", 
+      cgpa: "8.8",
+      skills: ["Figma", "User Research", "Adobe XD", "CSS3"],
+      description: "Creative UI/UX designer with a keen eye for detail. Experienced in creating wireframes, prototypes, and conducting user usability testing."
+    },
+    { 
+      id: 3, 
+      name: "Rahul Verma", 
+      email: "rahul.v@poly.edu", 
+      phone: "+91 98765 00003",
+      course: "Software Engineering", 
+      branch: "Systems Engineering",
+      status: "Open for Work", 
+      cgpa: "8.5",
+      skills: ["Java", "Python", "Docker", "Kubernetes"],
+      description: "Systems-focused developer with experience in cloud-native technologies and backend architecture. Quick learner and problem solver."
+    },
+    { 
+      id: 4, 
+      name: "Ananya Iyer", 
+      email: "ananya.i@science.edu", 
+      phone: "+91 98765 00004",
+      course: "Data Science", 
+      branch: "Analytics",
+      status: "Placed", 
+      cgpa: "9.5",
+      skills: ["Python", "SQL", "Tableau", "Machine Learning"],
+      description: "Aspiring data scientist with a background in statistical modeling and data visualization. Proven track record in analytical thinking."
+    },
+    { 
+      id: 5, 
+      name: "Siddharth Malhotra", 
+      email: "sid.m@uni.edu", 
+      phone: "+91 98765 00005",
+      course: "AI & ML", 
+      branch: "Computer Science",
+      status: "Open for Work", 
+      cgpa: "9.0",
+      skills: ["PyTorch", "TensorFlow", "OpenCV", "C++"],
+      description: "AI enthusiast specializing in computer vision and deep learning. Dedicated to building intelligent systems that solve real-world problems."
+    }
   ];
 
   const sampleApplications = [
-    { id: 1, studentName: "Arjun Mehta", jobTitle: "Frontend Developer", date: "2024-03-10", status: "Reviewed" },
-    { id: 2, studentName: "Priya Sharma", jobTitle: "UX Designer", date: "2024-03-12", status: "Accepted" },
-    { id: 3, studentName: "Vikram Singh", jobTitle: "Full Stack Dev", date: "2024-03-14", status: "Pending" },
-    { id: 4, studentName: "Sneha Kapur", jobTitle: "Data Analyst", date: "2024-03-15", status: "Reviewed" }
+    { 
+      id: 1, 
+      studentName: "Arjun Mehta", 
+      jobTitle: "Frontend Developer", 
+      date: "2024-03-10", 
+      status: "Reviewed",
+      email: "arjun.m@university.edu",
+      phone: "+91 98765 00001",
+      course: "Computer Science",
+      branch: "Engineering",
+      skills: ["React", "JavaScript", "Tailwind CSS"],
+      description: "Highly motivated frontend developer with a passion for building beautiful and performant user interfaces."
+    },
+    { 
+      id: 2, 
+      studentName: "Priya Sharma", 
+      jobTitle: "UX Designer", 
+      date: "2024-03-12", 
+      status: "Accepted",
+      email: "priya.s@tech.edu",
+      phone: "+91 98765 00002",
+      course: "Information Technology",
+      branch: "Design",
+      skills: ["Figma", "User Research", "Prototyping"],
+      description: "Creative UX designer focused on creating intuitive and user-centered digital experiences."
+    },
+    { 
+      id: 3, 
+      studentName: "Vikram Singh", 
+      jobTitle: "Full Stack Dev", 
+      date: "2024-03-14", 
+      status: "Pending",
+      email: "vikram.s@poly.edu",
+      phone: "+91 98765 00003",
+      course: "Software Engineering",
+      branch: "Engineering",
+      skills: ["Node.js", "Express", "MongoDB"],
+      description: "Versatile full stack developer with experience in building scalable web applications."
+    },
+    { 
+      id: 4, 
+      studentName: "Sneha Kapur", 
+      jobTitle: "Data Analyst", 
+      date: "2024-03-15", 
+      status: "Reviewed",
+      email: "sneha.k@science.edu",
+      phone: "+91 98765 00004",
+      course: "Data Science",
+      branch: "Analytics",
+      skills: ["Python", "SQL", "Tableau"],
+      description: "Data enthusiast with strong analytical skills and a background in statistical modeling."
+    }
   ];
 
   const companyProfile = {
@@ -273,7 +381,7 @@ export default function CompanyDashboard() {
     { name: "Students", icon: Users },
     { name: "Analytics", icon: BarChart2 },
     { name: "Settings", icon: Settings },
-    { name: "Help Center", icon: HelpCircle },
+    { name: "Help & Support", icon: HelpCircle },
   ];
 
   const renderContent = () => {
@@ -379,7 +487,7 @@ export default function CompanyDashboard() {
                     </tr>
                   ) : (
                     filteredJobs.slice(0, 5).map((job) => (
-                      <tr key={job.id} className="hover:bg-gray-50/50 transition-colors">
+                      <tr key={job.id} className="hover:bg-[#f5f7fb] hover:shadow-md hover:-translate-y-0.5 cursor-pointer transition-all duration-200">
                         <td className="px-6 py-4 font-bold text-gray-900">{job.title}</td>
                         <td className="px-6 py-4 text-gray-600 font-medium">{job.department}</td>
                         <td className="px-6 py-4 text-gray-600 font-medium">{job.deadline}</td>
@@ -476,7 +584,7 @@ export default function CompanyDashboard() {
                     </tr>
                   ) : (
                     filteredJobs.map((job) => (
-                      <tr key={job.id} className="hover:bg-gray-50/50 transition-colors">
+                      <tr key={job.id} className="hover:bg-[#f5f7fb] hover:shadow-md hover:-translate-y-0.5 cursor-pointer transition-all duration-200 group">
                         <td className="px-6 py-4 font-bold text-gray-900">{job.title}</td>
                         <td className="px-6 py-4 text-gray-600 font-medium">{job.department}</td>
                         <td className="px-6 py-4 text-gray-600 font-medium">{job.deadline}</td>
@@ -565,7 +673,13 @@ export default function CompanyDashboard() {
                            </span>
                          </td>
                          <td className="px-8 py-5 text-right">
-                           <button className="text-blue-600 hover:text-blue-700 font-black text-sm uppercase tracking-wider">
+                           <button 
+                             onClick={() => {
+                               setSelectedStudent(app);
+                               setShowStudentModal(true);
+                             }}
+                             className="text-blue-600 hover:text-blue-700 font-black text-sm uppercase tracking-wider"
+                           >
                              View Details
                            </button>
                          </td>
@@ -763,6 +877,123 @@ export default function CompanyDashboard() {
     }
 
     if (activeTab === "Students") {
+      if (viewingProfile) {
+        return (
+          <div className="animate-in slide-in-from-right-8 fade-in duration-500">
+            <div className="mb-6 flex items-center justify-between">
+              <button 
+                onClick={() => setViewingProfile(null)}
+                className="flex items-center gap-2 text-gray-500 hover:text-blue-600 font-bold transition-all group"
+              >
+                <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+                Back to Directory
+              </button>
+              <div className="flex gap-3">
+                <span className={`px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider border ${
+                  viewingProfile.status === 'Placed' ? 'bg-blue-100 text-blue-700 border-blue-200' :
+                  viewingProfile.status === 'Interning' ? 'bg-amber-100 text-amber-700 border-amber-200' :
+                  'bg-green-100 text-green-700 border-green-200'
+                }`}>
+                  {viewingProfile.status}
+                </span>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-[2.5rem] shadow-2xl border border-gray-100 overflow-hidden">
+               {/* Cover/Header Section */}
+               <div className="bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#334155] px-10 py-10 text-white relative">
+                  <div className="absolute top-0 right-0 p-32 bg-blue-500/10 rounded-full blur-3xl -mr-20 -mt-20"></div>
+                  <div className="flex flex-col md:flex-row items-center gap-6 relative z-10">
+                    <div className="w-24 h-24 rounded-3xl bg-white/10 backdrop-blur-md flex items-center justify-center text-4xl font-black border border-white/20 shadow-2xl">
+                      {viewingProfile.name.split(' ').map(n => n[0]).join('')}
+                    </div>
+                    <div className="text-center md:text-left">
+                      <h3 className="text-4xl font-black tracking-tight mb-1">{viewingProfile.name}</h3>
+                      <div className="flex flex-wrap justify-center md:justify-start gap-3 text-blue-300 font-black uppercase tracking-widest text-sm">
+                        <span className="flex items-center gap-2"><GraduationCap className="w-4 h-4" /> {viewingProfile.course}</span>
+                        <span>•</span>
+                        <span>{viewingProfile.branch}</span>
+                      </div>
+                    </div>
+                  </div>
+               </div>
+
+               <div className="p-10 grid grid-cols-1 lg:grid-cols-3 gap-12">
+                  <div className="lg:col-span-1 space-y-10">
+                    <section>
+                      <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-6">Contact & Vital Stats</h4>
+                      <div className="space-y-6">
+                        <div className="flex items-center gap-4 group">
+                          <div className="p-3.5 bg-blue-50 text-blue-600 rounded-2xl group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
+                            <Mail className="w-5 h-5" />
+                          </div>
+                          <div>
+                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-tight">Email Address</p>
+                            <p className="text-gray-900 font-bold text-base leading-tight mt-0.5">{viewingProfile.email}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-4 group">
+                          <div className="p-3.5 bg-indigo-50 text-indigo-600 rounded-2xl group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
+                            <Phone className="w-5 h-5" />
+                          </div>
+                          <div>
+                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-tight">Phone Number</p>
+                            <p className="text-gray-900 font-bold text-base leading-tight mt-0.5">{viewingProfile.phone}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-4 group">
+                          <div className="p-3.5 bg-amber-50 text-amber-600 rounded-2xl">
+                            <BarChart2 className="w-5 h-5" />
+                          </div>
+                          <div>
+                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-tight">Academic Performance</p>
+                            <p className="text-gray-900 font-black text-xl leading-tight mt-0.5">{viewingProfile.cgpa} <span className="text-xs text-gray-400">CGPA</span></p>
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+
+                    <section>
+                      <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-5">Core Competencies</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {viewingProfile.skills?.map((skill, i) => (
+                          <span key={i} className="px-4 py-2 bg-gray-50 text-gray-700 rounded-xl text-xs font-bold border border-gray-100 hover:border-blue-200 hover:bg-white hover:shadow-sm transition-all cursor-default">
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    </section>
+                  </div>
+
+                  <div className="lg:col-span-2 space-y-10">
+                    <section>
+                      <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-6">Professional Summary</h4>
+                      <div className="p-8 bg-blue-50/30 rounded-[2rem] border border-blue-100/30 relative">
+                        <div className="absolute top-6 left-6 text-blue-200">
+                          <FileText className="w-8 h-8 opacity-20" />
+                        </div>
+                        <p className="text-gray-700 font-medium text-lg leading-relaxed italic relative z-10">
+                          "{viewingProfile.description}"
+                        </p>
+                      </div>
+                    </section>
+
+                    <div className="flex flex-col sm:flex-row gap-5 pt-4">
+                      <button className="flex-1 bg-[#3b82f6] text-white py-5 rounded-[1.25rem] font-black text-lg shadow-xl shadow-blue-500/20 hover:bg-[#2563eb] hover:shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-3">
+                        <FileText className="w-6 h-6" />
+                        Download Portfolio
+                      </button>
+                      <button className="flex-1 px-8 py-5 bg-gray-100 text-gray-700 rounded-[1.25rem] font-black text-lg hover:bg-gray-200 transition-all active:scale-95">
+                        Shortlist Candidate
+                      </button>
+                    </div>
+                  </div>
+               </div>
+            </div>
+          </div>
+        );
+      }
+
       return (
         <div className="animate-in fade-in duration-300">
           <div className="mb-6">
@@ -830,7 +1061,10 @@ export default function CompanyDashboard() {
                         </span>
                       </td>
                       <td className="px-8 py-5 text-right">
-                        <button className="text-blue-600 hover:text-blue-700 font-black text-sm uppercase tracking-wider">
+                        <button 
+                          onClick={() => setViewingProfile(student)}
+                          className="text-blue-600 hover:text-blue-700 font-black text-sm uppercase tracking-wider"
+                        >
                           View Profile
                         </button>
                       </td>
@@ -846,7 +1080,7 @@ export default function CompanyDashboard() {
 
     if (activeTab === "Settings") {
       return (
-        <div className="animate-in fade-in duration-300 max-w-4xl">
+        <div className="animate-in fade-in duration-300 w-full pr-4">
           <div className="mb-8">
             <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">Organization Settings</h2>
             <p className="text-gray-500 text-sm mt-1 font-medium">Manage your company profile and account preferences</p>
@@ -941,158 +1175,144 @@ export default function CompanyDashboard() {
       );
     }
 
-    if (activeTab === "Help Center") {
+    if (activeTab === "Help & Support") {
       return (
-        <div className="animate-in fade-in duration-300 max-w-5xl">
+        <div className="animate-in fade-in duration-300 w-full pr-4">
           <div className="mb-8">
             <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">Help & Support</h2>
             <p className="text-gray-500 text-sm mt-2 font-medium">If you need assistance regarding job postings, applications, or company profile management, you can contact support below.</p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* FAQ and Contact Form */}
-            <div className="lg:col-span-2 space-y-8">
-              {/* FAQ Section */}
-              <section className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
-                <div className="p-6 border-b border-gray-100 bg-gray-50/50">
-                  <h3 className="text-xl font-black text-gray-900 tracking-tight">FAQ Section</h3>
+          <div className="flex flex-col gap-8">
+            {/* Support Information Boxes */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-white p-6 rounded-3xl shadow-lg border border-gray-100 flex items-center gap-5 group hover:shadow-xl transition-shadow">
+                <div className="p-4 bg-blue-50 text-blue-600 rounded-2xl group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                  <Mail className="w-6 h-6" />
                 </div>
-                <div className="divide-y divide-gray-100">
-                  {faqs.map((faq, index) => (
-                    <div key={index} className="group">
-                      <button 
-                        onClick={() => setActiveFaq(activeFaq === index ? null : index)}
-                        className="w-full flex items-center justify-between p-6 text-left hover:bg-gray-50 transition-colors"
-                      >
-                        <span className="font-bold text-gray-800">{faq.q}</span>
-                        {activeFaq === index ? (
-                          <ChevronUp className="w-5 h-5 text-blue-600" />
-                        ) : (
-                          <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" />
-                        )}
-                      </button>
-                      {activeFaq === index && (
-                        <div className="px-6 pb-6 animate-in slide-in-from-top-2 duration-200">
-                          <p className="text-gray-600 text-sm font-medium leading-relaxed bg-blue-50/50 p-4 rounded-2xl border border-blue-100/50">
-                            {faq.a}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  ))}
+                <div>
+                  <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest mb-1">Email Support</p>
+                  <p className="text-gray-900 font-bold text-sm">support@rgukt.edu</p>
                 </div>
-              </section>
+              </div>
 
-              {/* Contact Support Form */}
-              <section className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
-                <div className="p-6 border-b border-gray-100 bg-gray-50/50">
-                  <h3 className="text-xl font-black text-gray-900 tracking-tight">Contact Support Form</h3>
+              <div className="bg-white p-6 rounded-3xl shadow-lg border border-gray-100 flex items-center gap-5 group hover:shadow-xl transition-shadow">
+                <div className="p-4 bg-indigo-50 text-indigo-600 rounded-2xl group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                  <Phone className="w-6 h-6" />
                 </div>
-                <form onSubmit={handleSupportSubmit} className="p-8 space-y-5">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-black text-gray-400 ml-1 uppercase tracking-widest">Name</label>
-                      <input 
-                        type="text" 
-                        name="name"
-                        value={supportFormData.name}
-                        onChange={handleSupportFormChange}
-                        required
-                        className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:bg-white focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/5 transition-all outline-none font-bold text-gray-900 placeholder-gray-300"
-                        placeholder="Your full name"
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-black text-gray-400 ml-1 uppercase tracking-widest">Company Email</label>
-                      <input 
-                        type="email" 
-                        name="email"
-                        value={supportFormData.email}
-                        onChange={handleSupportFormChange}
-                        required
-                        className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:bg-white focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/5 transition-all outline-none font-bold text-gray-900 placeholder-gray-300"
-                        placeholder="hr@company.com"
-                      />
-                    </div>
+                <div>
+                  <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest mb-1">Phone Number</p>
+                  <p className="text-gray-900 font-bold text-sm">+91 98765 43210</p>
+                </div>
+              </div>
+
+              <div className="bg-white p-6 rounded-3xl shadow-lg border border-gray-100 flex items-center gap-5 group hover:shadow-xl transition-shadow">
+                <div className="p-4 bg-amber-50 text-amber-600 rounded-2xl group-hover:bg-amber-600 group-hover:text-white transition-colors">
+                  <Clock className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest mb-1">Working Hours</p>
+                  <p className="text-gray-900 font-bold text-sm">9 AM – 6 PM</p>
+                  <p className="text-[10px] text-gray-400 font-medium italic">Monday to Saturday</p>
+                </div>
+              </div>
+            </div>
+
+            {/* FAQ Section */}
+            <section className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden w-full">
+              <div className="p-6 border-b border-gray-100 bg-gray-50/50">
+                <h3 className="text-xl font-black text-gray-900 tracking-tight">FAQ Section</h3>
+              </div>
+              <div className="divide-y divide-gray-100">
+                {faqs.map((faq, index) => (
+                  <div key={index} className="group">
+                    <button 
+                      onClick={() => setActiveFaq(activeFaq === index ? null : index)}
+                      className="w-full flex items-center justify-between p-6 text-left hover:bg-gray-50 transition-colors"
+                    >
+                      <span className="font-bold text-gray-800">{faq.q}</span>
+                      {activeFaq === index ? (
+                        <ChevronUp className="w-5 h-5 text-blue-600" />
+                      ) : (
+                        <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" />
+                      )}
+                    </button>
+                    {activeFaq === index && (
+                      <div className="px-6 pb-6 animate-in slide-in-from-top-2 duration-200">
+                        <p className="text-gray-600 text-sm font-medium leading-relaxed bg-blue-50/50 p-4 rounded-2xl border border-blue-100/50">
+                          {faq.a}
+                        </p>
+                      </div>
+                    )}
                   </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Contact Support Form */}
+            <section className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden w-full">
+              <div className="p-6 border-b border-gray-100 bg-gray-50/50">
+                <h3 className="text-xl font-black text-gray-900 tracking-tight">Contact Support Form</h3>
+              </div>
+              <form onSubmit={handleSupportSubmit} className="p-8 space-y-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-black text-gray-400 ml-1 uppercase tracking-widest">Subject</label>
+                    <label className="text-xs font-black text-gray-400 ml-1 uppercase tracking-widest">Name</label>
                     <input 
                       type="text" 
-                      name="subject"
-                      value={supportFormData.subject}
+                      name="name"
+                      value={supportFormData.name}
                       onChange={handleSupportFormChange}
                       required
                       className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:bg-white focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/5 transition-all outline-none font-bold text-gray-900 placeholder-gray-300"
-                      placeholder="What do you need help with?"
+                      placeholder="Your full name"
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-black text-gray-400 ml-1 uppercase tracking-widest">Message</label>
-                    <textarea 
-                      name="message"
-                      value={supportFormData.message}
+                    <label className="text-xs font-black text-gray-400 ml-1 uppercase tracking-widest">Company Email</label>
+                    <input 
+                      type="email" 
+                      name="email"
+                      value={supportFormData.email}
                       onChange={handleSupportFormChange}
                       required
-                      rows={5}
-                      className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:bg-white focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/5 transition-all outline-none font-bold text-gray-900 placeholder-gray-300 resize-none"
-                      placeholder="Detailed description of your request..."
-                    ></textarea>
-                  </div>
-                  <button 
-                    type="submit"
-                    className="w-full bg-[#3b82f6] text-white py-4 rounded-2xl font-black shadow-xl shadow-blue-500/20 hover:bg-[#2563eb] hover:shadow-2xl transition-all active:scale-95"
-                  >
-                    Submit Support Request
-                  </button>
-                </form>
-              </section>
-            </div>
-
-            {/* Support Information */}
-            <div className="space-y-8">
-              <section className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden sticky top-8">
-                <div className="p-6 border-b border-gray-100 bg-gray-50/50">
-                  <h3 className="text-xl font-black text-gray-900 tracking-tight">Support Information</h3>
-                </div>
-                <div className="p-8 space-y-8">
-                  <div className="flex items-start gap-4">
-                    <div className="p-3 bg-blue-50 text-blue-600 rounded-xl">
-                      <Mail className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Email Support</p>
-                      <p className="text-gray-900 font-bold">support@rgukt.edu</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="p-3 bg-indigo-50 text-indigo-600 rounded-xl">
-                      <Phone className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Phone Number</p>
-                      <p className="text-gray-900 font-bold">+91 XXXXX XXXXX</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4 border-t border-gray-100 pt-8">
-                    <div className="p-3 bg-amber-50 text-amber-600 rounded-xl">
-                      <Clock className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Working Hours</p>
-                      <p className="text-gray-900 font-bold">9 AM – 6 PM</p>
-                      <p className="text-xs text-gray-400 mt-1 font-medium italic">Monday to Saturday</p>
-                    </div>
+                      className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:bg-white focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/5 transition-all outline-none font-bold text-gray-900 placeholder-gray-300"
+                      placeholder="hr@company.com"
+                    />
                   </div>
                 </div>
-                <div className="bg-blue-600/5 p-6 border-t border-gray-50">
-                  <p className="text-center text-xs font-bold text-blue-800 leading-relaxed">
-                    Expected response time: <br/> 
-                    <span className="text-base font-black">2-4 Business Hours</span>
-                  </p>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-black text-gray-400 ml-1 uppercase tracking-widest">Subject</label>
+                  <input 
+                    type="text" 
+                    name="subject"
+                    value={supportFormData.subject}
+                    onChange={handleSupportFormChange}
+                    required
+                    className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:bg-white focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/5 transition-all outline-none font-bold text-gray-900 placeholder-gray-300"
+                    placeholder="What do you need help with?"
+                  />
                 </div>
-              </section>
-            </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-black text-gray-400 ml-1 uppercase tracking-widest">Message</label>
+                  <textarea 
+                    name="message"
+                    value={supportFormData.message}
+                    onChange={handleSupportFormChange}
+                    required
+                    rows={5}
+                    className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:bg-white focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/5 transition-all outline-none font-bold text-gray-900 placeholder-gray-300 resize-none"
+                    placeholder="Detailed description of your request..."
+                  ></textarea>
+                </div>
+                <button 
+                  type="submit"
+                  className="w-full bg-[#3b82f6] text-white py-4 rounded-2xl font-black shadow-xl shadow-blue-500/20 hover:bg-[#2563eb] hover:shadow-2xl transition-all active:scale-95"
+                >
+                  Submit Support Request
+                </button>
+              </form>
+            </section>
           </div>
         </div>
       );
@@ -1130,20 +1350,28 @@ export default function CompanyDashboard() {
           {sidebarItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.name;
+            const isSupportItem = item.name === "Help & Support";
+            
             return (
-              <button
-                key={item.name}
-                onClick={() => setActiveTab(item.name)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-all duration-200 group ${
-                  isActive 
-                    ? "bg-[#3b82f6] text-white shadow-lg shadow-blue-500/20 font-semibold" 
-                    : "text-gray-400 hover:bg-white/10 hover:text-white font-medium"
-                }`}
-              >
-                <Icon className={`w-5 h-5 transition-colors ${isActive ? "text-white" : "text-gray-400 group-hover:text-white"}`} />
-                {item.name}
-                {isActive && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-white animate-pulse"></div>}
-              </button>
+              <React.Fragment key={item.name}>
+                {isSupportItem && (
+                  <div className="px-4 mt-14 mb-2">
+                    <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest opacity-70">Support</p>
+                  </div>
+                )}
+                <button
+                  onClick={() => setActiveTab(item.name)}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-base transition-all duration-200 group ${
+                    isActive 
+                      ? "bg-[#3b82f6] text-white shadow-lg shadow-blue-500/20 font-bold" 
+                      : "text-gray-400 hover:bg-white/10 hover:text-white font-medium"
+                  }`}
+                >
+                  <Icon className={`w-5 h-5 transition-colors ${isActive ? "text-white" : "text-gray-400 group-hover:text-white"}`} />
+                  {item.name}
+                  {isActive && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-white animate-pulse"></div>}
+                </button>
+              </React.Fragment>
             );
           })}
         </nav>
@@ -1151,7 +1379,7 @@ export default function CompanyDashboard() {
         <div className="px-4 mt-6 pt-6 border-t border-white/10 space-y-1.5">
           <button 
             onClick={() => setShowLogoutModal(true)}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors group"
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors group"
           >
             <LogOut className="w-5 h-5 text-red-400 group-hover:text-red-300" />
             Logout
@@ -1198,6 +1426,238 @@ export default function CompanyDashboard() {
            </div>
         </main>
       </div>
+
+      {/* Student Details Modal */}
+      {showStudentModal && selectedStudent && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-4xl overflow-hidden animate-in slide-in-from-bottom-8 duration-500 border border-white/20">
+            <div className="bg-gradient-to-br from-[#0f172a] to-[#1e293b] px-10 py-12 text-white relative overflow-hidden">
+               <div className="absolute top-0 right-0 p-32 bg-blue-500/10 rounded-full blur-3xl -mr-20 -mt-20"></div>
+               <div className="flex justify-between items-start relative z-10">
+                 <div className="flex items-center gap-6">
+                   <div className="w-24 h-24 rounded-3xl bg-white/10 backdrop-blur-md flex items-center justify-center text-4xl font-black border border-white/20 shadow-inner">
+                     {selectedStudent.studentName.split(' ').map(n => n[0]).join('')}
+                   </div>
+                   <div>
+                     <h3 className="text-4xl font-black tracking-tight">{selectedStudent.studentName}</h3>
+                     <p className="text-blue-400 text-sm font-black uppercase tracking-widest mt-2">{selectedStudent.course} • {selectedStudent.branch}</p>
+                     <div className="flex gap-3 mt-4">
+                        <span className={`px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider backdrop-blur-md border ${
+                          selectedStudent.status === 'Accepted' ? 'bg-green-500/10 text-green-400 border-green-500/20' :
+                          selectedStudent.status === 'Rejected' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
+                          'bg-blue-500/10 text-blue-400 border-blue-500/20'
+                        }`}>
+                          {selectedStudent.status}
+                        </span>
+                        <span className="px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider bg-white/5 text-white/60 border border-white/10 backdrop-blur-sm">
+                          Applied: {selectedStudent.date}
+                        </span>
+                     </div>
+                   </div>
+                 </div>
+                 <button 
+                  onClick={() => setShowStudentModal(false)}
+                  className="p-3 hover:bg-white/10 rounded-2xl transition-all active:scale-90"
+                 >
+                  <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                 </button>
+               </div>
+            </div>
+            
+            <div className="p-10 grid grid-cols-1 lg:grid-cols-3 gap-10 max-h-[60vh] overflow-y-auto">
+              <div className="lg:col-span-1 space-y-8">
+                <section>
+                  <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Contact Information</h4>
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-4 group">
+                      <div className="p-3 bg-blue-50 text-blue-600 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-all">
+                        <Mail className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-tight">Email</p>
+                        <p className="text-gray-900 font-bold text-sm">{selectedStudent.email}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4 group">
+                      <div className="p-3 bg-indigo-50 text-indigo-600 rounded-xl group-hover:bg-indigo-600 group-hover:text-white transition-all">
+                        <Phone className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-tight">Phone</p>
+                        <p className="text-gray-900 font-bold text-sm">{selectedStudent.phone}</p>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                <section>
+                  <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Skills</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedStudent.skills?.map((skill, i) => (
+                      <span key={i} className="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-xl text-xs font-bold border border-gray-200">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </section>
+              </div>
+
+              <div className="lg:col-span-2 space-y-8">
+                <section>
+                  <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Candidate Overview</h4>
+                  <div className="p-6 bg-blue-50/50 rounded-3xl border border-blue-100/50">
+                    <p className="text-gray-700 font-medium leading-relaxed italic">
+                      "{selectedStudent.description}"
+                    </p>
+                  </div>
+                </section>
+
+                <section>
+                   <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Application Details</h4>
+                   <div className="grid grid-cols-2 gap-4">
+                      <div className="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm">
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Position Applied</p>
+                        <p className="text-gray-900 font-black text-lg mt-1">{selectedStudent.jobTitle}</p>
+                      </div>
+                      <div className="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm">
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Candidate ID</p>
+                        <p className="text-gray-900 font-black text-lg mt-1">#STU-{1000 + selectedStudent.id}</p>
+                      </div>
+                   </div>
+                </section>
+
+                <div className="flex gap-4 pt-4">
+                  <button className="flex-1 bg-[#3b82f6] text-white py-4 rounded-2xl font-black shadow-xl shadow-blue-500/20 hover:bg-[#2563eb] hover:shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-3">
+                    <FileText className="w-5 h-5" />
+                    Download Resume
+                  </button>
+                  <button className="px-8 py-4 bg-gray-100 text-gray-700 rounded-2xl font-black hover:bg-gray-200 transition-all active:scale-95">
+                    Contact HR
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Student Details Modal */}
+      {showStudentModal && selectedStudent && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-4xl overflow-hidden animate-in slide-in-from-bottom-8 duration-500 border border-white/20">
+            <div className="bg-gradient-to-br from-[#0f172a] to-[#1e293b] px-9 py-8 text-white relative overflow-hidden">
+               <div className="absolute top-0 right-0 p-32 bg-blue-500/10 rounded-full blur-3xl -mr-20 -mt-20"></div>
+               <div className="flex justify-between items-start relative z-10">
+                 <div className="flex items-center gap-5">
+                   <div className="w-20 h-20 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center text-3xl font-black border border-white/20 shadow-inner">
+                     {selectedStudent.studentName.split(' ').map(n => n[0]).join('')}
+                   </div>
+                   <div>
+                     <h3 className="text-3xl font-black tracking-tight">{selectedStudent.studentName}</h3>
+                     <p className="text-blue-400 text-sm font-black uppercase tracking-widest mt-1">{selectedStudent.course} • {selectedStudent.branch}</p>
+                     <div className="flex gap-3 mt-3">
+                        <span className={`px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider backdrop-blur-md border ${
+                          selectedStudent.status === 'Accepted' ? 'bg-green-500/10 text-green-400 border-green-500/20' :
+                          selectedStudent.status === 'Rejected' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
+                          'bg-blue-500/10 text-blue-400 border-blue-500/20'
+                        }`}>
+                          {selectedStudent.status}
+                        </span>
+                        <span className="px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider bg-white/5 text-white/60 border border-white/10 backdrop-blur-sm">
+                          Applied: {selectedStudent.date}
+                        </span>
+                     </div>
+                   </div>
+                 </div>
+                 <button 
+                  onClick={() => setShowStudentModal(false)}
+                  className="p-3 hover:bg-white/10 rounded-2xl transition-all active:scale-90"
+                 >
+                  <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                 </button>
+               </div>
+            </div>
+            
+            <div className="p-10 grid grid-cols-1 lg:grid-cols-3 gap-10 max-h-[60vh] overflow-y-auto">
+              <div className="lg:col-span-1 space-y-8">
+                <section>
+                  <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Contact Information</h4>
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-4 group">
+                      <div className="p-3 bg-blue-50 text-blue-600 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-all">
+                        <Mail className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-tight">Email</p>
+                        <p className="text-gray-900 font-bold text-sm">{selectedStudent.email}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4 group">
+                      <div className="p-3 bg-indigo-50 text-indigo-600 rounded-xl group-hover:bg-indigo-600 group-hover:text-white transition-all">
+                        <Phone className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-tight">Phone</p>
+                        <p className="text-gray-900 font-bold text-sm">{selectedStudent.phone}</p>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                <section>
+                  <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Skills</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedStudent.skills?.map((skill, i) => (
+                      <span key={i} className="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-xl text-xs font-bold border border-gray-200">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </section>
+              </div>
+
+              <div className="lg:col-span-2 space-y-8">
+                <section>
+                  <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Candidate Overview</h4>
+                  <div className="p-6 bg-blue-50/50 rounded-3xl border border-blue-100/50">
+                    <p className="text-gray-700 font-medium leading-relaxed italic">
+                      "{selectedStudent.description}"
+                    </p>
+                  </div>
+                </section>
+
+                <section>
+                   <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Application Details</h4>
+                   <div className="grid grid-cols-2 gap-4">
+                      <div className="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm">
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Position Applied</p>
+                        <p className="text-gray-900 font-black text-lg mt-1">{selectedStudent.jobTitle}</p>
+                      </div>
+                      <div className="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm">
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Candidate ID</p>
+                        <p className="text-gray-900 font-black text-lg mt-1">#STU-{1000 + selectedStudent.id}</p>
+                      </div>
+                   </div>
+                </section>
+
+                <div className="flex gap-4 pt-4">
+                  <button className="flex-1 bg-[#3b82f6] text-white py-4 rounded-2xl font-black shadow-xl shadow-blue-500/20 hover:bg-[#2563eb] hover:shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-3">
+                    <FileText className="w-5 h-5" />
+                    Download Resume
+                  </button>
+                  <button className="px-8 py-4 bg-gray-100 text-gray-700 rounded-2xl font-black hover:bg-gray-200 transition-all active:scale-95">
+                    Contact HR
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Logout Confirmation Modal */}
       {showLogoutModal && (
