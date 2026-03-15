@@ -6,11 +6,11 @@ const stakeholders = [
     id: "students",
     emoji: "🎓",
     role: "For Students",
-    color: "from-indigo-500 to-blue-500",
-    lightBg: "bg-indigo-50",
-    border: "border-indigo-200",
-    accentText: "text-indigo-600",
-    accentBtn: "bg-indigo-600 hover:bg-indigo-700",
+    color: "from-red-800 to-red-900",
+    lightBg: "bg-red-50",
+    border: "border-red-200",
+    accentText: "text-red-800",
+    accentBtn: "bg-red-800 hover:bg-red-900",
     title: "Launch Your Career with Confidence",
     description:
       "Browse curated job and internship listings from top companies, track every application in one place, and get notified the moment a recruiter shows interest. Your dream offer is closer than you think.",
@@ -27,11 +27,11 @@ const stakeholders = [
     id: "companies",
     emoji: "🏢",
     role: "For Recruiters",
-    color: "from-violet-500 to-purple-600",
-    lightBg: "bg-violet-50",
-    border: "border-violet-200",
-    accentText: "text-violet-600",
-    accentBtn: "bg-violet-600 hover:bg-violet-700",
+    color: "from-blue-500 to-blue-600",
+    lightBg: "bg-blue-50",
+    border: "border-blue-200",
+    accentText: "text-blue-600",
+    accentBtn: "bg-blue-600 hover:bg-blue-700",
     title: "Find the Right Talent, Faster",
     description:
       "Post job drives, filter candidates by skills and GPA, schedule interviews, and issue offer letters — all from a single recruiter dashboard. Hire smarter, not harder.",
@@ -67,56 +67,62 @@ const stakeholders = [
   },
 ];
 
-const StakeholderCard = ({ stakeholder, index, onRegisterClick, onCompanyLoginClick, onAdminLoginClick, isFocused, onFocus }) => {
-  const ref = useRef(null);
-  const [visible, setVisible] = useState(false);
+const StakeholderCard = ({ stakeholder, index, onRegisterClick, onCompanyLoginClick, onAdminLoginClick, isFocused, onFocus, pos, isDesktop }) => {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
-      { threshold: 0.15 }
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
+  const isCenter = pos === "center";
+  const isRight = pos === "right";
+  const isLeft = pos === "left";
+
+  const zIndex = isCenter ? 3 : 1;
+  const opacity = isCenter ? 1 : 0.6;
+  const filter = isCenter ? "blur(0px)" : "blur(3px)";
+  
+  let translateX = "0px";
+  if (isDesktop) {
+    if (isLeft) translateX = "-360px";
+    if (isRight) translateX = "360px";
+  }
+
+  const transform = isDesktop 
+    ? `translateX(${translateX}) scale(${isCenter ? 1.05 : 0.9})`
+    : `scale(${isCenter ? 1.05 : 0.9})`;
 
   return (
     <div
-      ref={ref}
       onMouseEnter={onFocus}
       onClick={onFocus}
-      className={`group rounded-3xl border ${stakeholder.border} ${stakeholder.lightBg} p-8 flex flex-col transition-all duration-500 ease-in-out cursor-pointer ${
-        visible ? "translate-y-0" : "opacity-0 translate-y-10"
-      } ${
-        isFocused
-          ? "scale-105 blur-none opacity-100 shadow-md transform"
-          : "scale-95 blur-[3px] opacity-60 transform"
-      }`}
-      style={{ transitionDelay: `${index * 150}ms` }}
+      className={`group rounded-3xl border ${stakeholder.border} ${stakeholder.lightBg} px-6 py-[40px] flex flex-col justify-between h-[450px] ${isCenter ? "shadow-md shadow-indigo-200 cursor-default" : "cursor-pointer"} ${isDesktop ? "absolute top-0 w-[350px]" : "relative w-full mb-8"}`}
+      style={{ 
+        zIndex, 
+        opacity, 
+        filter, 
+        transform,
+        transition: "transform 0.5s ease, opacity 0.5s ease, filter 0.5s ease"
+      }}
     >
       {/* Top Badge */}
-      <div className="flex items-center gap-3 mb-6">
-        <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${stakeholder.color} flex items-center justify-center text-2xl shadow-lg`}>
+      <div className="flex items-center gap-3 mb-3">
+        <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${stakeholder.color} flex items-center justify-center text-xl shadow-md`}>
           {stakeholder.emoji}
         </div>
-        <span className={`text-sm font-bold tracking-widest uppercase ${stakeholder.accentText}`}>
+        <span className={`text-xs font-bold tracking-widest uppercase ${stakeholder.accentText}`}>
           {stakeholder.role}
         </span>
       </div>
 
       {/* Title */}
-      <h3 className="text-xl font-extrabold text-gray-900 mb-3 leading-snug">
+      <h3 className="text-lg font-extrabold text-gray-900 mb-2 leading-tight truncate">
         {stakeholder.title}
       </h3>
 
       {/* Description */}
-      <p className="text-gray-500 text-sm leading-relaxed mb-6">
+      <p className="text-gray-500 text-xs leading-relaxed mb-4 line-clamp-3">
         {stakeholder.description}
       </p>
 
       {/* Feature list */}
-      <ul className="space-y-2 mb-8 flex-1">
+      <ul className="space-y-1 mb-4 flex-1 overflow-hidden">
         {stakeholder.features.map((f) => (
           <li key={f} className="flex items-center gap-2 text-sm text-gray-600">
             <span className={`w-5 h-5 rounded-full bg-gradient-to-br ${stakeholder.color} flex items-center justify-center text-white text-xs flex-shrink-0`}>
@@ -129,7 +135,8 @@ const StakeholderCard = ({ stakeholder, index, onRegisterClick, onCompanyLoginCl
 
       {/* CTA */}
       <button
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           if (stakeholder.id === "students" && onRegisterClick) {
             onRegisterClick();
           } else if (stakeholder.id === "companies" && onCompanyLoginClick) {
@@ -140,7 +147,7 @@ const StakeholderCard = ({ stakeholder, index, onRegisterClick, onCompanyLoginCl
             navigate(stakeholder.route);
           }
         }}
-        className={`w-full py-3 rounded-2xl ${stakeholder.accentBtn} text-white font-bold text-sm transition-all duration-200 active:scale-95 shadow-md`}
+        className={`w-full py-2 rounded-xl ${stakeholder.accentBtn} text-white font-bold text-sm transition-all duration-200 active:scale-95 shadow-md`}
       >
         {stakeholder.cta} →
       </button>
@@ -151,7 +158,20 @@ const StakeholderCard = ({ stakeholder, index, onRegisterClick, onCompanyLoginCl
 const StakeholderSection = ({ onRegisterClick, onCompanyLoginClick, onAdminLoginClick }) => {
   const headingRef = useRef(null);
   const [headingVisible, setHeadingVisible] = useState(false);
-  const [activeCard, setActiveCard] = useState(stakeholders[0].id);
+  const [step, setStep] = useState(0);
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
+
+  const positions = [
+    ["center", "right", "left"],
+    ["left", "center", "right"],
+    ["right", "left", "center"]
+  ];
+
+  useEffect(() => {
+    const handleResize = () => setIsDesktop(window.innerWidth >= 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -160,6 +180,13 @@ const StakeholderSection = ({ onRegisterClick, onCompanyLoginClick, onAdminLogin
     );
     if (headingRef.current) observer.observe(headingRef.current);
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setStep((prev) => (prev + 1) % 3);
+    }, 3000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -197,25 +224,30 @@ const StakeholderSection = ({ onRegisterClick, onCompanyLoginClick, onAdminLogin
           <p className="max-w-2xl mx-auto text-gray-500 text-lg leading-relaxed">
             Whether you're a student searching for your first job, a company
             looking for top talent, or an administrator keeping everything
-            running smoothly — CampusConnect has been designed with{" "}
+            running smoothly — EDUVATE has been designed with{" "}
             <strong className="text-gray-700">you</strong> in mind.
           </p>
         </div>
 
         {/* Cards grid */}
-        <div className="row justify-content-center">
+        <div className={`relative flex justify-center w-full max-w-5xl mx-auto ${isDesktop ? "h-[500px]" : "flex-col items-center"}`}>
           {stakeholders.map((s, i) => (
-            <div key={s.id} className="col-12 col-md-4 mb-4">
-              <StakeholderCard 
-                stakeholder={s} 
-                index={i} 
-                isFocused={activeCard === s.id}
-                onFocus={() => setActiveCard(s.id)}
-                onRegisterClick={onRegisterClick} 
-                onCompanyLoginClick={onCompanyLoginClick} 
-                onAdminLoginClick={onAdminLoginClick} 
-              />
-            </div>
+            <StakeholderCard 
+              key={s.id}
+              stakeholder={s} 
+              index={i} 
+              isFocused={positions[step][i] === "center"}
+              onFocus={() => {
+                // Determine the step that brings this card to the center
+                const newStep = positions.findIndex(posArray => posArray[i] === "center");
+                if (newStep !== -1) setStep(newStep);
+              }}
+              pos={positions[step][i]}
+              isDesktop={isDesktop}
+              onRegisterClick={onRegisterClick} 
+              onCompanyLoginClick={onCompanyLoginClick} 
+              onAdminLoginClick={onAdminLoginClick} 
+            />
           ))}
         </div>
 

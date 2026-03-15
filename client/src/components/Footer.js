@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { FaTwitter, FaLinkedin, FaInstagram, FaGithub } from "react-icons/fa";
 
 const Footer = () => (
   <footer className="bg-gray-950 text-gray-300 pt-16 pb-8 border-t border-gray-900">
@@ -7,7 +8,7 @@ const Footer = () => (
       {/* Brand */}
       <div className="md:col-span-1">
         <h2 className="text-2xl font-extrabold text-white mb-4">
-          Campus<span className="text-indigo-400">Connect</span>
+          EDU<span className="text-indigo-400">VATE</span>
         </h2>
         <p className="text-sm leading-relaxed text-gray-400 mb-6">
           Bridging the gap between talented students and top-tier companies.
@@ -16,10 +17,10 @@ const Footer = () => (
         {/* Social icons */}
         <div className="flex gap-4">
           {[
-            { icon: "🐦", label: "Twitter" },
-            { icon: "💼", label: "LinkedIn" },
-            { icon: "📸", label: "Instagram" },
-            { icon: "🐙", label: "GitHub" },
+            { icon: <FaTwitter />, label: "Twitter" },
+            { icon: <FaLinkedin />, label: "LinkedIn" },
+            { icon: <FaInstagram />, label: "Instagram" },
+            { icon: <FaGithub />, label: "GitHub" },
           ].map((social, i) => (
             <span
               key={i}
@@ -106,7 +107,7 @@ const Footer = () => (
     </div>
 
     <div className="border-t border-gray-900 pt-8 mt-10 text-center text-xs text-gray-500 max-w-7xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-      <p>© {new Date().getFullYear()} CampusConnect Governance. All rights reserved.</p>
+      <p>© {new Date().getFullYear()} EDUVATE Governance. All rights reserved.</p>
       <div className="flex gap-6">
         <Link to="/home" className="hover:text-white transition-colors">Privacy Policy</Link>
         <Link to="/home" className="hover:text-white transition-colors">Terms of Service</Link>
