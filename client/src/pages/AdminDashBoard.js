@@ -6,7 +6,7 @@ import {
   Briefcase,
   Calendar,
   FileCheck,
-  Settings,
+  Settings as SettingsIcon,
   HelpCircle,
   TrendingUp,
   Activity,
@@ -19,6 +19,9 @@ import {
 } from "lucide-react";
 import StudentManagement from "../components/dashboard/StudentManagement";
 import CompanyManagement from "../components/dashboard/CompanyManagement";
+import Announcements from "../components/dashboard/Announcements";
+import Settings from "../components/dashboard/Settings";
+import HelpSupport from "../components/dashboard/HelpSupport";
 import {
   BarChart,
   Bar,
@@ -99,7 +102,7 @@ export default function AdminDashboard() {
     { id: 3, name: "Company Management", path: "/admin-dashboard/companies", icon: Building },
     { id: 4, name: "Analytics", path: "/admin-dashboard?scroll=analytics", icon: TrendingUp },
     { id: 5, name: "Announcements", path: "/admin-dashboard/announcements", icon: Megaphone },
-    { id: 6, name: "Settings", path: "/admin-dashboard/settings", icon: Settings }
+    { id: 6, name: "Settings", path: "/admin-dashboard/settings", icon: SettingsIcon }
   ];
 
   const handleStudentAction = (id, action) => {
@@ -187,6 +190,12 @@ export default function AdminDashboard() {
             <StudentManagement />
           ) : location.pathname === "/admin-dashboard/companies" ? (
             <CompanyManagement />
+          ) : location.pathname === "/admin-dashboard/announcements" ? (
+            <Announcements />
+          ) : location.pathname === "/admin-dashboard/settings" ? (
+            <Settings />
+          ) : location.pathname === "/admin-dashboard/help" ? (
+            <HelpSupport />
           ) : (
             <>
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -427,21 +436,26 @@ export default function AdminDashboard() {
               <div className="w-16 h-16 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <LogOut className="w-8 h-8" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Are you sure?</h3>
-              <p className="text-gray-500 font-medium">Do you want to logout of your account?</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Confirm Logout</h3>
+              <p className="text-gray-500 font-medium font-semibold italic">"Are you sure you want to logout?"</p>
               
               <div className="grid grid-cols-2 gap-3 mt-8">
                 <button 
                   onClick={() => setShowLogoutConfirm(false)}
-                  className="px-6 py-3 bg-gray-50 text-gray-600 font-bold rounded-xl hover:bg-gray-100 transition-all border border-gray-200"
+                  className="px-6 py-3 bg-gray-100 text-gray-600 font-bold rounded-xl hover:bg-gray-200 transition-all border border-gray-200"
                 >
                   Cancel
                 </button>
                 <Link
                   to="/"
+                  onClick={() => {
+                    // Simulated session clearing
+                    localStorage.removeItem('adminToken');
+                    sessionStorage.clear();
+                  }}
                   className="px-6 py-3 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition-all shadow-lg shadow-red-600/20 text-center"
                 >
-                  Yes
+                  Yes, Logout
                 </Link>
               </div>
             </div>
