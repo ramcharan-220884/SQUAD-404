@@ -9,7 +9,7 @@ const AppliedJobsList = ({ jobs }) => {
           <div className="job-card-header">
             <div className="job-info">
               <div className="job-icon">
-                {job.company.charAt(0)}
+                {(job.company || '?').charAt(0)}
               </div>
               <div>
                 <h3 className="job-title">{job.title}</h3>
