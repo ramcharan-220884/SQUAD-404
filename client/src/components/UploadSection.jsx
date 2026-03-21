@@ -1,13 +1,16 @@
 import React, { useRef } from 'react';
+import { Upload, File, X } from 'lucide-react';
+import { useNotification } from '../context/NotificationContext';
 
 const UploadSection = ({ type, file, onUpload }) => {
   const inputRef = useRef();
+  const { showNotification } = useNotification();
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
       if (type === 'resume' && selectedFile.type !== 'application/pdf') {
-        alert('Please upload a PDF file only.');
+        showNotification('Please upload a PDF file only.', 'error', 'student');
         return;
       }
       onUpload(selectedFile);

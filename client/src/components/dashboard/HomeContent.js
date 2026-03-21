@@ -1,5 +1,6 @@
-import React from 'react';
-import { openOpportunities } from '../../assets/images/dashboardData';
+import React, { useEffect, useState } from 'react';
+import API_BASE, { authFetch } from '../../services/api';
+import { useNotification } from '../../context/NotificationContext';
 
 function StatCard({ value, label, iconClass, icon }) {
   return (
@@ -14,28 +15,21 @@ function StatCard({ value, label, iconClass, icon }) {
 }
 
 function CompanyLogo({ opp }) {
-  if (opp.logoType === 'image' && opp.logo) {
-    return (
-      <div className="job-logo-wrap" style={{ width: '40px', height: '40px' }}>
-        <img src={opp.logo} alt={opp.company} className="job-logo-img" />
-      </div>
-    );
-  }
   return (
     <div
       className="job-logo-abbr"
-      style={{ background: opp.logoColor || '#800000', width: '40px', height: '40px', fontSize: '13px' }}
+      style={{ background: '#800000', width: '40px', height: '40px', fontSize: '13px' }}
     >
-      {opp.company.slice(0, 2).toUpperCase()}
+      {(opp.company_name || opp.company || 'CO').slice(0, 2).toUpperCase()}
     </div>
   );
 }
 
 function getDeadlineInfo(dateString) {
+  if (!dateString) return { text: 'Open', color: '#38a169', bg: '#c6f6d5' };
   const deadline = new Date(dateString);
   const now = new Date();
-  
-  // Set times to midnight to calculate strict day difference
+
   deadline.setHours(0, 0, 0, 0);
   now.setHours(0, 0, 0, 0);
 
@@ -43,19 +37,94 @@ function getDeadlineInfo(dateString) {
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
   if (diffDays < 0) return { text: 'Closed', color: '#8492a6', bg: '#f4f7fb' };
-  if (diffDays === 0) return { text: 'Last Day', color: '#e53e3e', bg: '#fed7d7' }; // Red
-  if (diffDays < 3) return { text: `${diffDays} Days Left`, color: '#e53e3e', bg: '#fed7d7' }; // Red
-  if (diffDays <= 6) return { text: `${diffDays} Days Left`, color: '#d69e2e', bg: '#fefcbf' }; // Yellow
-  return { text: `${diffDays} Days Left`, color: '#38a169', bg: '#c6f6d5' }; // Green
+  if (diffDays === 0) return { text: 'Last Day', color: '#e53e3e', bg: '#fed7d7' };
+  if (diffDays < 3) return { text: `${diffDays} Days Left`, color: '#e53e3e', bg: '#fed7d7' };
+  if (diffDays <= 6) return { text: `${diffDays} Days Left`, color: '#d69e2e', bg: '#fefcbf' };
+  return { text: `${diffDays} Days Left`, color: '#38a169', bg: '#c6f6d5' };
 }
 
 export default function HomeContent() {
+  const { showNotification } = useNotification();
+  const [stats, setStats] = useState({ applicationsSent: 0, shortlisted: 0, openJobs: 0 });
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [applyingJobId, setApplyingJobId] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const jobsRes = await authFetch("/students/jobs"); 
+        const jobsData = await jobsRes.json();
+        const actualJobs = (jobsData.success && jobsData.data !== undefined) ? jobsData.data : (Array.isArray(jobsData) ? jobsData : []);
+        setJobs(actualJobs.slice(0, 5));
+
+        setStats(prev => ({ ...prev, openJobs: actualJobs.length }));
+
+        const userId = localStorage.getItem("userId");
+        if (userId) {
+          const appsRes = await authFetch(`/applications/student/${userId}`);
+          const appsData = await appsRes.json();
+          const apps = (appsData.success && appsData.data !== undefined) ? appsData.data : (Array.isArray(appsData) ? appsData : []);
+          setStats({
+            applicationsSent: apps.length,
+            shortlisted: apps.filter(a => a.status === 'Shortlisted' || a.status === 'Selected').length,
+            openJobs: actualJobs.length
+          });
+        }
+      } catch (err) {
+        console.error("Error fetching home data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleApply = async (jobId) => {
+    if (applyingJobId === jobId) return; // prevent double-click
+    const token = localStorage.getItem("token");
+    if (!token) {
+      showNotification("Please log in to apply for jobs.", "warning", "student");
+      return;
+    }
+    setApplyingJobId(jobId);
+    try {
+      const res = await authFetch("/applications/apply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ job_id: jobId })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showNotification("Application submitted successfully!", "success", "student");
+        setStats(prev => ({ ...prev, applicationsSent: prev.applicationsSent + 1 }));
+        // Mark job as applied in local state
+        setJobs(prev => prev.map(j => j.id === jobId ? { ...j, applied: true } : j));
+      } else {
+        showNotification(data.message || "Failed to apply.", "error", "student");
+      }
+    } catch (err) {
+      console.error("Error applying:", err);
+      showNotification("Error submitting application.", "error", "student");
+    } finally {
+      setApplyingJobId(null);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div style={{ padding: '40px', textAlign: 'center' }}>
+        <p style={{ color: '#888', fontWeight: 600 }}>Loading dashboard...</p>
+      </div>
+    );
+  }
+
   return (
     <div>
-      {/* Quick Stats */}
+      {/* Quick Stats — Live Data */}
       <div className="home-stats-grid">
         <StatCard
-          value="3"
+          value={String(stats.applicationsSent)}
           label="Applications Sent"
           iconClass="maroon"
           icon={
@@ -65,7 +134,7 @@ export default function HomeContent() {
           }
         />
         <StatCard
-          value="1"
+          value={String(stats.shortlisted)}
           label="Shortlisted"
           iconClass="green"
           icon={
@@ -75,7 +144,7 @@ export default function HomeContent() {
           }
         />
         <StatCard
-          value="5"
+          value={String(stats.openJobs)}
           label="Open Opportunities"
           iconClass="purple"
           icon={
@@ -86,39 +155,51 @@ export default function HomeContent() {
         />
       </div>
 
-      {/* Open Opportunities Section */}
+      {/* Open Opportunities — Live from Database */}
       <div className="home-opp-section">
         <h2 className="home-opp-title">Open Opportunities</h2>
-        <div className="home-opp-grid">
-          {openOpportunities.map(opp => {
-            const deadlineInfo = getDeadlineInfo(opp.deadline);
-            return (
-              <div key={opp.id} className="home-opp-card">
-                <div className="home-opp-header">
-                  <CompanyLogo opp={opp} />
-                  <div className="home-opp-meta">
-                    <h3 className="home-opp-comp">{opp.company}</h3>
-                    <p className="home-opp-role">{opp.role}</p>
+        {jobs.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '40px', color: '#888' }}>
+            <p style={{ fontWeight: 600 }}>No open opportunities at the moment.</p>
+          </div>
+        ) : (
+          <div className="home-opp-grid">
+            {jobs.map(opp => {
+              const deadlineInfo = getDeadlineInfo(opp.deadline || opp.created_at);
+              return (
+                <div key={opp.id} className="home-opp-card">
+                  <div className="home-opp-header">
+                    <CompanyLogo opp={opp} />
+                    <div className="home-opp-meta">
+                      <h3 className="home-opp-comp">{opp.company_name || 'Company'}</h3>
+                      <p className="home-opp-role">{opp.title}</p>
+                    </div>
+                    <div 
+                      className="home-opp-deadline" 
+                      style={{ color: deadlineInfo.color, backgroundColor: deadlineInfo.bg }}
+                    >
+                      {deadlineInfo.text}
+                    </div>
                   </div>
-                  <div 
-                    className="home-opp-deadline" 
-                    style={{ color: deadlineInfo.color, backgroundColor: deadlineInfo.bg }}
+
+                  <div className="home-opp-details">
+                    <div className="home-opp-pill">🎓 Min CGPA: {opp.min_cgpa || 'Any'}</div>
+                    <div className="home-opp-pill">💰 {opp.ctc || 'Not specified'}</div>
+                  </div>
+
+                <button 
+                    className="home-opp-btn" 
+                    onClick={() => handleApply(opp.id)}
+                    disabled={applyingJobId === opp.id || opp.applied}
+                    style={(applyingJobId === opp.id || opp.applied) ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
                   >
-                    {deadlineInfo.text}
-                  </div>
+                    {opp.applied ? 'Applied ✓' : applyingJobId === opp.id ? 'Applying...' : 'Apply Now →'}
+                  </button>
                 </div>
-
-                <div className="home-opp-details">
-                  <div className="home-opp-pill">🎓 {opp.eligibility}</div>
-                  <div className="home-opp-pill">💻 {opp.mode}</div>
-                  <div className="home-opp-pill">📅 {new Date(opp.deadline).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
-                </div>
-
-                <button className="home-opp-btn">Apply Now →</button>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

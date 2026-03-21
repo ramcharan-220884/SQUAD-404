@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { loginUser } from '../services/authService';
+import { setAccessToken } from '../services/api';
+import { useNavigate } from 'react-router-dom';
 
 
 const AdminLoginModal = ({ isOpen, onClose }) => {
@@ -7,6 +9,7 @@ const AdminLoginModal = ({ isOpen, onClose }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   if (!isOpen) return null;
 
   const handleSubmit = async (e) => {
@@ -15,12 +18,12 @@ const AdminLoginModal = ({ isOpen, onClose }) => {
     setLoading(true);
     try {
       const response = await loginUser({ email, password, role: 'admin' });
-      if (response.token) {
-        localStorage.setItem('token', response.token);
+      if (response.accessToken) {
+        setAccessToken(response.accessToken);
         localStorage.setItem('userRole', response.user.role);
         localStorage.setItem('userId', response.user.id);
         onClose();
-        window.location.href = '/admin-dashboard';
+        navigate('/admin-dashboard');
       }
     } catch (err) {
       setError(err.message || 'Login failed. Please check your credentials.');
@@ -91,7 +94,7 @@ const AdminLoginModal = ({ isOpen, onClose }) => {
                   value={email}
                   onChange={(e) => { setEmail(e.target.value); setError(''); }}
                   required
-                  placeholder="e.g. admin@eduvate.com"
+                  placeholder="e.g. admin@pms.com"
                   className="pl-12 w-full px-4 py-3.5 bg-gray-50/50 border-2 border-gray-100/80 rounded-2xl focus:bg-white focus:ring-[6px] focus:ring-emerald-500/5 focus:border-emerald-500 outline-none transition-all duration-300 text-sm font-medium placeholder:text-gray-300"
                 />
               </div>

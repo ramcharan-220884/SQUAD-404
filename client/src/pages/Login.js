@@ -25,7 +25,6 @@ export default function Login() {
       const response = await loginUser({ email, password, role });
 
       if (response.token) {
-        localStorage.setItem("token", response.token);
         localStorage.setItem("userRole", response.user.role);
         localStorage.setItem("userId", response.user.id);
       }

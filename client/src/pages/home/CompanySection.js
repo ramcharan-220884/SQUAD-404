@@ -96,12 +96,20 @@ const CompanySection = ({ onLoginClick }) => {
               ))}
             </div>
 
-            <div className={`mt-12 transition-all duration-700 delay-[1000ms] ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+            <div className={`mt-12 flex flex-wrap gap-4 transition-all duration-700 delay-[1000ms] ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
               <button
                 onClick={onLoginClick}
                 className="px-8 py-4 rounded-full bg-violet-600 text-white font-bold text-lg shadow-lg hover:bg-violet-700 hover:scale-105 active:scale-95 hover:shadow-violet-900/40 transition-all duration-300"
               >
                 Company Login
+              </button>
+              <button
+                onClick={() => {
+                  if (window.onCompanyRegister) window.onCompanyRegister();
+                }}
+                className="px-8 py-4 rounded-full bg-transparent border-2 border-violet-400 text-violet-400 font-bold text-lg shadow-lg hover:bg-violet-900/30 hover:scale-105 active:scale-95 transition-all duration-300"
+              >
+                Register Company
               </button>
             </div>
           </div>

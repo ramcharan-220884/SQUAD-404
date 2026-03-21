@@ -69,7 +69,7 @@ const HeroSection = ({ onGetStarted }) => {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
             <button 
-              onClick={() => document.getElementById("stakeholders").scrollIntoView({ behavior: 'smooth' })}
+              onClick={onGetStarted}
               className="px-8 py-4 rounded-full bg-indigo-600 text-white font-bold text-lg shadow-[0_0_20px_rgba(79,70,229,0.4)] hover:bg-indigo-700 hover:scale-105 active:scale-95 transition-all duration-300"
             >
               Get Started

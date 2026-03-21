@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import socketService from "../services/socketService";
 import {
   LayoutDashboard,
   Users,
@@ -15,13 +16,23 @@ import {
   CheckCircle,
   XCircle,
   Megaphone,
+  Trophy,
+  Mic,
   LogOut
 } from "lucide-react";
+import { useNotification } from "../context/NotificationContext";
+
 import StudentManagement from "../components/dashboard/StudentManagement";
 import CompanyManagement from "../components/dashboard/CompanyManagement";
 import Announcements from "../components/dashboard/Announcements";
 import Settings from "../components/dashboard/Settings";
 import HelpSupport from "../components/dashboard/HelpSupport";
+import ThemeToggle from "../components/dashboard/ThemeToggle";
+import Competitions from "../components/dashboard/Competitions";
+import Events from "../components/dashboard/Events";
+import Assessments from "../components/dashboard/Assessments";
+import Interviews from "../components/dashboard/Interviews";
+
 import {
   BarChart,
   Bar,
@@ -36,432 +47,436 @@ import {
   Legend
 } from "recharts";
 
-// Mock Data
-const MOCK_STATS = [
-  { title: "Total Students", value: "12,450", icon: <Users className="w-6 h-6 text-green-600" />, change: "+12%" },
-  { title: "Total Recruiters", value: "320", icon: <Building className="w-6 h-6 text-green-600" />, change: "+5%" },
-  { title: "Active Jobs", value: "1,245", icon: <Briefcase className="w-6 h-6 text-green-600" />, change: "+18%" },
-  { title: "Upcoming Events", value: "24", icon: <Calendar className="w-6 h-6 text-green-600" />, change: "+2%" },
-  { title: "Pending Applications", value: "156", icon: <FileCheck className="w-6 h-6 text-green-600" />, change: "-4%" },
-  { title: "System Health Status", value: "99.9%", icon: <Activity className="w-6 h-6 text-green-600" />, change: "Optimal" },
-];
-
-const YEARLY_PLACEMENTS = [
-  { year: "2020", placements: 400 },
-  { year: "2021", placements: 650 },
-  { year: "2022", placements: 850 },
-  { year: "2023", placements: 1200 },
-  { year: "2024", placements: 1450 },
-];
-
-const APPLICATION_STATUS = [
-  { name: "Approved", value: 6500 },
-  { name: "Pending", value: 1200 },
-  { name: "Rejected", value: 300 },
-];
+import { getStats, getPendingUsers, approveUser, rejectUser, getPlacementAnalytics, getProfile, updateProfile } from "../services/adminService";
 
 const PIE_COLORS = ["#16a34a", "#facc15", "#dc2626"];
 
-const INITIAL_PENDING_STUDENTS = [
-  { id: 1, name: "Rahul Kumar", email: "rahul@example.com", college: "IIT Delhi", date: "2024-03-12" },
-  { id: 2, name: "Sneha Patel", email: "sneha@example.com", college: "VIT Vellore", date: "2024-03-11" },
-  { id: 3, name: "Amit Singh", email: "amit@example.com", college: "NIT Trichy", date: "2024-03-10" },
-];
-
-const INITIAL_PENDING_RECRUITERS = [
-  { id: 1, company: "TechNova", email: "hr@technova.com", org: "IT Services", date: "2024-03-12" },
-  { id: 2, company: "GlobalCorp", email: "careers@globalcorp.net", org: "Manufacturing", date: "2024-03-11" },
-];
-
 export default function AdminDashboard() {
-  const [pendingStudents, setPendingStudents] = useState(INITIAL_PENDING_STUDENTS);
-  const [pendingRecruiters, setPendingRecruiters] = useState(INITIAL_PENDING_RECRUITERS);
+  const { showNotification } = useNotification();
+  const [stats, setStats] = useState(null);
+  const [placementAnalytics, setPlacementAnalytics] = useState([]);
+  const [pendingStudents, setPendingStudents] = useState([]);
+  const [pendingRecruiters, setPendingRecruiters] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState(null);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
   const location = useLocation();
 
-  React.useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const scrollTarget = searchParams.get('scroll');
-    
-    if (scrollTarget === 'analytics') {
-      const element = document.getElementById('analytics-section');
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    } else if (scrollTarget === 'top') {
-      const element = document.getElementById('dashboard-top');
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
+  const fetchData = React.useCallback(async () => {
+    setLoading(true);
+    try {
+      const [statsData, pendingData, analyticsData] = await Promise.all([
+        getStats(),
+        getPendingUsers(),
+        getPlacementAnalytics().catch(() => [])
+      ]);
+
+      setStats(statsData);
+      setPlacementAnalytics(analyticsData);
+
+      setPendingStudents(
+        pendingData.filter(u => u.type === "student")
+      );
+
+      setPendingRecruiters(
+        pendingData.filter(u => u.type === "company")
+      );
+
+    } catch (err) {
+      console.error("Error fetching admin data:", err);
+      showNotification(`Failed to fetch dashboard data: ${err.message}`, "error", "admin");
+    } finally {
+      setLoading(false);
     }
-  }, [location]);
+  }, [showNotification]);
 
-  const menuItems = [
-    { id: 1, name: "Home", path: "/admin-dashboard?scroll=top", icon: LayoutDashboard },
-    { id: 2, name: "Student Management", path: "/admin-dashboard/students", icon: Users },
-    { id: 3, name: "Company Management", path: "/admin-dashboard/companies", icon: Building },
-    { id: 4, name: "Analytics", path: "/admin-dashboard?scroll=analytics", icon: TrendingUp },
-    { id: 5, name: "Announcements", path: "/admin-dashboard/announcements", icon: Megaphone },
-    { id: 6, name: "Settings", path: "/admin-dashboard/settings", icon: SettingsIcon }
-  ];
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      socketService.connect(token);
+    }
 
-  const handleStudentAction = (id, action) => {
-    // Fake action for mock data
-    setPendingStudents(pendingStudents.filter(s => s.id !== id));
-    alert(`Student ${action}ed successfully.`);
+    const searchParams = new URLSearchParams(location.search);
+    const scrollTarget = searchParams.get("scroll");
+
+    if (scrollTarget === "analytics") {
+      const element = document.getElementById("analytics-section");
+      if (element) element.scrollIntoView({ behavior: "smooth" });
+    } else if (scrollTarget === "top") {
+      const element = document.getElementById("dashboard-top");
+      if (element) element.scrollIntoView({ behavior: "smooth" });
+    }
+
+    fetchData();
+
+    return () => {
+      // Admin might not need many listeners yet, but we connect to the room
+    };
+  }, [fetchData, location]);
+
+  const handleStudentAction = async (id, action) => {
+    setActionLoading(`student-${id}-${action}`);
+    try {
+      if (action === "Approve") {
+        await approveUser(id, "student");
+      } else {
+        await rejectUser(id, "student");
+      }
+      showNotification(`Student ${action}d successfully`, "success", "admin");
+      fetchData();
+    } catch (err) {
+      console.error(`Failed to ${action} student`, err);
+      showNotification(`Failed to ${action} student`, "error", "admin");
+    } finally {
+      setActionLoading(null);
+    }
   };
 
-  const handleRecruiterAction = (id, action) => {
-    // Fake action for mock data
-    setPendingRecruiters(pendingRecruiters.filter(r => r.id !== id));
-    alert(`Recruiter ${action}ed successfully.`);
+  const handleActionRecruiter = async (id, action, type) => {
+    setActionLoading(id);
+    try {
+      if (action === "approve") {
+        await approveUser(id, type);
+      } else {
+        await rejectUser(id, type);
+      }
+      showNotification(`Recruiter ${action}d successfully`, "success", "admin");
+      fetchData();
+    } catch (err) {
+      console.error(`Failed to ${action} recruiter`, err);
+      showNotification(`Failed to ${action} recruiter`, "error", "admin");
+    } finally {
+      setActionLoading(null);
+    }
   };
+
+  const statCards = stats ? [
+
+    {
+      title: "Total Students",
+      value: String(stats.totalStudents || 0),
+      icon: <Users className="w-6 h-6 text-green-600" />,
+      change: "Live"
+    },
+
+    {
+      title: "Total Recruiters",
+      value: String(stats.activeCompanies || 0),
+      icon: <Building className="w-6 h-6 text-green-600" />,
+      change: "Live"
+    },
+
+    {
+      title: "Active Jobs",
+      value: String(stats.totalJobs || 0),
+      icon: <Briefcase className="w-6 h-6 text-green-600" />,
+      change: "Live"
+    },
+
+    {
+      title: "Pending Approvals",
+      value: String(stats.pendingApprovals || 0),
+      icon: <FileCheck className="w-6 h-6 text-green-600" />,
+      change: "Action Required"
+    },
+
+    {
+      title: "Pending Students",
+      value: String(pendingStudents.length),
+      icon: <UserPlus className="w-6 h-6 text-green-600" />,
+      change: "Live"
+    },
+
+    {
+      title: "Pending Recruiters",
+      value: String(pendingRecruiters.length),
+      icon: <Building className="w-6 h-6 text-green-600" />,
+      change: "Live"
+    }
+
+  ] : [];
+
+  const applicationStatus = stats ? [
+
+    {
+      name: "Active Students",
+      value: Math.max(0, (stats.totalStudents || 0) - pendingStudents.length)
+    },
+
+    {
+      name: "Pending",
+      value: stats.pendingApprovals || 0
+    },
+
+    {
+      name: "Active Companies",
+      value: stats.activeCompanies || 0
+    }
+
+  ] : [];
+
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-gray-50">
+        <p>Loading dashboard...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="flex h-screen bg-gray-50 font-sans overflow-hidden">
-      {/* Sidebar */}
-      <aside className="w-64 bg-green-900 text-green-50 flex flex-col hidden md:flex shrink-0 overflow-y-auto">
+    <div className="flex h-screen bg-gray-50">
+
+      <aside className="w-64 bg-green-900 text-green-50 flex flex-col hidden md:flex">
+
         <div className="p-4">
-          <h1 className="text-2xl font-bold tracking-wider text-white flex items-center gap-2">
-            <span className="bg-white text-green-900 p-1 rounded">E</span>DUVATE
-          </h1>
-          <p className="text-[10px] text-green-300 mt-1 uppercase tracking-widest font-semibold">Admin Portal</p>
+          <h1 className="text-2xl font-bold text-white">EDUVATE</h1>
+          <p className="text-xs text-green-300">Admin Portal</p>
         </div>
 
-        <nav className="flex-1 mt-2 px-4 space-y-1">
-          {menuItems.map((item) => {
-            const isActive = location.pathname === item.path;
-            return (
-              <Link
-                key={item.id}
-                to={item.path}
-                className={`flex items-center gap-3 px-4 py-2 rounded-xl transition-all font-medium text-[13px] ${
-                  isActive
-                    ? "bg-green-800 text-white shadow-inner"
-                    : "text-green-200 hover:text-white hover:bg-green-800/50"
-                }`}
-              >
-                <item.icon className="w-4.5 h-4.5" />
-                {item.name}
-              </Link>
-            );
-          })}
+        <nav className="flex-1 px-4 space-y-2">
+
+          <Link to="/admin-dashboard?scroll=top" className="flex items-center gap-2">
+            <LayoutDashboard size={18}/> Home
+          </Link>
+
+          <Link to="/admin-dashboard/students" className="flex items-center gap-2">
+            <Users size={18}/> Students
+          </Link>
+
+          <Link to="/admin-dashboard/companies" className="flex items-center gap-2">
+            <Building size={18}/> Companies
+          </Link>
+
+          <Link to="/admin-dashboard/announcements" className="flex items-center gap-2">
+            <Megaphone size={18}/> Announcements
+          </Link>
+
+          <Link to="/admin-dashboard/competitions" className="flex items-center gap-2">
+            <Trophy size={18}/> Competitions
+          </Link>
+
+          <Link to="/admin-dashboard/events" className="flex items-center gap-2">
+            <Calendar size={18}/> Events
+          </Link>
+
+          <Link to="/admin-dashboard/assessments" className="flex items-center gap-2">
+            <FileCheck size={18}/> Assessments
+          </Link>
+
+          <Link to="/admin-dashboard/interviews" className="flex items-center gap-2">
+            <Mic size={18}/> Interviews
+          </Link>
+
+          <Link to="/admin-dashboard/settings" className="flex items-center gap-2">
+            <SettingsIcon size={18}/> Settings
+          </Link>
+
+          <Link to="/admin-dashboard/help" className="flex items-center gap-2">
+            <HelpCircle size={18}/> Help
+          </Link>
+
+          <button
+            onClick={() => setShowLogoutConfirm(true)}
+            className="flex items-center gap-2 text-red-300"
+          >
+            <LogOut size={18}/> Logout
+          </button>
+
         </nav>
 
-        <div className="mt-auto px-4 py-3 space-y-3 border-t border-green-800/50">
-          <div className="space-y-2">
-            <p className="px-4 text-[11px] font-bold text-green-400 uppercase tracking-widest opacity-70">Support</p>
-            <nav className="space-y-1">
-              <Link to="/admin-dashboard/help" className="flex items-center gap-3 px-4 py-1.5 text-green-200 hover:text-white hover:bg-green-800/50 rounded-xl transition-all font-medium text-[13px]">
-                <HelpCircle className="w-4.5 h-4.5" />
-                Help & Support
-              </Link>
-              <button 
-                onClick={() => setShowLogoutConfirm(true)}
-                className="w-full flex items-center gap-3 px-4 py-1.5 text-green-200 hover:text-white hover:bg-green-800/50 rounded-xl transition-all font-medium text-[13px]"
-              >
-                <LogOut className="w-4.5 h-4.5" />
-                Logout
-              </button>
-            </nav>
-          </div>
-
-          <div className="px-4 py-3 bg-green-800/40 rounded-xl border border-green-700/30">
-            <p className="text-[10px] font-bold text-green-300 uppercase tracking-widest mb-1">Academic Year</p>
-            <p className="text-sm font-bold text-white tracking-wider">2024 – 2025</p>
-          </div>
-        </div>
       </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 overflow-y-auto w-full ml-2 scroll-smooth">
-        {/* Mobile Header */}
-        <header className="bg-white shadow-sm px-6 py-4 flex items-center justify-between md:hidden sticky top-0 z-10">
-          <h1 className="text-xl font-bold tracking-wider text-green-900 flex items-center gap-2">
-            <span className="bg-green-900 text-white p-1 rounded text-sm">E</span>DUVATE
-          </h1>
-          <button className="text-green-900 p-2">
-            <LayoutDashboard className="w-6 h-6" />
-          </button>
-        </header>
+      <main className="flex-1 overflow-y-auto p-6">
 
-        <div className="p-6 lg:p-10 max-w-7xl mx-auto space-y-8">
-          {location.pathname === "/admin-dashboard/students" ? (
-            <StudentManagement />
-          ) : location.pathname === "/admin-dashboard/companies" ? (
-            <CompanyManagement />
-          ) : location.pathname === "/admin-dashboard/announcements" ? (
-            <Announcements />
-          ) : location.pathname === "/admin-dashboard/settings" ? (
-            <Settings />
-          ) : location.pathname === "/admin-dashboard/help" ? (
-            <HelpSupport />
-          ) : (
-            <>
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div id="dashboard-top">
-                  <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">Overview Dashboard</h2>
-              <p className="text-gray-500 font-medium mt-1">Welcome back. Here is what's happening today.</p>
+        {location.pathname === "/admin-dashboard/students" ? (
+          <StudentManagement />
+        ) : location.pathname === "/admin-dashboard/companies" ? (
+          <CompanyManagement />
+        ) : location.pathname === "/admin-dashboard/announcements" ? (
+          <Announcements />
+        ) : location.pathname === "/admin-dashboard/competitions" ? (
+          <Competitions role="admin" />
+        ) : location.pathname === "/admin-dashboard/events" ? (
+          <Events role="admin" />
+        ) : location.pathname === "/admin-dashboard/assessments" ? (
+          <Assessments role="admin" />
+        ) : location.pathname === "/admin-dashboard/interviews" ? (
+          <Interviews role="admin" />
+        ) : location.pathname === "/admin-dashboard/settings" ? (
+          <Settings />
+        ) : location.pathname === "/admin-dashboard/help" ? (
+          <HelpSupport role="admin" />
+        ) : (
+          <>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-3xl font-bold">Overview Dashboard</h2>
+              <ThemeToggle role="admin" />
             </div>
-            <div className="flex gap-3">
-              <button className="flex items-center gap-2 px-4 py-2.5 bg-white border-2 border-green-100 text-green-700 font-bold rounded-xl hover:bg-green-50 hover:border-green-200 transition-all shadow-sm">
-                <Calendar className="w-4 h-4" /> Selected Date: Today
-              </button>
-              <button className="flex items-center gap-2 px-4 py-2.5 bg-green-600 text-white font-bold rounded-xl hover:bg-green-700 transition-all shadow-lg shadow-green-600/20 active:scale-95">
-                <Activity className="w-4 h-4" /> Download Report
-              </button>
-            </div>
-          </div>
 
-          {/* Stat Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {MOCK_STATS.map((stat, i) => (
-              <div key={i} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md transition-shadow">
-                <div className="absolute -right-6 -top-6 w-24 h-24 bg-green-50 rounded-full group-hover:scale-150 transition-transform duration-500 ease-out opacity-50 pointer-events-none"></div>
-                <div className="flex justify-between items-start mb-4 relative z-10">
-                  <div className="p-3 bg-green-50 rounded-xl text-green-600 border border-green-100">
-                    {stat.icon}
+            <div className="grid grid-cols-3 gap-6 mb-10">
+              {statCards.map((stat,i)=>(
+                <div key={i} className="bg-white p-6 rounded-xl shadow">
+                  {stat.icon}
+                  <p className="text-sm text-gray-500">{stat.title}</p>
+                  <p className="text-2xl font-bold">{stat.value}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-2 gap-8">
+
+              <div className="w-full h-[300px]">
+                {placementAnalytics.length === 0 ? (
+                  <div className="w-full h-full border-2 border-dashed border-gray-100 rounded-xl flex items-center justify-center font-bold text-gray-400">
+                    No Data Available
                   </div>
-                  <span className={`text-sm font-bold px-2.5 py-1 rounded-full ${stat.change.startsWith("-") || stat.change === "Optimal" ? (stat.change === "Optimal" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-600") : "bg-green-100 text-green-700"}`}>
-                    {stat.change}
+                ) : (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={placementAnalytics}>
+                      <CartesianGrid strokeDasharray="3 3"/>
+                      <XAxis dataKey="year"/>
+                      <YAxis/>
+                      <Tooltip/>
+                      <Bar dataKey="placements" fill="#16a34a"/>
+                    </BarChart>
+                  </ResponsiveContainer>
+                )}
+              </div>
+
+              <div className="w-full h-[300px]">
+                {applicationStatus.length === 0 || applicationStatus.every(s => s.value === 0) ? (
+                  <div className="w-full h-full border-2 border-dashed border-gray-100 rounded-xl flex items-center justify-center font-bold text-gray-400">
+                    No Data Available
+                  </div>
+                ) : (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={applicationStatus}
+                        dataKey="value"
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={100}
+                      >
+                        {applicationStatus.map((entry,index)=>(
+                          <Cell key={index} fill={PIE_COLORS[index]} />
+                        ))}
+                      </Pie>
+                      <Legend/>
+                    </PieChart>
+                  </ResponsiveContainer>
+                )}
+              </div>
+
+            </div>
+
+            {/* Pending Approvals Section */}
+            <div className="mt-10 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+              <div className="p-6 border-b border-gray-50 bg-gray-50/50 flex items-center justify-between">
+                <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+                  <UserPlus className="w-6 h-6 text-green-600" /> Pending Registrations
+                </h3>
+                <div className="flex gap-2">
+                  <span className="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">
+                    {pendingStudents.length} Students
+                  </span>
+                  <span className="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">
+                    {pendingRecruiters.length} Companies
                   </span>
                 </div>
-                <div className="relative z-10">
-                  <h3 className="text-gray-500 font-medium text-sm mb-1">{stat.title}</h3>
-                  <p className="text-3xl font-black text-gray-900 tracking-tight">{stat.value}</p>
+              </div>
+              {pendingStudents.length === 0 && pendingRecruiters.length === 0 ? (
+                <div className="p-12 text-center text-gray-400 font-bold border-t border-gray-50">
+                  <UserPlus className="w-12 h-12 mx-auto mb-4 opacity-20" />
+                  No pending registrations to review at this time.
                 </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Charts Section */}
-          <div id="analytics-section" className="grid grid-cols-1 lg:grid-cols-2 gap-8 scroll-mt-6">
-            <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col h-[450px]">
-              <div className="mb-6 flex justify-between items-center">
-                <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5 text-green-600" />
-                  Student Placements – Yearly Trend
-                </h3>
-              </div>
-              <div className="flex-1 w-full min-h-0">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={YEARLY_PLACEMENTS} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
-                    <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{ fill: '#6b7280', fontSize: 13, fontWeight: 500 }} dy={10} />
-                    <YAxis axisLine={false} tickLine={false} tick={{ fill: '#6b7280', fontSize: 13, fontWeight: 500 }} />
-                    <Tooltip
-                      cursor={{ fill: '#f0fdf4' }}
-                      contentStyle={{ borderRadius: '12px', borderColor: '#dcfce3', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', padding: '12px 16px', fontWeight: 600, color: '#166534' }}
-                    />
-                    <Bar dataKey="placements" fill="#16a34a" radius={[6, 6, 0, 0]} maxBarSize={60} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-
-            <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col h-[450px]">
-              <div className="mb-6 flex justify-between items-center">
-                <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                  <FileCheck className="w-5 h-5 text-green-600" />
-                  Application Submission Status
-                </h3>
-              </div>
-              <div className="flex-1 w-full flex items-center justify-center min-h-0">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={APPLICATION_STATUS}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={80}
-                      outerRadius={120}
-                      paddingAngle={5}
-                      dataKey="value"
-                      stroke="none"
-                    >
-                      {APPLICATION_STATUS.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left">
+                    <thead>
+                      <tr className="bg-white text-gray-400 text-[11px] uppercase tracking-widest font-bold border-b border-gray-50">
+                        <th className="px-6 py-4">Name</th>
+                        <th className="px-6 py-4">Email</th>
+                        <th className="px-6 py-4">Type</th>
+                        <th className="px-6 py-4">Date</th>
+                        <th className="px-6 py-4 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-50">
+                      {[...pendingStudents, ...pendingRecruiters].map((user) => (
+                        <tr key={user.id} className="hover:bg-gray-50/50 transition-all">
+                          <td className="px-6 py-4 font-bold text-sm text-gray-900">{user.name}</td>
+                          <td className="px-6 py-4 text-sm text-gray-500">{user.email}</td>
+                          <td className="px-6 py-4">
+                            <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${
+                              user.type === 'student' ? 'bg-blue-50 text-blue-600 border-blue-100' : 'bg-emerald-50 text-emerald-700 border-emerald-100'
+                            }`}>
+                              {user.type}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-500">
+                            {user.created_at ? new Date(user.created_at).toLocaleDateString() : 'N/A'}
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            <div className="flex justify-end gap-2">
+                              <button 
+                                onClick={() => user.type === 'student' ? handleStudentAction(user.id, "Approve") : handleActionRecruiter(user.id, "approve", "company")}
+                                className="p-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-600 hover:text-white transition-all shadow-sm active:scale-95"
+                                title="Approve"
+                              >
+                                <CheckCircle className="w-4 h-4" />
+                              </button>
+                              <button 
+                                onClick={() => user.type === 'student' ? handleStudentAction(user.id, "Reject") : handleActionRecruiter(user.id, "reject", "company")}
+                                className="p-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-600 hover:text-white transition-all shadow-sm active:scale-95"
+                                title="Reject"
+                              >
+                                <XCircle className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
                       ))}
-                    </Pie>
-                    <Tooltip
-                      contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontWeight: 'bold' }}
-                      itemStyle={{ color: '#111827' }}
-                    />
-                    <Legend
-                      verticalAlign="bottom"
-                      height={36}
-                      iconType="circle"
-                      formatter={(value) => <span className="text-gray-700 font-semibold ml-1">{value}</span>}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-          </div>
-
-          {/* Approvals Section */}
-          <div className="space-y-8">
-            {/* Pending Students Table */}
-            <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-              <div className="px-6 py-5 border-b border-gray-100 bg-gray-50/50 flex flex-wrap justify-between items-center gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="bg-orange-100 p-2 rounded-lg">
-                    <UserPlus className="w-5 h-5 text-orange-600" />
-                  </div>
-                  <h3 className="text-lg font-bold text-gray-900">Pending Students</h3>
+                    </tbody>
+                  </table>
                 </div>
-                <span className="bg-orange-100 text-orange-700 py-1.5 px-3 rounded-full text-xs font-black tracking-wide uppercase">
-                  {pendingStudents.length} actions required
-                </span>
-              </div>
-
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="bg-white border-b border-gray-100 text-gray-500 text-xs uppercase tracking-widest">
-                      <th className="px-6 py-4 font-bold">Name</th>
-                      <th className="px-6 py-4 font-bold">Email</th>
-                      <th className="px-6 py-4 font-bold">College</th>
-                      <th className="px-6 py-4 font-bold">Registration Date</th>
-                      <th className="px-6 py-4 font-bold w-48 text-right">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-50">
-                    {pendingStudents.length === 0 ? (
-                      <tr>
-                        <td colSpan="5" className="px-6 py-8 text-center text-gray-500 font-medium">No pending student approvals.</td>
-                      </tr>
-                    ) : pendingStudents.map((student) => (
-                      <tr key={student.id} className="hover:bg-gray-50/50 transition-colors">
-                        <td className="px-6 py-4 font-bold text-gray-900">{student.name}</td>
-                        <td className="px-6 py-4 text-gray-600 font-medium">{student.email}</td>
-                        <td className="px-6 py-4 text-gray-600 font-medium">{student.college}</td>
-                        <td className="px-6 py-4 text-gray-500 text-sm font-medium">{student.date}</td>
-                        <td className="px-6 py-4 flex gap-2 justify-end">
-                          <button
-                            onClick={() => handleStudentAction(student.id, "Approve")}
-                            className="p-2 sm:px-3 sm:py-2 bg-green-50 text-green-600 hover:bg-green-600 hover:text-white rounded-lg flex items-center justify-center gap-1.5 font-bold transition-colors border border-green-200 hover:border-green-600"
-                            title="Approve"
-                          >
-                            <CheckCircle className="w-4 h-4" />
-                            <span className="hidden sm:inline text-sm">Approve</span>
-                          </button>
-                          <button
-                            onClick={() => handleStudentAction(student.id, "Reject")}
-                            className="p-2 sm:px-3 sm:py-2 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-lg flex items-center justify-center gap-1.5 font-bold transition-colors border border-red-200 hover:border-red-600"
-                            title="Reject"
-                          >
-                            <XCircle className="w-4 h-4" />
-                            <span className="hidden sm:inline text-sm">Reject</span>
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              )}
             </div>
+          </>
+        )}
 
-            {/* Pending Recruiters Table */}
-            <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-              <div className="px-6 py-5 border-b border-gray-100 bg-gray-50/50 flex flex-wrap justify-between items-center gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="bg-purple-100 p-2 rounded-lg">
-                    <Building className="w-5 h-5 text-purple-600" />
-                  </div>
-                  <h3 className="text-lg font-bold text-gray-900">Pending Recruiters</h3>
-                </div>
-                <span className="bg-purple-100 text-purple-700 py-1.5 px-3 rounded-full text-xs font-black tracking-wide uppercase">
-                  {pendingRecruiters.length} actions required
-                </span>
-              </div>
-
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="bg-white border-b border-gray-100 text-gray-500 text-xs uppercase tracking-widest">
-                      <th className="px-6 py-4 font-bold">Company Name</th>
-                      <th className="px-6 py-4 font-bold">Email</th>
-                      <th className="px-6 py-4 font-bold">Organization</th>
-                      <th className="px-6 py-4 font-bold">Registration Date</th>
-                      <th className="px-6 py-4 font-bold w-48 text-right">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-50">
-                    {pendingRecruiters.length === 0 ? (
-                      <tr>
-                        <td colSpan="5" className="px-6 py-8 text-center text-gray-500 font-medium">No pending recruiter approvals.</td>
-                      </tr>
-                    ) : pendingRecruiters.map((recruiter) => (
-                      <tr key={recruiter.id} className="hover:bg-gray-50/50 transition-colors">
-                        <td className="px-6 py-4 font-bold text-gray-900">{recruiter.company}</td>
-                        <td className="px-6 py-4 text-gray-600 font-medium">{recruiter.email}</td>
-                        <td className="px-6 py-4 text-gray-600 font-medium">{recruiter.org}</td>
-                        <td className="px-6 py-4 text-gray-500 text-sm font-medium">{recruiter.date}</td>
-                        <td className="px-6 py-4 flex gap-2 justify-end">
-                          <button
-                            onClick={() => handleRecruiterAction(recruiter.id, "Approve")}
-                            className="p-2 sm:px-3 sm:py-2 bg-green-50 text-green-600 hover:bg-green-600 hover:text-white rounded-lg flex items-center justify-center gap-1.5 font-bold transition-colors border border-green-200 hover:border-green-600"
-                            title="Approve"
-                          >
-                            <CheckCircle className="w-4 h-4" />
-                            <span className="hidden sm:inline text-sm">Approve</span>
-                          </button>
-                          <button
-                            onClick={() => handleRecruiterAction(recruiter.id, "Reject")}
-                            className="p-2 sm:px-3 sm:py-2 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-lg flex items-center justify-center gap-1.5 font-bold transition-colors border border-red-200 hover:border-red-600"
-                            title="Reject"
-                          >
-                            <XCircle className="w-4 h-4" />
-                            <span className="hidden sm:inline text-sm">Reject</span>
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-            </>
-          )}
-        </div>
       </main>
 
-      {/* Logout Confirmation Modal */}
       {showLogoutConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden border border-gray-100 animate-in zoom-in duration-300">
-            <div className="p-8 text-center">
-              <div className="w-16 h-16 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <LogOut className="w-8 h-8" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Confirm Logout</h3>
-              <p className="text-gray-500 font-medium font-semibold italic">"Are you sure you want to logout?"</p>
-              
-              <div className="grid grid-cols-2 gap-3 mt-8">
-                <button 
-                  onClick={() => setShowLogoutConfirm(false)}
-                  className="px-6 py-3 bg-gray-100 text-gray-600 font-bold rounded-xl hover:bg-gray-200 transition-all border border-gray-200"
-                >
-                  Cancel
-                </button>
-                <Link
-                  to="/"
-                  onClick={() => {
-                    // Simulated session clearing
-                    localStorage.removeItem('adminToken');
-                    sessionStorage.clear();
-                  }}
-                  className="px-6 py-3 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition-all shadow-lg shadow-red-600/20 text-center"
-                >
-                  Yes, Logout
-                </Link>
-              </div>
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50">
+          <div className="bg-white p-6 rounded-xl">
+            <p className="mb-4">Are you sure you want to logout?</p>
+
+            <div className="flex gap-4">
+              <button
+                onClick={()=>setShowLogoutConfirm(false)}
+                className="px-4 py-2 bg-gray-200 rounded"
+              >
+                Cancel
+              </button>
+
+              <Link
+                to="/"
+                onClick={()=>{
+                  localStorage.removeItem("adminToken");
+                  sessionStorage.clear();
+                }}
+                className="px-4 py-2 bg-red-600 text-white rounded"
+              >
+                Logout
+              </Link>
             </div>
+
           </div>
         </div>
       )}
+
     </div>
   );
 }
