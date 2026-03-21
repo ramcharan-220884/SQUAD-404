@@ -147,7 +147,9 @@ export const googleLogin = async (req, res, next) => {
     });
 
   } catch (err) {
-    console.error("Google verify error:", err);
+    console.error("Google verify error — name:", err.name);
+    console.error("Google verify error — message:", err.message);
+    console.error("GOOGLE_CLIENT_ID loaded as:", process.env.GOOGLE_CLIENT_ID);
     res.status(401).json({ success: false, message: "Invalid Google authorization token. Please try again." });
   }
 };
