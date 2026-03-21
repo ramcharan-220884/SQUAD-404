@@ -1,5 +1,5 @@
 import React from 'react';
-import { studentProfile } from '../../assets/images/dashboardData';
+import ThemeToggle from './ThemeToggle';
 
 export default function Header() {
   const currentDate = new Date().toLocaleDateString("en-IN", {
@@ -10,10 +10,14 @@ export default function Header() {
     timeZone: "Asia/Kolkata"
   });
 
+  // Read the logged-in user's name from localStorage (set during login)
+  const userName = localStorage.getItem("userName") || "Student";
+  const initials = userName.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2) || "S";
+
   return (
     <header className="db-header">
       <div className="db-header-left">
-        <h2>Welcome back, {studentProfile.name} 👋</h2>
+        <h2>Welcome back, {userName} 👋</h2>
         <p>{currentDate} · RGUKT Portal</p>
       </div>
 
@@ -34,15 +38,12 @@ export default function Header() {
           <span className="db-notif-badge" />
         </button>
 
-        {/* Avatar — uses real image with fallback to initials */}
-        <div className="db-avatar" title={studentProfile.name}>
-          <img
-            src={studentProfile.avatar}
-            alt={studentProfile.name}
-            className="db-avatar-img"
-            onError={(e) => { e.currentTarget.style.display = 'none'; }}
-          />
-          <span className="db-avatar-fallback">{studentProfile.initials}</span>
+        {/* Theme Toggle */}
+        <ThemeToggle role="student" />
+
+        {/* Avatar — initials only (no hardcoded image) */}
+        <div className="db-avatar" title={userName}>
+          <span className="db-avatar-fallback">{initials}</span>
         </div>
       </div>
     </header>

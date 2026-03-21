@@ -30,10 +30,19 @@ const Home = () => {
     setModalData({ ...modalData, isOpen: false });
   };
 
+  // Wire up global observers for the nested sections
+  React.useEffect(() => {
+    window.onStudentRegister = () => setIsRegisterModalOpen(true);
+    window.onCompanyRegister = () => setIsCompanyRegisterOpen(true);
+    return () => {
+      delete window.onStudentRegister;
+      delete window.onCompanyRegister;
+    };
+  }, []);
+
   return (
     <div className="scroll-smooth">
       <Navbar onLoginClick={() => {
-        setInitialLoginRole("student");
         setIsLoginModalOpen(true);
       }} />
       <main>
@@ -41,25 +50,20 @@ const Home = () => {
         <StakeholderSection
           onRegisterClick={() => setIsRegisterModalOpen(true)}
           onCompanyLoginClick={() => {
-            setInitialLoginRole("company");
-            setIsLoginModalOpen(true);
+            setIsCompanyLoginOpen(true);
           }}
           onAdminLoginClick={() => {
-            setInitialLoginRole("admin");
-            setIsLoginModalOpen(true);
+            setIsAdminLoginOpen(true);
           }}
         />
         <StudentSection onLoginClick={() => {
-          setInitialLoginRole("student");
           setIsLoginModalOpen(true);
         }} />
         <CompanySection onLoginClick={() => {
-          setInitialLoginRole("company");
-          setIsLoginModalOpen(true);
+          setIsCompanyLoginOpen(true);
         }} />
         <AdminSection onLoginClick={() => {
-          setInitialLoginRole("admin");
-          setIsLoginModalOpen(true);
+          setIsAdminLoginOpen(true);
         }} />
       </main>
       <Footer />
@@ -68,6 +72,22 @@ const Home = () => {
         isOpen={modalData.isOpen} 
         onClose={closeAuthModal} 
         role={modalData.role} 
+        onLogin={(role) => {
+          if (role === 'company') {
+            setIsCompanyLoginOpen(true);
+          } else if (role === 'admin') {
+            setIsAdminLoginOpen(true);
+          } else {
+            setIsLoginModalOpen(true);
+          }
+        }}
+        onRegister={(role) => {
+          if (role === 'company') {
+            setIsCompanyRegisterOpen(true);
+          } else {
+            setIsRegisterModalOpen(true);
+          }
+        }}
       />
       <LoginModal 
         isOpen={isLoginModalOpen} 

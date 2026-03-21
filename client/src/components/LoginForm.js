@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { loginUser } from "../services/authService";
+import { setAccessToken } from "../services/api";
 
-const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student" }) => {
+const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student", onRoleChange, onForgotPassword }) => {
   const [role, setRole] = useState(initialRole);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -12,6 +13,7 @@ const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student" }) =
   const handleRoleChange = (newRole) => {
     setRole(newRole);
     setError("");
+    if (onRoleChange) onRoleChange(newRole);
   };
 
   const handleSubmit = async (e) => {
@@ -25,10 +27,12 @@ const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student" }) =
     try {
       const response = await loginUser({ email, password, role });
 
-      if (response.token) {
-        localStorage.setItem("token", response.token);
+      if (response.accessToken) {
+        setAccessToken(response.accessToken);
         localStorage.setItem("userRole", response.user.role);
         localStorage.setItem("userId", response.user.id);
+        localStorage.setItem("userName", response.user.name || "Student");
+        localStorage.setItem("userEmail", response.user.email);
       }
 
       if (onSuccess) {
@@ -81,13 +85,13 @@ const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student" }) =
               </svg>
             </div>
             <input
-              type={role === "admin" ? "text" : "email"}
+            type="email"
               name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
               className="pl-12 w-full px-5 py-4 bg-gray-50/50 border-2 border-gray-100/80 rounded-2xl focus:bg-white focus:ring-[6px] focus:ring-[#22c55e]/5 focus:border-[#22c55e] outline-none transition-all duration-300 text-sm font-medium placeholder:text-gray-300"
-              placeholder={role === "admin" ? "e.g. admin@eduvate.com" : "e.g. name@example.com"}
+              placeholder={role === "admin" ? "e.g. admin@pms.com" : "e.g. name@example.com"}
             />
           </div>
         </div>
@@ -111,7 +115,7 @@ const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student" }) =
             />
           </div>
           <div className="flex justify-end mt-2">
-            <button type="button" className="text-[11px] font-bold text-[#22c55e] hover:text-[#16a34a] transition-colors uppercase tracking-wider">
+            <button type="button" onClick={onForgotPassword} className="text-[11px] font-bold text-[#22c55e] hover:text-[#16a34a] transition-colors uppercase tracking-wider">
               Forgot Password?
             </button>
           </div>

@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { getPostedJobs, postJob, updateApplicationStatus } from "../services/companyService";
+import { useNavigate } from "react-router-dom";
+import { useNotification } from "../context/NotificationContext";
+import { getPostedJobs, getCompanyStats, postJob, updateApplicationStatus, getApplicants, getProfile, updateProfile } from "../services/companyService";
+import { Loader2 } from "lucide-react";
+import socketService from "../services/socketService";
 import { 
   LayoutDashboard, 
   Briefcase, 
@@ -17,8 +21,15 @@ import {
   Phone,
   Clock,
   ArrowLeft,
-  GraduationCap
+  GraduationCap,
+  Trophy,
+  Calendar
 } from "lucide-react";
+import Announcements from "../components/dashboard/Announcements";
+import Competitions from "../components/dashboard/Competitions";
+import Events from "../components/dashboard/Events";
+import Assessments from "../components/dashboard/Assessments";
+import ThemeToggle from "../components/dashboard/ThemeToggle";
 import { 
   BarChart, 
   Bar, 
@@ -34,6 +45,7 @@ import {
 } from 'recharts';
 
 export default function CompanyDashboard() {
+  const { showNotification } = useNotification();
   const [activeTab, setActiveTab] = useState("Home");
   const [jobs, setJobs] = useState([]);
   const [newJob, setNewJob] = useState({ title: "", min_cgpa: "", ctc: "" });
@@ -45,6 +57,7 @@ export default function CompanyDashboard() {
   const [showPostJobModal, setShowPostJobModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editJobId, setEditJobId] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [postJobFormData, setPostJobFormData] = useState({
     title: "",
     department: "",
@@ -59,37 +72,23 @@ export default function CompanyDashboard() {
 
   // New Dashboard Stats and Table State
   const [dashboardStats, setDashboardStats] = useState({
-    totalJobs: 24,
-    applications: 186,
-    studentsReached: 1420,
-    placementRate: "68%"
+    totalJobs: 0,
+    totalApplications: 0,
+    studentsReached: 0,
+    placementRate: "0%"
   });
 
-  const [dashboardJobs, setDashboardJobs] = useState([
-    { id: 1, title: "Frontend Developer", department: "Engineering", deadline: "2024-10-15", applications: 45, status: "Active" },
-    { id: 2, title: "UX Designer", department: "Design", deadline: "2024-10-20", applications: 28, status: "Active" },
-    { id: 3, title: "Data Analyst", department: "Data Science", deadline: "2024-09-30", applications: 82, status: "Closed" },
-    { id: 4, title: "Product Manager", department: "Product", deadline: "2024-11-05", applications: 19, status: "In Review" },
-    { id: 5, title: "Backend Engineer", department: "Engineering", deadline: "2024-11-12", applications: 12, status: "Active" },
-  ]);
+  const [dashboardJobs, setDashboardJobs] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
+  // Applications tab filters
+  const [appSearchQuery, setAppSearchQuery] = useState("");
+  const [appJobFilter, setAppJobFilter] = useState("All");
+  const [appStatusFilter, setAppStatusFilter] = useState("All");
 
-  // New Analytics State Data
-  const [trendData, setTrendData] = useState([
-    { month: 'Jan', applications: 45 },
-    { month: 'Feb', applications: 72 },
-    { month: 'Mar', applications: 95 },
-    { month: 'Apr', applications: 130 },
-    { month: 'May', applications: 85 },
-    { month: 'Jun', applications: 110 },
-  ]);
-
-  const [placementData, setPlacementData] = useState([
-    { name: 'Placed', value: 45 },
-    { name: 'In Process', value: 30 },
-    { name: 'Pending', value: 25 },
-  ]);
+  // Analytics State Data
+  const [trendData, setTrendData] = useState([]);
+  const [placementData, setPlacementData] = useState([]);
 
   const [activeFaq, setActiveFaq] = useState(null);
   const [supportFormData, setSupportFormData] = useState({
@@ -125,196 +124,215 @@ export default function CompanyDashboard() {
 
   const handleSupportSubmit = (e) => {
     e.preventDefault();
-    alert("Support request submitted! We will get back to you soon.");
+    showNotification("Support request submitted! We will get back to you soon.", "success", "company");
     setSupportFormData({ name: '', email: '', subject: '', message: '' });
   };
 
-  // Sample Data for populated states
-  const sampleStudents = [
-    { 
-      id: 1, 
-      name: "Arjun Mehta", 
-      email: "arjun.m@university.edu", 
-      phone: "+91 98765 00001",
-      course: "Computer Science", 
-      branch: "Engineering",
-      status: "Open for Work", 
-      cgpa: "9.2",
-      skills: ["React", "Node.js", "MongoDB", "Tailwind CSS"],
-      description: "Highly motivated frontend developer with a strong foundation in MERN stack. Passionate about building scalable web applications and intuitive user interfaces."
-    },
-    { 
-      id: 2, 
-      name: "Priya Sharma", 
-      email: "priya.s@tech.edu", 
-      phone: "+91 98765 00002",
-      course: "Information Technology", 
-      branch: "Design",
-      status: "Interning", 
-      cgpa: "8.8",
-      skills: ["Figma", "User Research", "Adobe XD", "CSS3"],
-      description: "Creative UI/UX designer with a keen eye for detail. Experienced in creating wireframes, prototypes, and conducting user usability testing."
-    },
-    { 
-      id: 3, 
-      name: "Rahul Verma", 
-      email: "rahul.v@poly.edu", 
-      phone: "+91 98765 00003",
-      course: "Software Engineering", 
-      branch: "Systems Engineering",
-      status: "Open for Work", 
-      cgpa: "8.5",
-      skills: ["Java", "Python", "Docker", "Kubernetes"],
-      description: "Systems-focused developer with experience in cloud-native technologies and backend architecture. Quick learner and problem solver."
-    },
-    { 
-      id: 4, 
-      name: "Ananya Iyer", 
-      email: "ananya.i@science.edu", 
-      phone: "+91 98765 00004",
-      course: "Data Science", 
-      branch: "Analytics",
-      status: "Placed", 
-      cgpa: "9.5",
-      skills: ["Python", "SQL", "Tableau", "Machine Learning"],
-      description: "Aspiring data scientist with a background in statistical modeling and data visualization. Proven track record in analytical thinking."
-    },
-    { 
-      id: 5, 
-      name: "Siddharth Malhotra", 
-      email: "sid.m@uni.edu", 
-      phone: "+91 98765 00005",
-      course: "AI & ML", 
-      branch: "Computer Science",
-      status: "Open for Work", 
-      cgpa: "9.0",
-      skills: ["PyTorch", "TensorFlow", "OpenCV", "C++"],
-      description: "AI enthusiast specializing in computer vision and deep learning. Dedicated to building intelligent systems that solve real-world problems."
-    }
-  ];
-
-  const sampleApplications = [
-    { 
-      id: 1, 
-      studentName: "Arjun Mehta", 
-      jobTitle: "Frontend Developer", 
-      date: "2024-03-10", 
-      status: "Reviewed",
-      email: "arjun.m@university.edu",
-      phone: "+91 98765 00001",
-      course: "Computer Science",
-      branch: "Engineering",
-      skills: ["React", "JavaScript", "Tailwind CSS"],
-      description: "Highly motivated frontend developer with a passion for building beautiful and performant user interfaces."
-    },
-    { 
-      id: 2, 
-      studentName: "Priya Sharma", 
-      jobTitle: "UX Designer", 
-      date: "2024-03-12", 
-      status: "Accepted",
-      email: "priya.s@tech.edu",
-      phone: "+91 98765 00002",
-      course: "Information Technology",
-      branch: "Design",
-      skills: ["Figma", "User Research", "Prototyping"],
-      description: "Creative UX designer focused on creating intuitive and user-centered digital experiences."
-    },
-    { 
-      id: 3, 
-      studentName: "Vikram Singh", 
-      jobTitle: "Full Stack Dev", 
-      date: "2024-03-14", 
-      status: "Pending",
-      email: "vikram.s@poly.edu",
-      phone: "+91 98765 00003",
-      course: "Software Engineering",
-      branch: "Engineering",
-      skills: ["Node.js", "Express", "MongoDB"],
-      description: "Versatile full stack developer with experience in building scalable web applications."
-    },
-    { 
-      id: 4, 
-      studentName: "Sneha Kapur", 
-      jobTitle: "Data Analyst", 
-      date: "2024-03-15", 
-      status: "Reviewed",
-      email: "sneha.k@science.edu",
-      phone: "+91 98765 00004",
-      course: "Data Science",
-      branch: "Analytics",
-      skills: ["Python", "SQL", "Tableau"],
-      description: "Data enthusiast with strong analytical skills and a background in statistical modeling."
-    }
-  ];
-
-  const companyProfile = {
-    name: "TechNova Inc.",
-    email: "hr@technova.com",
-    location: "Bangalore, India",
-    contact: "+91 98765 43210",
-    description: "Innovating the future through cutting-edge software solutions and Al-driven recruitment platforms.",
-    industry: "Information Technology",
-    employees: "500-1000"
-  };
+  // Live company profile from API
+  const [companyProfile, setCompanyProfile] = useState({
+    name: localStorage.getItem("userName") || "Your Company",
+    email: localStorage.getItem("userEmail") || "",
+    contact_person: "",
+    contact_number: "",
+    description: "",
+    status: ""
+  });
+  const [loading, setLoading] = useState(true);
 
   const COLORS = ['#3b82f6', '#818cf8', '#f59e0b']; // Blue, Indigo, Amber
 
-  useEffect(() => {
-    const fetchJobs = async () => {
-      try {
-        const data = await getPostedJobs();
-        setJobs(data);
-      } catch (err) {
-        console.error(err);
+  const fetchDashboardData = React.useCallback(async () => {
+    try {
+      setLoading(true);
+
+      // 1. Fetch company profile
+      const profileData = await getProfile();
+      if (profileData) {
+        setCompanyProfile({
+          name: profileData.name || "Your Company",
+          email: profileData.email || "",
+          contact_person: profileData.contact_person || "",
+          contact_number: profileData.contact_number || "",
+          description: profileData.description || "",
+          status: profileData.status || ""
+        });
       }
+
+      // 2. Fetch jobs (ARRAY)
+      const jobsArray = await getPostedJobs();
+      if (Array.isArray(jobsArray)) {
+        const mappedJobs = jobsArray.map(j => ({
+          ...j,
+          title: j.title || "Untitled",
+          department: j.department || "General",
+          salary: j.package || j.ctc || j.salary || "",
+          deadline: j.deadline ? new Date(j.deadline).toLocaleDateString() : "N/A",
+          applications: j.applicant_count || 0,
+          status: new Date(j.deadline) < new Date() ? "Closed" : "Active"
+        }));
+        setJobs(mappedJobs);
+        setDashboardJobs(mappedJobs);
+      }
+
+      // 3. Fetch stats (all dynamic)
+      const statsData = await getCompanyStats();
+      if (statsData) {
+        setDashboardStats({
+          totalJobs: statsData.totalJobs || 0,
+          totalApplications: statsData.totalApplications || 0,
+          studentsReached: statsData.studentsReached || 0,
+          placementRate: statsData.placementRate || "0%"
+        });
+      }
+
+      // 4. Fetch applicants
+      const applicants = await getApplicants();
+      if (Array.isArray(applicants)) {
+        // Group applicants by job
+        const jobApplicantMap = {};
+        applicants.forEach(app => {
+          if (!jobApplicantMap[app.job_id]) jobApplicantMap[app.job_id] = [];
+          jobApplicantMap[app.job_id].push({
+            application_id: app.application_id,
+            student_id: app.student_id,
+            student_name: app.student_name,
+            student_email: app.student_email,
+            branch: app.branch,
+            cgpa: app.cgpa,
+            status: app.status || 'Applied',
+            applied_at: app.applied_at,
+            resume_url: app.resume_url,
+            job_title: app.job_title
+          });
+        });
+
+        // Merge applicant details into jobs
+        setJobs(prev => prev.map(job => ({
+          ...job,
+          applications: jobApplicantMap[job.id]?.length || job.applications || 0,
+          applicantDetails: jobApplicantMap[job.id] || []
+        })));
+        setDashboardJobs(prev => prev.map(job => ({
+          ...job,
+          applications: jobApplicantMap[job.id]?.length || job.applications || 0,
+          applicantDetails: jobApplicantMap[job.id] || []
+        })));
+
+        // Compute trend data from applicants
+        const monthCounts = {};
+        const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        applicants.forEach(app => {
+          if (app?.applied_at) {
+            const d = new Date(app.applied_at);
+            const key = monthNames[d.getMonth()];
+            monthCounts[key] = (monthCounts[key] || 0) + 1;
+          }
+        });
+        const computedTrend = Object.entries(monthCounts).map(([month, applications]) => ({ month, applications }));
+        if (computedTrend.length > 0) setTrendData(computedTrend);
+
+        // Compute placement breakdown
+        const statusCounts = { Selected: 0, Shortlisted: 0, Applied: 0, Rejected: 0 };
+        applicants.forEach(app => {
+          const s = app?.status || 'Applied';
+          if (statusCounts.hasOwnProperty(s)) {
+            statusCounts[s] = (statusCounts[s] || 0) + 1;
+          }
+        });
+        const computedPlacement = [
+          { name: 'Selected', value: statusCounts.Selected },
+          { name: 'In Process', value: statusCounts.Shortlisted },
+          { name: 'Pending', value: statusCounts.Applied + statusCounts.Rejected }
+        ].filter(d => d.value > 0);
+        if (computedPlacement.length > 0) setPlacementData(computedPlacement);
+      }
+    } catch (err) {
+      console.error("Error fetching company data:", err);
+      showNotification("Failed to load dashboard data", "error", "company");
+    } finally {
+      setLoading(false);
+    }
+  }, [showNotification]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token"); 
+    if (token) {
+        socketService.connect(token);
+        socketService.on("newApplicant", (data) => {
+            showNotification(`New Applicant: ${data.studentName} applied for ${data.jobTitle}`, "info", "company");
+            fetchDashboardData(); 
+        });
+        socketService.on("newAnnouncement", (data) => {
+            showNotification(`New Announcement: ${data.title}`, "info", "company");
+        });
+    }
+
+    fetchDashboardData();
+
+    return () => {
+        socketService.off("newApplicant");
+        socketService.off("newAnnouncement");
     };
-    fetchJobs();
-  }, []);
+  }, [fetchDashboardData, showNotification]);
+
 
   const handlePostJob = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
     // Validation
     if (!postJobFormData.title || !postJobFormData.department || !postJobFormData.deadline) {
-      alert("Please fill in the required fields (Title, Department, Deadline)");
+      showNotification("Please fill in the required fields (Title, Department, Deadline)", "warning", "company");
       return;
     }
 
-    if (isEditing) {
-      // Update Mode
-      const updatedJobs = dashboardJobs.map(job => 
-        job.id === editJobId 
-          ? { 
-              ...job, 
-              ...postJobFormData 
-            } 
-          : job
-      );
-      setDashboardJobs(updatedJobs);
-      setMessage("Job updated successfully!");
-    } else {
-      // Create Mode
-      const newJobObj = {
-        id: dashboardJobs.length + 1,
-        title: postJobFormData.title,
-        department: postJobFormData.department,
-        deadline: postJobFormData.deadline,
-        applications: 0,
-        status: "Active",
-        location: postJobFormData.location,
-        type: postJobFormData.type,
-        salary: postJobFormData.salary,
-        description: postJobFormData.description,
-        skills: postJobFormData.skills,
-        experience: postJobFormData.experience
-      };
+    setIsSubmitting(true);
+    try {
+      if (isEditing) {
+        // Update Mode
+        const updatedJobs = dashboardJobs.map(job => 
+          job.id === editJobId 
+            ? { 
+                ...job, 
+                ...postJobFormData 
+              } 
+            : job
+        );
+        setDashboardJobs(updatedJobs);
+        showNotification("Job updated successfully!", "success", "company");
+      } else {
+        const newJobObj = {
+          title: postJobFormData.title,
+          department: postJobFormData.department,
+          deadline: postJobFormData.deadline,
+          status: "Active",
+          location: postJobFormData.location,
+          type: postJobFormData.type,
+          ctc: postJobFormData.salary,
+          description: postJobFormData.description,
+          skills: postJobFormData.skills,
+          experience: postJobFormData.experience,
+          min_cgpa: null,
+          max_backlogs: null
+        };
 
-      setDashboardJobs([newJobObj, ...dashboardJobs]);
-      setDashboardStats({
-        ...dashboardStats,
-        totalJobs: dashboardStats.totalJobs + 1
-      });
-      setMessage("Job posted successfully!");
+        // Send to backend
+        const res = await postJob(newJobObj);
+        if (res.success) {
+          const addedJob = { ...newJobObj, id: res.data.job_id, job_id: res.data.job_id, applications: 0, status: "Active" };
+          setDashboardJobs([addedJob, ...dashboardJobs]);
+          setDashboardStats({
+            ...dashboardStats,
+            totalJobs: (dashboardStats.totalJobs || 0) + 1
+          });
+          showNotification("Job posted successfully!", "success", "company");
+        } else {
+          showNotification(res.message || "Failed to post job", "error", "company");
+        }
+      }
+    } catch (err) {
+      showNotification(err.message || "Server error posting job", "error", "company");
+    } finally {
+      setIsSubmitting(false);
     }
     
     // Reset and close
@@ -344,7 +362,7 @@ export default function CompanyDashboard() {
       department: job.department || "",
       location: job.location || "",
       type: job.type || "Full-time",
-      salary: job.salary || "",
+      salary: job.package || job.ctc || job.salary || "",
       deadline: job.deadline || "",
       description: job.description || "",
       skills: job.skills || "",
@@ -360,17 +378,34 @@ export default function CompanyDashboard() {
     setPostJobFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleStatusUpdate = async (jobId, studentId, status) => {
+  const handleStatusUpdate = async (applicationId, status) => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     try {
-      await updateApplicationStatus(jobId, studentId, status);
-      setMessage("Status updated successfully!");
+      await updateApplicationStatus(applicationId, status);
+      showNotification(`Application status updated to ${status}`, "success", "company");
+      // Update local state immutably
+      const updatedJobs = dashboardJobs.map(job => ({
+        ...job,
+        applicantDetails: job.applicantDetails?.map(app => 
+          app.application_id === applicationId ? { ...app, status } : app
+        )
+      }));
+      setDashboardJobs(updatedJobs);
+      setJobs(updatedJobs);
     } catch (err) {
-      setMessage("Error updating status");
+      showNotification("Error updating application status", "error", "company");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleLogout = () => {
-    // Redirect to home/login
+    localStorage.removeItem("token");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userRole");
+    socketService.disconnect();
     window.location.href = "/";
   };
 
@@ -380,39 +415,48 @@ export default function CompanyDashboard() {
     { name: "Applications", icon: FileText },
     { name: "Students", icon: Users },
     { name: "Analytics", icon: BarChart2 },
+    { name: "Announcements", icon: Bell },
+    { name: "Competitions", icon: Trophy },
+    { name: "Events", icon: Calendar },
+    { name: "Assessments", icon: FileText },
     { name: "Settings", icon: Settings },
     { name: "Help & Support", icon: HelpCircle },
   ];
 
   const renderContent = () => {
-    const filteredJobs = dashboardJobs.filter(job => {
-      const matchSearch = job.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          job.department.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchStatus = statusFilter === "All" || job.status === statusFilter;
+    const filteredJobs = (dashboardJobs || []).filter(job => {
+      const title = job?.title || "";
+      const department = job?.department || "";
+      const matchSearch = title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                          department.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchStatus = statusFilter === "All" || job?.status === statusFilter;
       return matchSearch && matchStatus;
     });
 
     if (activeTab === "Home") {
       // Calculate dynamic stats from dashboardStats state
       const totalJobs = dashboardStats.totalJobs;
-      const totalApplications = dashboardStats.applications;
+      const totalApplications = dashboardStats.totalApplications;
       const studentsReached = dashboardStats.studentsReached;
       const placementRate = dashboardStats.placementRate;
 
       return (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-          <div className="mb-10">
-            <h2 className="text-4xl font-black text-gray-900 tracking-tight">Welcome back, TechNova!</h2>
-            <p className="text-gray-500 text-lg mt-2 font-medium">Here's what's happening with your recruitment today.</p>
+          <div className="mb-10 flex justify-between items-start">
+            <div>
+              <h2 className="text-4xl font-black text-gray-900 tracking-tight">Welcome back, {companyProfile.name}!</h2>
+              <p className="text-gray-500 text-lg mt-2 font-medium">Here's what's happening with your recruitment today.</p>
+            </div>
+            <ThemeToggle role="company" />
           </div>
           
           {/* Dashboard Statistics Cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
             {[
-              { label: "Total Jobs", value: totalJobs, icon: Briefcase, color: "blue", trend: "+12% this month" },
-              { label: "Applications", value: totalApplications, icon: FileText, color: "indigo", trend: "+24 new today" },
-              { label: "Students Reached", value: studentsReached, icon: Users, color: "purple", trend: "Top 5% reach" },
-              { label: "Placement Rate", value: placementRate, icon: BarChart2, color: "blue", trend: "Industry leading" }
+              { label: "Total Jobs", value: totalJobs, icon: Briefcase, color: "blue" },
+              { label: "Applications", value: totalApplications, icon: FileText, color: "indigo" },
+              { label: "Students Reached", value: studentsReached, icon: Users, color: "purple" },
+              { label: "Placement Rate", value: placementRate, icon: BarChart2, color: "blue" }
             ].map((stat, i) => (
               <div key={i} className="bg-white p-8 rounded-[2rem] shadow-xl shadow-gray-200/50 border border-gray-100 flex flex-col gap-6 hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.02] transition-all duration-500 cursor-pointer group relative overflow-hidden">
                 <div className={`absolute top-0 right-0 p-12 bg-${stat.color}-500/5 rounded-full blur-3xl -mr-12 -mt-12 group-hover:bg-${stat.color}-500/10 transition-colors`}></div>
@@ -420,9 +464,6 @@ export default function CompanyDashboard() {
                   <div className={`p-4 bg-${stat.color}-50 text-${stat.color}-600 rounded-2xl group-hover:bg-${stat.color}-600 group-hover:text-white shadow-sm transition-all duration-500`}>
                     <stat.icon className="w-8 h-8" />
                   </div>
-                  <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 bg-${stat.color}-50 text-${stat.color}-700 rounded-full border border-${stat.color}-100`}>
-                    {stat.trend}
-                  </span>
                 </div>
                 <div className="relative z-10">
                   <p className="text-xs text-gray-400 font-black uppercase tracking-widest">{stat.label}</p>
@@ -625,149 +666,225 @@ export default function CompanyDashboard() {
     }
 
     if (activeTab === "Applications") {
+      // Build flat list of all applications across all jobs
+      const allApplications = dashboardJobs.flatMap(job =>
+        (job.applicantDetails || []).map(app => ({
+          ...app,
+          jobTitle: job.title,
+          jobId: job.id,
+        }))
+      );
+
+      // Unique job titles for the filter dropdown
+      const jobTitles = ["All", ...new Set(dashboardJobs.map(j => j.title).filter(Boolean))];
+
+      // Apply all filters
+      const filteredApps = allApplications.filter(app => {
+        const q = appSearchQuery.toLowerCase();
+        const matchesSearch = !q ||
+          (app.student_name || "").toLowerCase().includes(q) ||
+          (app.student_email || "").toLowerCase().includes(q);
+        const matchesJob = appJobFilter === "All" || app.jobTitle === appJobFilter;
+        const matchesStatus = appStatusFilter === "All" || (app.status || "Applied") === appStatusFilter;
+        return matchesSearch && matchesJob && matchesStatus;
+      });
+
+      // Summary counts from the full unfiltered list
+      const totalAll   = allApplications.length;
+      const totalPending     = allApplications.filter(a => !a.status || a.status === "Applied").length;
+      const totalShortlisted = allApplications.filter(a => a.status === "Shortlisted").length;
+      const totalSelected    = allApplications.filter(a => a.status === "Selected").length;
+      const totalRejected    = allApplications.filter(a => a.status === "Rejected").length;
+
+      const hasActiveFilters = appSearchQuery || appJobFilter !== "All" || appStatusFilter !== "All";
+
       return (
         <div className="animate-in fade-in duration-300">
+          {/* Header */}
           <div className="mb-6">
-            <h2 className="text-2xl font-bold text-gray-800">Manage Applications</h2>
-            <p className="text-gray-500 text-sm mt-1">Review and update student application statuses</p>
+            <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">Manage Applications</h2>
+            <p className="text-gray-500 text-sm mt-1 font-medium">Search, filter and update applicant statuses across all your job postings</p>
           </div>
-          
-          {jobs.length === 0 ? (
-             <section className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden mb-12">
-               <div className="p-8 border-b border-gray-100 bg-gray-50/30">
-                 <h3 className="text-xl font-black text-gray-900 tracking-tight">Recent Applications</h3>
-                 <p className="text-sm text-gray-500 font-medium mt-1">Showing sample data for demonstration</p>
-               </div>
-               <div className="overflow-x-auto">
-                 <table className="w-full text-left border-collapse">
-                   <thead>
-                     <tr className="bg-gray-50/50 border-b border-gray-100 text-xs uppercase tracking-wider text-gray-500 font-bold">
-                       <th className="px-8 py-5">Student Name</th>
-                       <th className="px-8 py-5">Job Title</th>
-                       <th className="px-8 py-5 text-center">Applied Date</th>
-                       <th className="px-8 py-5">Status</th>
-                       <th className="px-8 py-5 text-right">Action</th>
-                     </tr>
-                   </thead>
-                   <tbody className="divide-y divide-gray-100">
-                     {sampleApplications.map((app) => (
-                       <tr key={app.id} className="hover:bg-gray-50/30 transition-colors group">
-                         <td className="px-8 py-5">
-                           <div className="flex items-center gap-3">
-                             <div className="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 font-bold group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-                               {app.studentName.split(' ').map(n => n[0]).join('')}
-                             </div>
-                             <p className="font-bold text-gray-900">{app.studentName}</p>
-                           </div>
-                         </td>
-                         <td className="px-8 py-5 text-gray-600 font-semibold">{app.jobTitle}</td>
-                         <td className="px-8 py-5 text-center font-bold text-gray-500">{app.date}</td>
-                         <td className="px-8 py-5">
-                           <span className={`inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold ${
-                             app.status === 'Accepted' ? 'bg-green-100 text-green-700' :
-                             app.status === 'Rejected' ? 'bg-red-100 text-red-700' :
-                             app.status === 'Reviewed' ? 'bg-purple-100 text-purple-700' :
-                             'bg-blue-100 text-blue-700'
-                           }`}>
-                             {app.status}
-                           </span>
-                         </td>
-                         <td className="px-8 py-5 text-right">
-                           <button 
-                             onClick={() => {
-                               setSelectedStudent(app);
-                               setShowStudentModal(true);
-                             }}
-                             className="text-blue-600 hover:text-blue-700 font-black text-sm uppercase tracking-wider"
-                           >
-                             View Details
-                           </button>
-                         </td>
-                       </tr>
-                     ))}
-                   </tbody>
-                 </table>
-               </div>
-             </section>
-          ) : (
-            <div className="grid gap-8">
-              {jobs.map((job) => (
-                <div key={`app-${job.id}`} className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-500">
-                  <div className="bg-gradient-to-r from-gray-50/50 to-white px-8 py-6 border-b border-gray-100 flex justify-between items-center">
-                    <div>
-                      <h3 className="font-black text-xl text-gray-900 tracking-tight">{job.title}</h3>
-                      <p className="text-xs text-blue-600 mt-1.5 font-black uppercase tracking-widest">Showing {job.applications?.length || 0} applicant(s)</p>
-                    </div>
-                    <div className="text-xs font-black text-gray-400 bg-gray-100 px-3 py-1.5 rounded-lg uppercase tracking-wider">
-                      ID: #{job.id}
-                    </div>
-                  </div>
-                  <div className="p-0">
-                    {(!job.applications || job.applications.length === 0) ? (
-                      <div className="p-12 text-center bg-gray-50/30">
-                        <FileText className="w-12 h-12 text-gray-200 mx-auto mb-3" />
-                        <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">No applicants for this role yet</p>
-                      </div>
-                    ) : (
-                      <div className="overflow-x-auto">
-                        <table className="w-full text-left border-collapse">
-                          <thead>
-                            <tr className="border-b border-gray-100 text-xs uppercase tracking-wider text-gray-500 font-bold bg-gray-50/50">
-                              <th className="px-8 py-5">Student Name</th>
-                              <th className="px-8 py-5">Status</th>
-                              <th className="px-8 py-5 text-right">Action</th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-gray-100">
-                            {job.applications.map((app) => (
-                              <tr key={app.student_id} className="hover:bg-gray-50/30 transition-colors group">
-                                <td className="px-8 py-5 font-bold text-gray-900">
-                                  <div className="flex items-center gap-3">
-                                    <div className="w-9 h-9 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 font-bold text-xs">
-                                      {app.student_name.split(' ').map(n => n[0]).join('')}
-                                    </div>
-                                    {app.student_name}
-                                  </div>
-                                </td>
-                                <td className="px-8 py-5">
-                                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold ${
-                                    app.status === 'Selected' ? 'bg-green-100 text-green-700' :
-                                    app.status === 'Rejected' ? 'bg-red-100 text-red-700' :
-                                    app.status === 'Shortlisted' ? 'bg-purple-100 text-purple-700' :
-                                    'bg-blue-100 text-blue-700'
-                                  }`}>
-                                    <span className={`w-1.5 h-1.5 rounded-full mr-2 ${
-                                      app.status === 'Selected' ? 'bg-green-500' :
-                                      app.status === 'Rejected' ? 'bg-red-500' :
-                                      app.status === 'Shortlisted' ? 'bg-purple-500' :
-                                      'bg-blue-500'
-                                    }`}></span>
-                                    {app.status || 'Applied'}
-                                  </span>
-                                </td>
-                                <td className="px-8 py-5 text-right">
-                                  <select
-                                    value={app.status || 'Applied'}
-                                    onChange={(e) => handleStatusUpdate(job.id, app.student_id, e.target.value)}
-                                    className="border-2 border-gray-100 rounded-xl py-2 pl-4 pr-10 text-xs font-bold bg-white focus:border-blue-500/50 outline-none shadow-sm cursor-pointer transition-all hover:bg-gray-50"
-                                  >
-                                    <option value="Applied">Applied</option>
-                                    <option value="Shortlisted">Shortlisted</option>
-                                    <option value="Selected">Selected</option>
-                                    <option value="Rejected">Rejected</option>
-                                  </select>
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
+
+          {/* Summary Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-7">
+            {[
+              { label: "Total", value: totalAll, color: "blue" },
+              { label: "Applied", value: totalPending, color: "indigo" },
+              { label: "Shortlisted", value: totalShortlisted, color: "purple" },
+              { label: "Selected", value: totalSelected, color: "green" },
+              { label: "Rejected", value: totalRejected, color: "red" },
+            ].map((s, i) => (
+              <div
+                key={i}
+                onClick={() => setAppStatusFilter(s.label === "Applied" ? "Applied" : s.label === "Total" ? "All" : s.label)}
+                className={`bg-white rounded-2xl px-5 py-4 shadow-sm border cursor-pointer hover:-translate-y-1 hover:shadow-md transition-all duration-300 ${
+                  (appStatusFilter === s.label || (s.label === "Total" && appStatusFilter === "All"))
+                    ? `border-${s.color}-400 ring-2 ring-${s.color}-200`
+                    : "border-gray-100"
+                }`}
+              >
+                <p className={`text-xs font-black uppercase tracking-widest text-${s.color}-500 mb-1`}>{s.label}</p>
+                <p className="text-3xl font-black text-gray-900">{s.value}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Search & Filter Bar */}
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 mb-6 flex flex-col md:flex-row items-center gap-4">
+            {/* Search */}
+            <div className="relative flex-1 w-full">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <input
+                type="text"
+                placeholder="Search by student name or email..."
+                value={appSearchQuery}
+                onChange={e => setAppSearchQuery(e.target.value)}
+                className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 text-sm font-medium outline-none transition-all"
+              />
             </div>
+
+            {/* Job Filter */}
+            <select
+              value={appJobFilter}
+              onChange={e => setAppJobFilter(e.target.value)}
+              className="px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 text-sm font-bold text-gray-700 outline-none cursor-pointer w-full md:w-56 transition-all hover:border-gray-300"
+            >
+              {jobTitles.map(t => (
+                <option key={t} value={t}>{t === "All" ? "All Jobs" : t}</option>
+              ))}
+            </select>
+
+            {/* Status Filter */}
+            <select
+              value={appStatusFilter}
+              onChange={e => setAppStatusFilter(e.target.value)}
+              className="px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 text-sm font-bold text-gray-700 outline-none cursor-pointer w-full md:w-44 transition-all hover:border-gray-300"
+            >
+              <option value="All">All Status</option>
+              <option value="Applied">Applied</option>
+              <option value="Shortlisted">Shortlisted</option>
+              <option value="Selected">Selected</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+
+            {/* Clear Filters */}
+            {hasActiveFilters && (
+              <button
+                onClick={() => { setAppSearchQuery(""); setAppJobFilter("All"); setAppStatusFilter("All"); }}
+                className="px-5 py-3 bg-gray-100 text-gray-600 rounded-xl text-sm font-bold hover:bg-gray-200 transition-all whitespace-nowrap active:scale-95"
+              >
+                Clear Filters
+              </button>
+            )}
+          </div>
+
+          {/* Result count */}
+          {hasActiveFilters && (
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">
+              Showing {filteredApps.length} of {totalAll} application{totalAll !== 1 ? "s" : ""}
+            </p>
           )}
+
+          {/* Applications Table */}
+          <section className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-gray-50/70 border-b border-gray-100 text-xs uppercase tracking-wider text-gray-500 font-bold">
+                    <th className="px-8 py-5">Student</th>
+                    <th className="px-8 py-5">Job Position</th>
+                    <th className="px-8 py-5">Email</th>
+                    <th className="px-8 py-5">Current Status</th>
+                    <th className="px-8 py-5 text-right">Update Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {allApplications.length === 0 ? (
+                    <tr>
+                      <td colSpan="5" className="px-8 py-16 text-center">
+                        <FileText className="w-12 h-12 text-gray-200 mx-auto mb-3" />
+                        <p className="text-base font-bold text-gray-400">No applications received yet</p>
+                        <p className="text-xs text-gray-300 mt-1 font-medium">Post jobs to start receiving applicants</p>
+                      </td>
+                    </tr>
+                  ) : filteredApps.length === 0 ? (
+                    <tr>
+                      <td colSpan="5" className="px-8 py-16 text-center">
+                        <Search className="w-12 h-12 text-gray-200 mx-auto mb-3" />
+                        <p className="text-base font-bold text-gray-400">No applications match your filters</p>
+                        <button
+                          onClick={() => { setAppSearchQuery(""); setAppJobFilter("All"); setAppStatusFilter("All"); }}
+                          className="mt-4 px-5 py-2 bg-blue-50 text-blue-600 rounded-xl text-sm font-bold hover:bg-blue-100 transition-all"
+                        >
+                          Clear Filters
+                        </button>
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredApps.map((app, idx) => (
+                      <tr key={`${app.application_id}-${idx}`} className="hover:bg-blue-50/20 transition-colors group">
+                        {/* Student */}
+                        <td className="px-8 py-5">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 font-black text-xs group-hover:bg-blue-600 group-hover:text-white transition-colors shrink-0">
+                              {(app.student_name || "S").split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase()}
+                            </div>
+                            <p className="font-bold text-gray-900 text-sm">{app.student_name || "—"}</p>
+                          </div>
+                        </td>
+
+                        {/* Job */}
+                        <td className="px-8 py-5">
+                          <span className="inline-flex items-center px-3 py-1.5 bg-gray-100 text-gray-700 rounded-xl text-xs font-bold">
+                            {app.jobTitle}
+                          </span>
+                        </td>
+
+                        {/* Email */}
+                        <td className="px-8 py-5 text-gray-500 font-medium text-sm">
+                          {app.student_email || "—"}
+                        </td>
+
+                        {/* Current status badge */}
+                        <td className="px-8 py-5">
+                          <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wide ${
+                            app.status === "Selected"   ? "bg-green-100 text-green-700" :
+                            app.status === "Rejected"   ? "bg-red-100 text-red-700" :
+                            app.status === "Shortlisted"? "bg-purple-100 text-purple-700" :
+                            "bg-blue-100 text-blue-700"
+                          }`}>
+                            <span className={`w-1.5 h-1.5 rounded-full ${
+                              app.status === "Selected"    ? "bg-green-500" :
+                              app.status === "Rejected"    ? "bg-red-500" :
+                              app.status === "Shortlisted" ? "bg-purple-500" :
+                              "bg-blue-500"
+                            }`} />
+                            {app.status || "Applied"}
+                          </span>
+                        </td>
+
+                        {/* Update dropdown */}
+                        <td className="px-8 py-5 text-right">
+                          <select
+                            value={app.status || "Applied"}
+                            onChange={e => handleStatusUpdate(app.application_id, e.target.value)}
+                            disabled={isSubmitting}
+                            className="border-2 border-gray-100 rounded-xl py-2.5 pl-4 pr-9 text-xs font-bold bg-white focus:border-blue-500/50 outline-none shadow-sm cursor-pointer transition-all hover:border-blue-200 hover:bg-blue-50/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            <option value="Applied">Applied</option>
+                            <option value="Shortlisted">Shortlisted</option>
+                            <option value="Selected">Selected</option>
+                            <option value="Rejected">Rejected</option>
+                          </select>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </section>
         </div>
       );
     }
@@ -994,82 +1111,74 @@ export default function CompanyDashboard() {
         );
       }
 
+      const allApplicants = dashboardJobs.flatMap(job => 
+        (job.applicantDetails || []).map(app => ({
+          ...app,
+          jobTitle: job.title
+        }))
+      );
+      // Deduplicate by student_id
+      const uniqueStudents = [];
+      const seen = new Set();
+      allApplicants.forEach(app => {
+        if (!seen.has(app.student_id)) {
+          seen.add(app.student_id);
+          uniqueStudents.push(app);
+        }
+      });
+
       return (
         <div className="animate-in fade-in duration-300">
           <div className="mb-6">
             <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">Student Directory</h2>
-            <p className="text-gray-500 text-sm mt-1 font-medium">Browse and connect with potential candidates</p>
+            <p className="text-gray-500 text-sm mt-1 font-medium">Students who have applied to your job postings</p>
           </div>
           
-          <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
-            <div className="relative w-full md:w-96">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <input
-                type="text"
-                placeholder="Search students by name or course..."
-                className="pl-11 pr-5 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 text-sm outline-none w-full transition-all"
-              />
-            </div>
-            <div className="flex items-center gap-3 w-full md:w-auto">
-              <select className="px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm font-bold text-gray-700 outline-none hover:border-gray-300 transition-all cursor-pointer">
-                <option>All Courses</option>
-                <option>Computer Science</option>
-                <option>Data Science</option>
-                <option>Design</option>
-              </select>
-              <button className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-all text-sm font-bold shadow-lg shadow-blue-500/20 active:scale-95">
-                Filter
-              </button>
-            </div>
-          </div>
-
           <section className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden mb-12">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-gray-50/50 border-b border-gray-100 text-xs uppercase tracking-wider text-gray-500 font-bold">
                     <th className="px-8 py-5">Student Name</th>
-                    <th className="px-8 py-5">Course / Branch</th>
-                    <th className="px-8 py-5 text-center">CGPA</th>
+                    <th className="px-8 py-5">Email</th>
+                    <th className="px-8 py-5">Applied For</th>
                     <th className="px-8 py-5">Status</th>
-                    <th className="px-8 py-5 text-right">Action</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                  {sampleStudents.map((student) => (
-                    <tr key={student.id} className="hover:bg-gray-50/30 transition-colors group">
-                      <td className="px-8 py-5">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 font-bold group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                            {student.name.split(' ').map(n => n[0]).join('')}
-                          </div>
-                          <div>
-                            <p className="font-bold text-gray-900">{student.name}</p>
-                            <p className="text-xs text-gray-400 font-medium">{student.email}</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-8 py-5 text-gray-600 font-semibold">{student.course}</td>
-                      <td className="px-8 py-5 text-center font-bold text-gray-900">{student.cgpa}</td>
-                      <td className="px-8 py-5">
-                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold ${
-                          student.status === 'Open for Work' ? 'bg-green-100 text-green-700' :
-                          student.status === 'Placed' ? 'bg-blue-100 text-blue-700' :
-                          'bg-amber-100 text-amber-700'
-                        }`}>
-                          {student.status}
-                        </span>
-                      </td>
-                      <td className="px-8 py-5 text-right">
-                        <button 
-                          onClick={() => setViewingProfile(student)}
-                          className="text-blue-600 hover:text-blue-700 font-black text-sm uppercase tracking-wider"
-                        >
-                          View Profile
-                        </button>
+                  {uniqueStudents.length === 0 ? (
+                    <tr>
+                      <td colSpan="4" className="px-8 py-12 text-center text-gray-500 font-medium">
+                        <Users className="w-12 h-12 text-gray-200 mx-auto mb-3" />
+                        No students have applied to your jobs yet.
                       </td>
                     </tr>
-                  ))}
+                  ) : (
+                    uniqueStudents.map((student) => (
+                      <tr key={student.student_id} className="hover:bg-gray-50/30 transition-colors group">
+                        <td className="px-8 py-5">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 font-bold group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                              {(student.student_name || 'S').split(' ').map(n => n[0]).join('')}
+                            </div>
+                            <p className="font-bold text-gray-900">{student.student_name}</p>
+                          </div>
+                        </td>
+                        <td className="px-8 py-5 text-gray-600 font-medium">{student.student_email}</td>
+                        <td className="px-8 py-5 text-gray-600 font-semibold">{student.jobTitle}</td>
+                        <td className="px-8 py-5">
+                          <span className={`inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold ${
+                            student.status === 'Selected' ? 'bg-green-100 text-green-700' :
+                            student.status === 'Rejected' ? 'bg-red-100 text-red-700' :
+                            student.status === 'Shortlisted' ? 'bg-purple-100 text-purple-700' :
+                            'bg-blue-100 text-blue-700'
+                          }`}>
+                            {student.status || 'Applied'}
+                          </span>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
@@ -1078,97 +1187,95 @@ export default function CompanyDashboard() {
       );
     }
 
-    if (activeTab === "Settings") {
+
+    if (activeTab === "Announcements") {
       return (
-        <div className="animate-in fade-in duration-300 w-full pr-4">
-          <div className="mb-8">
-            <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">Organization Settings</h2>
-            <p className="text-gray-500 text-sm mt-1 font-medium">Manage your company profile and account preferences</p>
+        <div className="animate-in fade-in duration-300">
+           <Announcements role="company" />
+        </div>
+      );
+    }
+
+    if (activeTab === "Competitions") {
+      return (
+        <div className="animate-in fade-in duration-300">
+           <Competitions role="company" />
+        </div>
+      );
+    }
+
+    if (activeTab === "Events") {
+      return (
+        <div className="animate-in fade-in duration-300">
+           <Events role="company" />
+        </div>
+      );
+    }
+
+    if (activeTab === "Assessments") {
+      return (
+        <div className="animate-in fade-in duration-300">
+           <Assessments role="company" />
+        </div>
+      );
+    }
+
+    if (activeTab === "Settings") {
+      const isDark = document.documentElement.classList.contains('dark');
+      
+      const handleThemeToggle = async () => {
+        try {
+          const newMode = !isDark;
+          await updateProfile({ dark_mode: newMode });
+          if (newMode) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+          showNotification("Theme updated successfully", "success", "company");
+        } catch (err) {
+          showNotification("Failed to update theme", "error", "company");
+        }
+      };
+
+      return (
+        <div className="animate-in fade-in duration-300">
+          <div className="mb-10">
+            <h2 className="text-4xl font-black text-gray-900 tracking-tight">Account Settings</h2>
+            <p className="text-gray-500 text-lg mt-2 font-medium">Manage your company profile and dashboard preferences.</p>
           </div>
 
-          <div className="space-y-8">
-            {/* Company Profile Card */}
-            <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
-              <div className="bg-gradient-to-r from-[#0f172a] to-[#1e293b] p-8 text-white relative h-32">
-                <div className="absolute -bottom-10 left-8">
-                  <div className="w-24 h-24 bg-white rounded-3xl shadow-2xl p-2 flex items-center justify-center border-4 border-gray-50">
-                    <div className="w-full h-full bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center text-white text-2xl font-black">
-                      TN
-                    </div>
-                  </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="bg-white p-8 rounded-[2rem] shadow-xl shadow-gray-200/50 border border-gray-100">
+              <div className="flex items-center gap-4 mb-8">
+                <div className="p-3 bg-blue-50 text-blue-600 rounded-2xl">
+                  <Settings className="w-6 h-6" />
                 </div>
+                <h3 className="text-xl font-bold text-gray-900">Appearance</h3>
               </div>
-              <div className="pt-16 p-8">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
-                  <div>
-                    <h3 className="text-2xl font-black text-gray-900">{companyProfile.name}</h3>
-                    <p className="text-blue-600 font-bold text-sm tracking-wide uppercase mt-1">{companyProfile.industry} • {companyProfile.employees} Employees</p>
-                  </div>
-                  <button className="bg-white text-black px-6 py-3 rounded-xl font-bold text-sm border-2 border-gray-100 hover:bg-gray-50 hover:border-gray-200 transition-all shadow-sm active:scale-95">
-                    Edit Company Profile
-                  </button>
+              
+              <div className="flex items-center justify-between p-6 bg-gray-50/50 rounded-2xl border border-gray-100 hover:bg-white hover:border-blue-200 transition-all group">
+                <div>
+                  <p className="text-sm font-bold text-gray-900">Dark Mode</p>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Enable a darker interface for low light</p>
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-gray-100 pt-8">
-                  <div className="space-y-1">
-                    <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Email Address</p>
-                    <p className="text-gray-900 font-bold text-lg">{companyProfile.email}</p>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Phone Number</p>
-                    <p className="text-gray-900 font-bold text-lg">{companyProfile.contact}</p>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Headquarters</p>
-                    <p className="text-gray-900 font-bold text-lg">{companyProfile.location}</p>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Platform Status</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                      <p className="text-green-700 font-bold text-sm">Verified Employer Account</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-8 pt-8 border-t border-gray-100">
-                  <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest mb-3">About the Company</p>
-                  <p className="text-gray-600 font-medium leading-relaxed">{companyProfile.description}</p>
-                </div>
+                <button 
+                  onClick={handleThemeToggle}
+                  className={`w-12 h-6 rounded-full transition-all relative ${isDark ? "bg-blue-600" : "bg-gray-200"}`}
+                >
+                  <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${isDark ? "left-7" : "left-1"}`} />
+                </button>
               </div>
             </div>
 
-            {/* Account Settings */}
-            <div className="bg-white rounded-3xl shadow-lg border border-gray-100 p-8">
-              <h3 className="text-xl font-black text-gray-900 mb-6">Security & Preferences</h3>
-              <div className="space-y-4">
-                <button className="w-full flex items-center justify-between p-4 rounded-2xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100 group text-left">
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                      <LayoutDashboard className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <p className="font-bold text-gray-900">Push Notifications</p>
-                      <p className="text-[11px] text-gray-500 font-medium">Control dashboard alerts and updates</p>
-                    </div>
-                  </div>
-                  <div className="w-12 h-6 bg-blue-600/20 rounded-full relative">
-                    <div className="absolute left-1 top-1 w-4 h-4 bg-blue-600 rounded-full"></div>
-                  </div>
-                </button>
-                <button className="w-full flex items-center justify-between p-4 rounded-2xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100 group text-left">
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-                      <Settings className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <p className="font-bold text-gray-900">Change Password</p>
-                      <p className="text-[11px] text-gray-500 font-medium">Last updated 3 months ago</p>
-                    </div>
-                  </div>
-                  <span className="text-gray-400">&rarr;</span>
-                </button>
+            <div className="bg-white p-8 rounded-[2rem] shadow-xl shadow-gray-200/50 border border-gray-100 opacity-50 cursor-not-allowed">
+              <div className="flex items-center gap-4 mb-8">
+                <div className="p-3 bg-purple-50 text-purple-600 rounded-2xl">
+                  <Mail className="w-6 h-6" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900">Email Notifications</h3>
               </div>
+              <p className="text-sm text-gray-500 font-medium italic">Advanced notification settings coming soon...</p>
             </div>
           </div>
         </div>
@@ -1409,11 +1516,11 @@ export default function CompanyDashboard() {
             
             <div className="flex items-center gap-3 border-l border-gray-200 pl-5">
               <div className="text-right hidden sm:block">
-                <p className="text-sm font-bold text-gray-900 leading-none">TechNova Inc.</p>
-                <p className="text-[11px] font-bold text-[#3b82f6] mt-1.5 uppercase tracking-wide">Admin</p>
+                <p className="text-sm font-bold text-gray-900 leading-none">{companyProfile.name}</p>
+                <p className="text-[11px] font-bold text-[#3b82f6] mt-1.5 uppercase tracking-wide">Company</p>
               </div>
               <button className="w-10 h-10 bg-gradient-to-tr from-[#052c42] to-blue-800 text-white rounded-full flex items-center justify-center font-bold shadow-md text-sm border-2 border-white ring-2 ring-gray-100 hover:ring-gray-200 transition-all">
-                TN
+                {companyProfile.name.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase()}
               </button>
             </div>
           </div>
@@ -1442,122 +1549,6 @@ export default function CompanyDashboard() {
                      <h3 className="text-4xl font-black tracking-tight">{selectedStudent.studentName}</h3>
                      <p className="text-blue-400 text-sm font-black uppercase tracking-widest mt-2">{selectedStudent.course} • {selectedStudent.branch}</p>
                      <div className="flex gap-3 mt-4">
-                        <span className={`px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider backdrop-blur-md border ${
-                          selectedStudent.status === 'Accepted' ? 'bg-green-500/10 text-green-400 border-green-500/20' :
-                          selectedStudent.status === 'Rejected' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
-                          'bg-blue-500/10 text-blue-400 border-blue-500/20'
-                        }`}>
-                          {selectedStudent.status}
-                        </span>
-                        <span className="px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider bg-white/5 text-white/60 border border-white/10 backdrop-blur-sm">
-                          Applied: {selectedStudent.date}
-                        </span>
-                     </div>
-                   </div>
-                 </div>
-                 <button 
-                  onClick={() => setShowStudentModal(false)}
-                  className="p-3 hover:bg-white/10 rounded-2xl transition-all active:scale-90"
-                 >
-                  <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                 </button>
-               </div>
-            </div>
-            
-            <div className="p-10 grid grid-cols-1 lg:grid-cols-3 gap-10 max-h-[60vh] overflow-y-auto">
-              <div className="lg:col-span-1 space-y-8">
-                <section>
-                  <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Contact Information</h4>
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-4 group">
-                      <div className="p-3 bg-blue-50 text-blue-600 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-all">
-                        <Mail className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-tight">Email</p>
-                        <p className="text-gray-900 font-bold text-sm">{selectedStudent.email}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4 group">
-                      <div className="p-3 bg-indigo-50 text-indigo-600 rounded-xl group-hover:bg-indigo-600 group-hover:text-white transition-all">
-                        <Phone className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-tight">Phone</p>
-                        <p className="text-gray-900 font-bold text-sm">{selectedStudent.phone}</p>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-
-                <section>
-                  <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Skills</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedStudent.skills?.map((skill, i) => (
-                      <span key={i} className="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-xl text-xs font-bold border border-gray-200">
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </section>
-              </div>
-
-              <div className="lg:col-span-2 space-y-8">
-                <section>
-                  <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Candidate Overview</h4>
-                  <div className="p-6 bg-blue-50/50 rounded-3xl border border-blue-100/50">
-                    <p className="text-gray-700 font-medium leading-relaxed italic">
-                      "{selectedStudent.description}"
-                    </p>
-                  </div>
-                </section>
-
-                <section>
-                   <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Application Details</h4>
-                   <div className="grid grid-cols-2 gap-4">
-                      <div className="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm">
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Position Applied</p>
-                        <p className="text-gray-900 font-black text-lg mt-1">{selectedStudent.jobTitle}</p>
-                      </div>
-                      <div className="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm">
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Candidate ID</p>
-                        <p className="text-gray-900 font-black text-lg mt-1">#STU-{1000 + selectedStudent.id}</p>
-                      </div>
-                   </div>
-                </section>
-
-                <div className="flex gap-4 pt-4">
-                  <button className="flex-1 bg-[#3b82f6] text-white py-4 rounded-2xl font-black shadow-xl shadow-blue-500/20 hover:bg-[#2563eb] hover:shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-3">
-                    <FileText className="w-5 h-5" />
-                    Download Resume
-                  </button>
-                  <button className="px-8 py-4 bg-gray-100 text-gray-700 rounded-2xl font-black hover:bg-gray-200 transition-all active:scale-95">
-                    Contact HR
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Student Details Modal */}
-      {showStudentModal && selectedStudent && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
-          <div className="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-4xl overflow-hidden animate-in slide-in-from-bottom-8 duration-500 border border-white/20">
-            <div className="bg-gradient-to-br from-[#0f172a] to-[#1e293b] px-9 py-8 text-white relative overflow-hidden">
-               <div className="absolute top-0 right-0 p-32 bg-blue-500/10 rounded-full blur-3xl -mr-20 -mt-20"></div>
-               <div className="flex justify-between items-start relative z-10">
-                 <div className="flex items-center gap-5">
-                   <div className="w-20 h-20 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center text-3xl font-black border border-white/20 shadow-inner">
-                     {selectedStudent.studentName.split(' ').map(n => n[0]).join('')}
-                   </div>
-                   <div>
-                     <h3 className="text-3xl font-black tracking-tight">{selectedStudent.studentName}</h3>
-                     <p className="text-blue-400 text-sm font-black uppercase tracking-widest mt-1">{selectedStudent.course} • {selectedStudent.branch}</p>
-                     <div className="flex gap-3 mt-3">
                         <span className={`px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider backdrop-blur-md border ${
                           selectedStudent.status === 'Accepted' ? 'bg-green-500/10 text-green-400 border-green-500/20' :
                           selectedStudent.status === 'Rejected' ? 'bg-red-500/10 text-red-400 border-red-500/20' :

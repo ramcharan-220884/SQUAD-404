@@ -1,13 +1,34 @@
 import express from "express";
-import { registerStudent, loginStudent, getStudentProfile, updateStudentProfile } from "../controllers/studentController.js";
-
+import { 
+  getProfile, updateProfile, getAvailableJobs, 
+  submitTicket,
+  getAnnouncements, withdrawApplication,
+  getPublicSettings,
+  getCompetitions, registerForCompetition,
+  getEvents, registerForEvent,
+  getAssessments, updateAssessmentStatus
+} from "../controllers/studentController.js";
+import { verifyToken, requireRole } from "../middleware/authMiddleware.js";
+import validate from "../middleware/validate.js";
+import { updateProfileSchema, submitTicketSchema, registerCompetitionEventSchema, updateAssessmentStatusSchema } from "../validations/student.validation.js";
 const router = express.Router();
 
-router.post("/register", registerStudent);
-router.post("/login", loginStudent);
+router.use(verifyToken);
+router.use(requireRole("student"));
 
-// Profile endpoints
-router.get("/:id", getStudentProfile);
-router.put("/:id", updateStudentProfile);
+router.get("/profile", getProfile);
+router.put("/profile", validate(updateProfileSchema), updateProfile);
+router.get("/jobs", getAvailableJobs);
+router.post("/tickets", validate(submitTicketSchema), submitTicket);
+router.delete("/applications/:id", withdrawApplication);
+router.get("/settings", getPublicSettings);
+
+router.get("/announcements", getAnnouncements);
+router.get("/competitions", getCompetitions);
+router.post("/competitions/register", validate(registerCompetitionEventSchema), registerForCompetition);
+router.get("/events", getEvents);
+router.post("/events/register", validate(registerCompetitionEventSchema), registerForEvent);
+router.get("/assessments", getAssessments);
+router.post("/assessments/status", validate(updateAssessmentStatusSchema), updateAssessmentStatus);
 
 export default router;

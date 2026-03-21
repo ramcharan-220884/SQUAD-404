@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { registerUser } from '../services/authService';
-
-
+import { X, Building2, Mail, Lock, FileText } from 'lucide-react';
+import { useNotification } from '../context/NotificationContext';
+import { registerUser, googleLoginAPI } from '../services/authService';
+import { GoogleLogin } from '@react-oauth/google';
 const CompanyRegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
+  const { showNotification } = useNotification();
   const [formData, setFormData] = useState({
     companyName: '',
     email: '',
@@ -13,6 +15,23 @@ const CompanyRegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
   const [loading, setLoading] = useState(false);
   if (!isOpen) return null;
 
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      showNotification("Creating Company Profile...", "info");
+      const response = await googleLoginAPI(credentialResponse.credential, 'company');
+      
+      localStorage.setItem("userRole", response.user.role);
+      localStorage.setItem("userId", response.user.id);
+      localStorage.setItem("userName", response.user.name);
+      localStorage.setItem("userEmail", response.user.email);
+      
+      showNotification(`Welcome, ${response.user.name}! Profile sent for approval.`, "success");
+      onClose();
+      window.location.href = "/company-dashboard";
+    } catch (err) {
+      showNotification(err.message || "Google Sign-Up failed.", "error");
+    }
+  };
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError('');
@@ -27,6 +46,17 @@ const CompanyRegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
       return;
     }
 
+    if (formData.password.length < 8) {
+      setError('Password must be at least 8 characters long.');
+      return;
+    }
+
+    const strongPassword = /^(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+    if (!strongPassword.test(formData.password)) {
+      setError('Password must include at least one number and one special character (e.g. !@#$).');
+      return;
+    }
+
     setLoading(true);
     try {
       await registerUser({
@@ -35,10 +65,14 @@ const CompanyRegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
         password: formData.password,
         role: 'company',
       });
-      alert("Registration successful! Your account is pending admin approval.");
+      showNotification("Registration successful! Your account is pending admin approval.", "success", "company");
       onClose();
     } catch (err) {
-      setError(err.message || 'Registration failed. Please try again.');
+      const msg = err.message?.includes('Validation failed') 
+        ? 'Password must be 8+ chars with a number and special character (!@#$)'
+        : (err.message || 'Error connecting to server');
+      setError(msg);
+      showNotification(msg, "error", "company");
     } finally {
       setLoading(false);
     }
@@ -78,6 +112,23 @@ const CompanyRegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
               <span className="w-1.5 h-1.5 rounded-full bg-violet-500 animate-pulse"></span>
               Company Sign Up
             </div>
+          </div>
+
+          <div className="w-full flex justify-center mb-6">
+            <GoogleLogin 
+              onSuccess={handleGoogleSuccess} 
+              onError={() => showNotification("Google Sign-Up failed to connect.", "error")}
+              theme="outline" 
+              size="large" 
+              shape="rectangular"
+              text="signup_with"
+            />
+          </div>
+
+          <div className="flex items-center w-full mb-6">
+            <div className="flex-1 border-t border-gray-200"></div>
+            <span className="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Or standard signup</span>
+            <div className="flex-1 border-t border-gray-200"></div>
           </div>
 
           {/* Error */}
@@ -153,6 +204,7 @@ const CompanyRegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
                   className="pl-12 w-full px-4 py-3.5 bg-gray-50/50 border-2 border-gray-100/80 rounded-2xl focus:bg-white focus:ring-[6px] focus:ring-violet-500/5 focus:border-violet-500 outline-none transition-all duration-300 text-sm font-medium placeholder:text-gray-300"
                 />
               </div>
+              <p className="text-[10px] text-gray-400 font-medium ml-1 mt-1">Min 8 chars, include a number and a special character (e.g. !@#$)</p>
             </div>
 
             {/* Confirm Password */}
