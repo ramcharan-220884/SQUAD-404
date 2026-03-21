@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getSettings } from '../../services/studentService';
+import socketService from '../../services/socketService';
 
 const menuItems = [
+// ... (rest of the file)
   {
     id: 'home',
     label: 'Home',
@@ -52,7 +55,25 @@ const menuItems = [
     label: 'Competitions',
     icon: (
       <svg className="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 002.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 012.916.52 6.003 6.003 0 01-5.395 4.972m0 0a6.726 6.726 0 01-2.749 1.35m0 0a6.772 6.772 0 01-3.044 0" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99-2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 002.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 012.916.52 6.003 6.003 0 01-5.395 4.972m0 0a6.726 6.726 0 01-2.749 1.35m0 0a6.772 6.772 0 01-3.044 0" />
+      </svg>
+    ),
+  },
+  {
+    id: 'assessments',
+    label: 'Assessments',
+    icon: (
+      <svg className="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+      </svg>
+    ),
+  },
+  {
+    id: 'announcements',
+    label: 'Announcements',
+    icon: (
+      <svg className="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 110-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38c-.551.318-1.26.117-1.527-.461a13.247 13.247 0 01-1.022-2.384m2.676-1.849c.473-.049.943-.08 1.413-.082m0 0a1.5 1.5 0 011.433 1.062m-1.433-1.062V9.106m0 0a1.5 1.5 0 011.433-1.062m-1.433 1.062v5.332m0-5.332c.47-.002.94-.033 1.413-.082m1.413 5.332a.75.75 0 00.75-.75V11.25a.75.75 0 00-.75-.75m-1.413 5.332c1.097-.114 2.181-.223 3.25-.327a1.5 1.5 0 001.357-1.492V9.106a1.5 1.5 0 00-1.357-1.492c-1.069-.104-2.153-.213-3.25-.327m0 5.332V9.106M15 12a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
       </svg>
     ),
   },
@@ -60,7 +81,20 @@ const menuItems = [
 
 export default function Sidebar({ activeItem, onItemClick }) {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [settings, setSettings] = useState({ academic_year: '...', semester: '...' });
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const data = await getSettings();
+        if (data) setSettings(data);
+      } catch (err) {
+        console.error("Error fetching sidebar settings:", err);
+      }
+    };
+    fetchSettings();
+  }, []);
 
   const handleLogoutClick = () => {
     setShowLogoutModal(true);
@@ -68,8 +102,13 @@ export default function Sidebar({ activeItem, onItemClick }) {
 
   const confirmLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userId');
     sessionStorage.clear();
-    navigate('/login');
+    socketService.disconnect();
+    navigate('/');
   };
 
   const cancelLogout = () => {
@@ -158,8 +197,8 @@ export default function Sidebar({ activeItem, onItemClick }) {
       {/* Academic Year Card */}
       <div className="db-academic-card" style={{ background: 'linear-gradient(135deg, rgba(128,0,0,0.2) 0%, rgba(128,0,0,0.3) 100%)', border: '1px solid rgba(128,0,0,0.25)' }}>
         <div className="db-academic-card-label">Academic Year</div>
-        <div className="db-academic-card-year">2024 – 2025</div>
-        <div className="db-academic-card-sub">Semester II · Active</div>
+        <div className="db-academic-card-year">{settings.academic_year || '2024 – 2025'}</div>
+        <div className="db-academic-card-sub">{settings.semester || 'Semester II'} · Active</div>
       </div>
     </aside>
 

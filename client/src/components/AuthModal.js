@@ -1,19 +1,12 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-
-const AuthModal = ({ isOpen, onClose, role }) => {
-  const navigate = useNavigate();
-
+const AuthModal = ({ isOpen, onClose, role, onLogin, onRegister }) => {
   if (!isOpen) return null;
 
   const handleAction = (type) => {
     onClose();
     if (type === 'login') {
-      // Pass role in state for Login.js to pick up
-      navigate('/login', { state: { role: role.toLowerCase() } });
+      if (onLogin) onLogin(role.toLowerCase());
     } else {
-      // Pass role as query param for Register.js
-      navigate(`/register?role=${role.toLowerCase() === 'admin' ? 'student' : role.toLowerCase()}`);
+      if (onRegister) onRegister(role.toLowerCase());
     }
   };
 

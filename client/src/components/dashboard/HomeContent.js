@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import API_BASE from '../../services/api';
+import API_BASE, { authFetch } from '../../services/api';
+import { useNotification } from '../../context/NotificationContext';
 
 function StatCard({ value, label, iconClass, icon }) {
   return (
@@ -43,32 +44,32 @@ function getDeadlineInfo(dateString) {
 }
 
 export default function HomeContent() {
+  const { showNotification } = useNotification();
   const [stats, setStats] = useState({ applicationsSent: 0, shortlisted: 0, openJobs: 0 });
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [applyingJobId, setApplyingJobId] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userId = localStorage.getItem("userId");
-
-        // Fetch jobs
-        const jobsRes = await fetch(`${API_BASE}/jobs/all`);
+        const jobsRes = await authFetch("/students/jobs"); 
         const jobsData = await jobsRes.json();
-        setJobs(Array.isArray(jobsData) ? jobsData.slice(0, 5) : []);
+        const actualJobs = (jobsData.success && jobsData.data !== undefined) ? jobsData.data : (Array.isArray(jobsData) ? jobsData : []);
+        setJobs(actualJobs.slice(0, 5));
 
-        // Fetch student application stats
+        setStats(prev => ({ ...prev, openJobs: actualJobs.length }));
+
+        const userId = localStorage.getItem("userId");
         if (userId) {
-          const appsRes = await fetch(`${API_BASE}/applications/student/${userId}`);
+          const appsRes = await authFetch(`/applications/student/${userId}`);
           const appsData = await appsRes.json();
-          const apps = Array.isArray(appsData) ? appsData : [];
+          const apps = (appsData.success && appsData.data !== undefined) ? appsData.data : (Array.isArray(appsData) ? appsData : []);
           setStats({
             applicationsSent: apps.length,
             shortlisted: apps.filter(a => a.status === 'Shortlisted' || a.status === 'Selected').length,
-            openJobs: Array.isArray(jobsData) ? jobsData.length : 0
+            openJobs: actualJobs.length
           });
-        } else {
-          setStats(prev => ({ ...prev, openJobs: Array.isArray(jobsData) ? jobsData.length : 0 }));
         }
       } catch (err) {
         console.error("Error fetching home data:", err);
@@ -80,27 +81,33 @@ export default function HomeContent() {
   }, []);
 
   const handleApply = async (jobId) => {
-    const userId = localStorage.getItem("userId");
-    if (!userId) {
-      alert("Please log in to apply for jobs.");
+    if (applyingJobId === jobId) return; // prevent double-click
+    const token = localStorage.getItem("token");
+    if (!token) {
+      showNotification("Please log in to apply for jobs.", "warning", "student");
       return;
     }
+    setApplyingJobId(jobId);
     try {
-      const res = await fetch(`${API_BASE}/applications/apply`, {
+      const res = await authFetch("/applications/apply", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ student_id: parseInt(userId), job_id: jobId })
+        body: JSON.stringify({ job_id: jobId })
       });
       const data = await res.json();
       if (res.ok) {
-        alert("Application submitted successfully!");
+        showNotification("Application submitted successfully!", "success", "student");
         setStats(prev => ({ ...prev, applicationsSent: prev.applicationsSent + 1 }));
+        // Mark job as applied in local state
+        setJobs(prev => prev.map(j => j.id === jobId ? { ...j, applied: true } : j));
       } else {
-        alert(data.message || "Failed to apply.");
+        showNotification(data.message || "Failed to apply.", "error", "student");
       }
     } catch (err) {
       console.error("Error applying:", err);
-      alert("Error submitting application.");
+      showNotification("Error submitting application.", "error", "student");
+    } finally {
+      setApplyingJobId(null);
     }
   };
 
@@ -160,7 +167,7 @@ export default function HomeContent() {
             {jobs.map(opp => {
               const deadlineInfo = getDeadlineInfo(opp.deadline || opp.created_at);
               return (
-                <div key={opp.job_id} className="home-opp-card">
+                <div key={opp.id} className="home-opp-card">
                   <div className="home-opp-header">
                     <CompanyLogo opp={opp} />
                     <div className="home-opp-meta">
@@ -180,7 +187,14 @@ export default function HomeContent() {
                     <div className="home-opp-pill">💰 {opp.ctc || 'Not specified'}</div>
                   </div>
 
-                  <button className="home-opp-btn" onClick={() => handleApply(opp.job_id)}>Apply Now →</button>
+                <button 
+                    className="home-opp-btn" 
+                    onClick={() => handleApply(opp.id)}
+                    disabled={applyingJobId === opp.id || opp.applied}
+                    style={(applyingJobId === opp.id || opp.applied) ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
+                  >
+                    {opp.applied ? 'Applied ✓' : applyingJobId === opp.id ? 'Applying...' : 'Apply Now →'}
+                  </button>
                 </div>
               );
             })}

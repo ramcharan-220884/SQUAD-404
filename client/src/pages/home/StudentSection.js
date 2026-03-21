@@ -132,12 +132,23 @@ const StudentSection = ({ onLoginClick }) => {
               ))}
             </div>
 
-            <div className={`mt-12 transition-all duration-700 delay-[1000ms] ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+            <div className={`mt-12 flex flex-wrap gap-4 transition-all duration-700 delay-[1000ms] ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
               <button
                 onClick={onLoginClick}
                 className="px-8 py-4 rounded-full bg-indigo-600 text-white font-bold text-lg shadow-lg hover:bg-indigo-700 hover:scale-105 active:scale-95 hover:shadow-indigo-200 transition-all duration-300"
               >
                 Student Login
+              </button>
+              <button
+                onClick={() => {
+                  // This is a bit of a hack since we don't have onRegisterClick here, 
+                  // but we can trigger it via the login click if we handle it correctly in Home.js
+                  // or better, we pass onRegisterClick down.
+                  if (window.onStudentRegister) window.onStudentRegister();
+                }}
+                className="px-8 py-4 rounded-full bg-white border-2 border-indigo-600 text-indigo-600 font-bold text-lg shadow-lg hover:bg-indigo-50 hover:scale-105 active:scale-95 transition-all duration-300"
+              >
+                Sign Up as Student
               </button>
             </div>
           </div>

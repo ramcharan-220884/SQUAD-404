@@ -1,136 +1,285 @@
 import { pool } from "../config/db.js";
-import bcrypt from "bcrypt";
 
-// Register new student
-export const registerStudent = async (req, res, next) => {
-  const { name, email, password } = req.body;
-  if (!name || !email || !password) {
-    return res.status(400).json({ message: "Name, email, and password are required" });
-  }
-
+// Get student profile
+export const getProfile = async (req, res, next) => {
   try {
-    // Check if email already exists
-    const [existing] = await pool.query(
-      "SELECT * FROM students WHERE email = ?",
-      [email]
-    );
-    if (existing.length > 0) return res.status(400).json({ message: "Email already registered" });
-
-    // Hash password
-    const hash = await bcrypt.hash(password, 10);
-
-    // Insert into DB with approved = false
-    const [result] = await pool.query(
-      `INSERT INTO students (name, email, password_hash, approved, status) VALUES (?, ?, ?, 0, 'Pending')`,
-      [name, email, hash]
-    );
-
-    res.status(201).json({ message: "Student registered successfully, pending approval", userId: result.insertId });
-  } catch (err) {
-    next(err);
-  }
-};
-
-// Login student
-export const loginStudent = async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ message: "Email and password are required" });
-    }
-
-    const [rows] = await pool.query("SELECT * FROM students WHERE email = ?", [email]);
-    if (rows.length === 0) return res.status(401).json({ message: "Invalid credentials" });
-
-    const user = rows[0];
-    const match = await bcrypt.compare(password, user.password_hash);
-    if (!match) return res.status(401).json({ message: "Invalid credentials" });
-
-    // Login logic moved to authRoutes for JWT handling
-    res.json({ message: "Use /api/auth/login for token-based authentication", userId: user.user_id, name: user.name });
-  } catch (err) {
-    next(err);
-  }
-};
-
-// Get student profile — returns ALL fields including profile wizard columns
-export const getStudentProfile = async (req, res) => {
-  const { id } = req.params;
-  try {
+    const id = req.user.id;
     const [rows] = await pool.query(
-      `SELECT user_id, name, email, first_name, last_name, dob, gender, college, degree,
-              cgpa, backlogs, skills, projects, internships, resume_url, profile_photo_url, status
-       FROM students WHERE user_id = ?`,
+      `SELECT 
+        id, name, email, first_name, last_name, dob, gender, college, degree, 
+        skills, projects, internships, profile_photo_url, profile_completed,
+        branch, cgpa, resume_url, placed_status, dark_mode, created_at 
+       FROM students WHERE id = ?`,
       [id]
     );
-    if (rows.length === 0) return res.status(404).json({ message: "Student not found" });
-    res.json(rows[0]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ success: false, message: "Student not found" });
+    }
+
+    res.json({ success: true, data: rows[0] });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
+    next(err);
   }
 };
 
-// Update student profile — accepts all profile wizard fields
-export const updateStudentProfile = async (req, res) => {
-  const { id } = req.params;
-  const {
-    name,
-    first_name, firstName,
-    last_name, lastName,
-    dob,
-    gender,
-    college,
-    degree,
-    cgpa,
-    skills,
-    projects,
-    internships,
-    resume_url,
-    profile_photo_url
-  } = req.body;
-
-  // Support both snake_case and camelCase from frontend
-  const finalFirstName = first_name || firstName || null;
-  const finalLastName = last_name || lastName || null;
-  const finalName = name || (finalFirstName && finalLastName ? `${finalFirstName} ${finalLastName}` : null);
-
+// Update student profile
+export const updateProfile = async (req, res, next) => {
   try {
-    // Build dynamic SET clause — only update fields that were provided
-    const updates = [];
+    const id = req.user.id;
+    const { 
+      name, first_name, last_name, dob, gender, college, degree, 
+      skills, projects, internships, profile_photo_url, profile_completed,
+      branch, cgpa, resume_url, dark_mode 
+    } = req.body;
+
+    // Build the dynamic update query to handle partial updates (like from settings)
+    const fields = [];
     const values = [];
 
-    if (finalName !== null && finalName !== undefined) { updates.push("name = ?"); values.push(finalName); }
-    if (finalFirstName !== null) { updates.push("first_name = ?"); values.push(finalFirstName); }
-    if (finalLastName !== null) { updates.push("last_name = ?"); values.push(finalLastName); }
-    if (dob !== undefined) { updates.push("dob = ?"); values.push(dob); }
-    if (gender !== undefined) { updates.push("gender = ?"); values.push(gender); }
-    if (college !== undefined) { updates.push("college = ?"); values.push(college); }
-    if (degree !== undefined) { updates.push("degree = ?"); values.push(degree); }
-    if (cgpa !== undefined) { updates.push("cgpa = ?"); values.push(cgpa); }
-    if (skills !== undefined) { updates.push("skills = ?"); values.push(skills); }
-    if (projects !== undefined) { updates.push("projects = ?"); values.push(projects); }
-    if (internships !== undefined) { updates.push("internships = ?"); values.push(JSON.stringify(internships)); }
-    if (resume_url !== undefined) { updates.push("resume_url = ?"); values.push(resume_url); }
-    if (profile_photo_url !== undefined) { updates.push("profile_photo_url = ?"); values.push(profile_photo_url); }
+    if (name !== undefined) { fields.push("name = ?"); values.push(name); }
+    if (first_name !== undefined) { fields.push("first_name = ?"); values.push(first_name); }
+    if (last_name !== undefined) { fields.push("last_name = ?"); values.push(last_name); }
+    if (dob !== undefined) { fields.push("dob = ?"); values.push(dob); }
+    if (gender !== undefined) { fields.push("gender = ?"); values.push(gender); }
+    if (college !== undefined) { fields.push("college = ?"); values.push(college); }
+    if (degree !== undefined) { fields.push("degree = ?"); values.push(degree); }
+    if (skills !== undefined) { 
+        fields.push("skills = ?"); 
+        values.push(typeof skills === 'object' ? JSON.stringify(skills) : skills); 
+    }
+    if (projects !== undefined) { 
+        fields.push("projects = ?"); 
+        values.push(typeof projects === 'object' ? JSON.stringify(projects) : projects); 
+    }
+    if (internships !== undefined) { 
+        fields.push("internships = ?"); 
+        values.push(typeof internships === 'object' ? JSON.stringify(internships) : internships); 
+    }
+    if (profile_photo_url !== undefined) { fields.push("profile_photo_url = ?"); values.push(profile_photo_url); }
+    if (profile_completed !== undefined) { fields.push("profile_completed = ?"); values.push(profile_completed); }
+    if (branch !== undefined) { fields.push("branch = ?"); values.push(branch); }
+    if (cgpa !== undefined) { fields.push("cgpa = ?"); values.push(cgpa); }
+    if (resume_url !== undefined) { fields.push("resume_url = ?"); values.push(resume_url); }
+    if (dark_mode !== undefined) { fields.push("dark_mode = ?"); values.push(dark_mode); }
 
-    if (updates.length === 0) {
-      return res.status(400).json({ message: "No fields to update" });
+    if (fields.length === 0) {
+      return res.status(400).json({ success: false, message: "No fields to update" });
     }
 
     values.push(id);
-    const [result] = await pool.query(
-      `UPDATE students SET ${updates.join(", ")} WHERE user_id = ?`,
+    await pool.query(
+      `UPDATE students SET ${fields.join(", ")} WHERE id = ?`,
       values
     );
 
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ message: "Student not found" });
+    res.json({ success: true, message: "Profile updated successfully" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Get available companies (Jobs) - FIXED to query jobs table
+export const getAvailableJobs = async (req, res, next) => {
+  try {
+    const student_id = req.user.id;
+    // Get all open jobs, and check if the student has already applied
+    const [rows] = await pool.query(`
+      SELECT 
+        j.*, 
+        c.name as company_name,
+        CASE WHEN a.id IS NOT NULL THEN 1 ELSE 0 END as applied
+      FROM jobs j
+      JOIN companies c ON j.company_id = c.id
+      LEFT JOIN applications a ON a.job_id = j.id AND a.student_id = ?
+      WHERE j.deadline >= CURDATE() OR j.deadline IS NULL
+    `, [student_id]);
+    
+    // Map applied boolean so React disables the button appropriately
+    const formattedData = rows.map(r => ({ ...r, applied: r.applied === 1 }));
+    res.json({ success: true, data: formattedData });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Submit support ticket
+export const submitTicket = async (req, res, next) => {
+  try {
+    const user_id = req.user.id;
+    const role = req.user.role;
+    const { subject, message, priority } = req.body;
+
+    await pool.query(
+      "INSERT INTO support_tickets (user_id, role, subject, message, priority) VALUES (?, ?, ?, ?, ?)",
+      [user_id, role, subject, message, priority || 'Normal']
+    );
+
+    res.status(201).json({ success: true, message: "Support ticket submitted" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Withdraw application
+export const withdrawApplication = async (req, res, next) => {
+  try {
+    const student_id = req.user.id;
+    const { id } = req.params;
+
+    const [app] = await pool.query("SELECT id FROM applications WHERE id = ? AND student_id = ?", [id, student_id]);
+    if (app.length === 0) {
+      return res.status(404).json({ success: false, message: "Application not found or unauthorized" });
     }
 
-    res.json({ message: "Profile updated successfully" });
+    await pool.query("DELETE FROM applications WHERE id = ?", [id]);
+    res.json({ success: true, message: "Application withdrawn successfully" });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
+    next(err);
+  }
+};
+
+// Get announcements with audience filtering
+export const getAnnouncements = async (req, res, next) => {
+  try {
+    const role = req.user.role; // 'student' or 'company'
+    const [rows] = await pool.query(
+      "SELECT * FROM announcements WHERE audience IN ('All', 'All Students', ?) ORDER BY created_at DESC",
+      [role === 'student' ? 'Students' : 'Recruiters']
+    );
+    res.json({ success: true, data: rows });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Get competitions for student
+export const getCompetitions = async (req, res, next) => {
+  try {
+    const student_id = req.user.id;
+    const [rows] = await pool.query(`
+      SELECT c.*, 
+             CASE WHEN cr.id IS NOT NULL THEN 1 ELSE 0 END as registered
+      FROM competitions c
+      LEFT JOIN competition_registrations cr ON cr.competition_id = c.id AND cr.student_id = ?
+      WHERE c.deadline >= CURDATE()
+      ORDER BY c.deadline ASC
+    `, [student_id]);
+    
+    const formatted = rows.map(r => ({ ...r, registered: r.registered === 1 }));
+    res.json({ success: true, data: formatted });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Register for competition
+export const registerForCompetition = async (req, res, next) => {
+  try {
+    const student_id = req.user.id;
+    const { competition_id } = req.body;
+    
+    await pool.query(
+      "INSERT IGNORE INTO competition_registrations (competition_id, student_id) VALUES (?, ?)",
+      [competition_id, student_id]
+    );
+    
+    res.status(201).json({ success: true, message: "Registered for competition successfully" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Get events for student
+export const getEvents = async (req, res, next) => {
+  try {
+    const student_id = req.user.id;
+    const [rows] = await pool.query(`
+      SELECT e.*, 
+             CASE WHEN er.id IS NOT NULL THEN 1 ELSE 0 END as registered
+      FROM events e
+      LEFT JOIN event_registrations er ON er.event_id = e.id AND er.student_id = ?
+      WHERE e.date >= CURDATE()
+      ORDER BY e.date ASC
+    `, [student_id]);
+    
+    const formatted = rows.map(r => ({ ...r, registered: r.registered === 1 }));
+    res.json({ success: true, data: formatted });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Register for event
+export const registerForEvent = async (req, res, next) => {
+  try {
+    const student_id = req.user.id;
+    const { event_id } = req.body;
+    
+    await pool.query(
+      "INSERT IGNORE INTO event_registrations (event_id, student_id) VALUES (?, ?)",
+      [event_id, student_id]
+    );
+    
+    res.status(201).json({ success: true, message: "Registered for event successfully" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Get assessments for student
+export const getAssessments = async (req, res, next) => {
+  try {
+    const student_id = req.user.id;
+    const [rows] = await pool.query(`
+      SELECT a.*, 
+             aa.status as attempt_status,
+             aa.score
+      FROM assessments a
+      LEFT JOIN assessment_attempts aa ON aa.assessment_id = a.id AND aa.student_id = ?
+      WHERE a.deadline >= CURDATE()
+      ORDER BY a.deadline ASC
+    `, [student_id]);
+    
+    res.json({ success: true, data: rows });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Start or Complete assessment
+export const updateAssessmentStatus = async (req, res, next) => {
+  try {
+    const student_id = req.user.id;
+    const { assessment_id, status, score } = req.body;
+    
+    if (status === 'Completed') {
+      await pool.query(
+        "INSERT INTO assessment_attempts (assessment_id, student_id, status, score, completed_at) VALUES (?, ?, 'Completed', ?, CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE status = 'Completed', score = ?, completed_at = CURRENT_TIMESTAMP",
+        [assessment_id, student_id, score, score]
+      );
+    } else {
+      await pool.query(
+        "INSERT IGNORE INTO assessment_attempts (assessment_id, student_id, status) VALUES (?, ?, 'Started')",
+        [assessment_id, student_id]
+      );
+    }
+    
+    res.json({ success: true, message: "Assessment status updated" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Get public settings (for student sidebar)
+export const getPublicSettings = async (req, res, next) => {
+  try {
+    const [rows] = await pool.query(
+      "SELECT academic_year, semester FROM admin_settings LIMIT 1"
+    );
+    const settings = rows.length > 0 ? rows[0] : {};
+    res.json({ success: true, data: settings });
+  } catch (err) {
+    next(err);
   }
 };

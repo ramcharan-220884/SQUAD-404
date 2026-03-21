@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { reportIssue } from "../../services/adminService";
+import socketService from "../../services/socketService";
+import { useNotification } from "../../context/NotificationContext";
 import {
   Search,
   BookOpen,
@@ -15,7 +18,8 @@ import {
   ExternalLink
 } from "lucide-react";
 
-export default function HelpSupport() {
+export default function HelpSupport({ role }) {
+  const { showNotification } = useNotification();
   const [openFaq, setOpenFaq] = useState(null);
   const [reportForm, setReportForm] = useState({
     title: "",
@@ -23,27 +27,58 @@ export default function HelpSupport() {
     description: "",
   });
 
-  const faqs = [
+  useEffect(() => {
+    socketService.on("ticketReply", (data) => {
+        showNotification(`Support Ticket Update: ${data.message}`, "info", "student");
+    });
+
+    return () => {
+        socketService.off("ticketReply");
+    };
+  }, [showNotification]);
+
+  const studentFaqs = [
     {
-      q: "How to add a new student?",
-      a: "Navigate to the 'Student Management' tab in the sidebar. Click the 'Add Student' button at the top right, fill in the required details, and click 'Save'. You can also bulk upload students via CSV."
+      q: "How do I apply for a job?",
+      a: "Go to 'Browse Jobs', click on any job card to see details, and click 'Apply Now'. Your profile will be shared with the recruiter automatically."
     },
     {
-      q: "How to post a new company?",
-      a: "Go to 'Company Management' and select '+ Create Company'. Enter the company profile, point of contact, and industry details. Once saved, the company will appear in your recruiters list."
+      q: "Can I update my profile after applying?",
+      a: "Yes, you can update your profile anytime in the 'My Profile' section. However, recruiters see the version of your profile at the time they review your application."
     },
     {
-      q: "How to approve student profiles?",
-      a: "Pending approvals are visible on the main 'Overview Dashboard'. Review the student details in the pending list and click the green 'Approve' checkmark to grant access."
+      q: "How can I track my application status?",
+      a: "Visit 'Applied Jobs' to see a real-time progress bar for each application, including steps like Shortlisted, Interview Scheduled, and Selected."
     },
     {
-      q: "How to view placement reports?",
-      a: "Visit the 'Analytics' section or use the 'Download Report' button on the main dashboard overview to export detailed placement statistics as a PDF or Excel file."
+      q: "What if I miss an interview?",
+      a: "Contact the placement cell immediately via the 'Report Issue' form. Mention the company and reason for absence for rescheduling requests."
     }
   ];
 
+  const adminFaqs = [
+    {
+      q: "How do I approve a new student or company?",
+      a: "Go to 'User Approvals' from the sidebar. You will see a list of pending requests. Click 'Approve' to activate their account or 'Reject' to deny access."
+    },
+    {
+      q: "How can I export student data to Excel/CSV?",
+      a: "Navigate to 'Student Management' and click the 'Export CSV' button at the top right. This will download a file containing all student details and placement statistics."
+    },
+    {
+      q: "Can I edit an existing announcement?",
+      a: "Currently, you can delete an announcement and post a new one. Direct editing is coming in a future update."
+    },
+    {
+      q: "How is the placement percentage calculated?",
+      a: "The dashboard calculates this as (Number of Students with 'Placed' status / Total Number of Active Students) * 100."
+    }
+  ];
+
+  const faqs = role === 'admin' ? adminFaqs : studentFaqs;
+
   const quickHelp = [
-    { title: "User Guide", desc: "Detailed manual for system management", icon: BookOpen, color: "blue" },
+    { title: role === 'admin' ? "Admin Guide" : "User Guide", desc: role === 'admin' ? "System configuration manual" : "Detailed manual for students", icon: BookOpen, color: "blue" },
     { title: "FAQs", desc: "Quick answers to common questions", icon: HelpCircle, color: "purple" },
     { title: "Report an Issue", desc: "Flag bugs or technical glitches", icon: AlertTriangle, color: "orange" },
     { title: "Contact Support", desc: "Get direct help from our team", icon: MessageSquare, color: "green" },
@@ -51,6 +86,33 @@ export default function HelpSupport() {
 
   const toggleFaq = (index) => {
     setOpenFaq(openFaq === index ? null : index);
+  };
+
+  const [submitState, setSubmitState] = useState({ loading: false, success: false, error: null });
+
+  const handleReportSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitState({ loading: true, success: false, error: null });
+    
+    const payload = {
+      title: reportForm.title,
+      category: reportForm.category,
+      description: reportForm.description,
+      priority: "Normal"
+    };
+
+    try {
+      const res = await reportIssue(payload);
+      if (res.success) {
+        setSubmitState({ loading: false, success: true, error: null });
+        setReportForm({ title: "", category: "Bug", description: "" });
+        setTimeout(() => setSubmitState(s => ({...s, success: false})), 3000);
+      } else {
+        setSubmitState({ loading: false, success: false, error: res.message });
+      }
+    } catch (err) {
+      setSubmitState({ loading: false, success: false, error: "Failed to submit report" });
+    }
   };
 
   return (
@@ -170,12 +232,15 @@ export default function HelpSupport() {
             <h3 className="text-2xl font-bold text-gray-900">Report an Issue</h3>
           </div>
 
-          <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-6" onSubmit={handleReportSubmit}>
             <div className="space-y-2">
               <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">Issue Title</label>
               <input 
+                required
                 type="text" 
                 placeholder="E.g., CSV upload not working"
+                value={reportForm.title}
+                onChange={e => setReportForm({...reportForm, title: e.target.value})}
                 className="w-full px-5 py-3 bg-gray-50 border-2 border-gray-100 rounded-2xl outline-none focus:bg-white focus:border-orange-500 transition-all font-bold text-gray-700" 
               />
             </div>
@@ -183,7 +248,10 @@ export default function HelpSupport() {
             <div className="space-y-2">
               <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">Issue Category</label>
               <div className="relative">
-                <select className="w-full px-5 py-3 bg-gray-50 border-2 border-gray-100 rounded-2xl outline-none focus:bg-white focus:border-orange-500 appearance-none font-bold text-gray-700 cursor-pointer">
+                <select 
+                  value={reportForm.category}
+                  onChange={e => setReportForm({...reportForm, category: e.target.value})}
+                  className="w-full px-5 py-3 bg-gray-50 border-2 border-gray-100 rounded-2xl outline-none focus:bg-white focus:border-orange-500 appearance-none font-bold text-gray-700 cursor-pointer">
                   <option>Bug</option>
                   <option>Login Issue</option>
                   <option>Data Issue</option>
@@ -196,24 +264,21 @@ export default function HelpSupport() {
             <div className="space-y-2">
               <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">Description</label>
               <textarea 
+                required
                 rows="4"
                 placeholder="Please describe the issue in detail..."
+                value={reportForm.description}
+                onChange={e => setReportForm({...reportForm, description: e.target.value})}
                 className="w-full px-5 py-3 bg-gray-50 border-2 border-gray-100 rounded-2xl outline-none focus:bg-white focus:border-orange-500 transition-all font-bold text-gray-700 resize-none"
               ></textarea>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">Upload Screenshot</label>
-              <div className="border-3 border-dashed border-gray-100 rounded-[2rem] p-8 text-center bg-gray-50/50 hover:bg-white hover:border-orange-200 transition-all group cursor-pointer">
-                <Upload className="w-10 h-10 text-gray-300 mx-auto mb-4 group-hover:text-orange-500 transition-colors" />
-                <p className="text-sm font-bold text-gray-500 mb-1 group-hover:text-gray-900 transition-colors">Drag and drop file here</p>
-                <p className="text-[10px] font-black text-gray-400 uppercase">Limit 5MB • PNG, JPG</p>
-              </div>
-            </div>
-
-            <button className="w-full py-4 bg-orange-600 text-white font-black rounded-2xl flex items-center justify-center gap-3 hover:bg-orange-700 transition-all shadow-xl shadow-orange-600/20 active:scale-95">
-              <Send className="w-5 h-5" /> Submit Report
+            <button disabled={submitState.loading} type="submit" className="w-full py-4 bg-orange-600 text-white font-black rounded-2xl flex items-center justify-center gap-3 hover:bg-orange-700 transition-all shadow-xl shadow-orange-600/20 active:scale-95 disabled:opacity-50">
+              <Send className="w-5 h-5" /> {submitState.loading ? "Submitting..." : "Submit Report"}
             </button>
+            
+            {submitState.success && <p className="text-green-600 text-center font-bold text-sm">Issue reported successfully!</p>}
+            {submitState.error && <p className="text-red-600 text-center font-bold text-sm">{submitState.error}</p>}
           </form>
         </div>
       </div>

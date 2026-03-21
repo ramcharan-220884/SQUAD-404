@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { registerStudent } from "../services/studentService";
 import { registerCompany } from "../services/companyService";
 import { useNavigate, Link, useLocation } from "react-router-dom";
+import { useNotification } from '../context/NotificationContext';
 
 export default function Register() {
   const [role, setRole] = useState("student");
@@ -16,6 +17,7 @@ export default function Register() {
   
   const navigate = useNavigate();
   const location = useLocation();
+  const { showNotification } = useNotification();
 
   useEffect(() => {
     // Check if the URL has ?role=company
@@ -60,7 +62,7 @@ export default function Register() {
         return;
       }
 
-      alert("Registration successful! Please login.");
+      showNotification("Registration successful! Please login.", "success", "student");
       navigate("/login");
     } catch (err) {
       setError(err.message || "Registration failed. Please try again.");

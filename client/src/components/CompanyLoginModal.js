@@ -1,13 +1,51 @@
 import React, { useState } from 'react';
-import { loginUser } from '../services/authService';
-
+import { loginUser, googleLoginAPI } from '../services/authService';
+import ForgotPasswordModal from './ForgotPasswordModal';
+import { GoogleLogin } from '@react-oauth/google';
+import { useNavigate } from 'react-router-dom';
+import { useNotification } from '../context/NotificationContext';
+import { setAccessToken } from '../services/api';
 
 const CompanyLoginModal = ({ isOpen, onClose, onSwitchToRegister }) => {
+  const { showNotification } = useNotification();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [showForgot, setShowForgot] = useState(false);
+  const navigate = useNavigate();
+
   if (!isOpen) return null;
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      showNotification("Verifying Google Profile...", "info");
+      setLoading(true);
+      setGoogleLoading(true);
+      setError('');
+      
+      const response = await googleLoginAPI(credentialResponse.credential, 'company');
+      
+      if (response.accessToken) setAccessToken(response.accessToken);
+      
+      localStorage.setItem('userRole', response.user.role);
+      localStorage.setItem('userId', response.user.id);
+      localStorage.setItem('userName', response.user.name);
+      localStorage.setItem('userEmail', response.user.email);
+      
+      showNotification(`Welcome back, ${response.user.name}!`, "success");
+      onClose();
+      navigate("/company-dashboard");
+    } catch (err) {
+      const errMsg = err.message || 'Google Login failed. Please try again.';
+      setError(errMsg);
+      showNotification(errMsg, "error");
+    } finally {
+      setLoading(false);
+      setGoogleLoading(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,12 +53,21 @@ const CompanyLoginModal = ({ isOpen, onClose, onSwitchToRegister }) => {
     setLoading(true);
     try {
       const response = await loginUser({ email, password, role: 'company' });
-      if (response.token) {
-        localStorage.setItem('token', response.token);
+      if (response.accessToken) {
+        setAccessToken(response.accessToken);
         localStorage.setItem('userRole', response.user.role);
         localStorage.setItem('userId', response.user.id);
-        onClose();
-        window.location.href = '/company-dashboard';
+        localStorage.setItem('userName', response.user.name);
+        localStorage.setItem('userEmail', response.user.email);
+        if (response.user.approved === 1) {
+            onClose();
+            navigate('/company-dashboard');
+          } else {
+            showNotification("Your account is awaiting approval.", "warning");
+            setAccessToken(null); // Clear token if not approved
+            localStorage.clear(); // Clear user data
+            setError("Your account is awaiting approval. Please try again later.");
+          }
       }
     } catch (err) {
       setError(err.message || 'Login failed. Please check your credentials.');
@@ -30,6 +77,7 @@ const CompanyLoginModal = ({ isOpen, onClose, onSwitchToRegister }) => {
   };
 
   return (
+    <>
     <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md overflow-hidden">
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden relative border border-white/20 animate-in fade-in zoom-in duration-300">
 
@@ -59,11 +107,30 @@ const CompanyLoginModal = ({ isOpen, onClose, onSwitchToRegister }) => {
               </div>
             </div>
 
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-50 text-violet-600 text-[10px] font-extrabold uppercase tracking-[0.2em]">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-50 text-violet-600 text-[10px] font-extrabold uppercase tracking-[0.2em] mb-4">
               <span className="w-1.5 h-1.5 rounded-full bg-violet-500 animate-pulse"></span>
               Recruiter Login
             </div>
           </div>
+
+          <div className="w-full flex justify-center mb-6">
+            <GoogleLogin 
+              onSuccess={handleGoogleSuccess} 
+              onError={() => setError("Google Sign-In failed to connect.")}
+              theme="outline" 
+              size="large" 
+              shape="rectangular"
+              text="signin_with"
+            />
+          </div>
+
+          <div className="flex items-center w-full mb-6">
+            <div className="flex-1 border-t border-gray-200"></div>
+            <span className="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Or standard login</span>
+            <div className="flex-1 border-t border-gray-200"></div>
+          </div>
+
+
 
           {/* Error */}
           {error && (
@@ -141,10 +208,22 @@ const CompanyLoginModal = ({ isOpen, onClose, onSwitchToRegister }) => {
                 Sign Up
               </button>
             </p>
+
+            <div className="mt-2 text-center">
+              <button 
+                type="button" 
+                onClick={() => setShowForgot(true)} 
+                className="text-[12px] font-bold text-gray-400 hover:text-violet-600 transition-colors"
+              >
+                Forgot Password?
+              </button>
+            </div>
           </form>
         </div>
       </div>
     </div>
+    <ForgotPasswordModal isOpen={showForgot} onClose={() => setShowForgot(false)} role="company" />
+    </>
   );
 };
 

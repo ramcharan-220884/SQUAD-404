@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import API_BASE from '../../services/api';
+import { getAvailableJobs, applyForJob } from '../../services/studentService';
+import { useNotification } from '../../context/NotificationContext';
+import { SkeletonCard } from '../LoadingSpinner';
+import EmptyState from '../EmptyState';
 
 function CompanyLogo({ job }) {
   return (
@@ -12,59 +15,63 @@ function CompanyLogo({ job }) {
   );
 }
 
-export default function BrowseJobs() {
+export default function BrowseJobs({ onJobApplied }) {
+  const { showNotification } = useNotification();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [applyingId, setApplyingId] = useState(null);
+  
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const limit = 10;
 
   useEffect(() => {
-    const fetchJobs = async () => {
-      try {
-        const res = await fetch(`${API_BASE}/jobs/all`);
-        const data = await res.json();
-        setJobs(Array.isArray(data) ? data : []);
-      } catch (err) {
-        console.error("Error fetching jobs:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchJobs();
-  }, []);
+  }, [currentPage]);
+
+  const fetchJobs = async () => {
+    setLoading(true);
+    try {
+      const data = await getAvailableJobs();
+      // Since the current backend getAvailableJobs is a simple list
+      setJobs(Array.isArray(data) ? data : []);
+      setTotalPages(1); // Reset pagination for flat list
+    } catch (err) {
+      console.error("Error fetching jobs:", err);
+      showNotification("Failed to fetch available jobs", "error", "student");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleApply = async (jobId) => {
-    const userId = localStorage.getItem("userId");
-    if (!userId) {
-      alert("Please log in to apply for jobs.");
-      return;
-    }
     setApplyingId(jobId);
     try {
-      const res = await fetch(`${API_BASE}/applications/apply`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ student_id: parseInt(userId), job_id: jobId })
-      });
-      const data = await res.json();
-      if (res.ok) {
-        alert("Application submitted successfully!");
-      } else {
-        alert(data.message || "Failed to apply.");
-      }
+      await applyForJob(jobId);
+      showNotification("Application submitted successfully!", "success", "student");
+      // Add a dummy application status temporarily so button disables instantly
+      setJobs(prevJobs => prevJobs.map(job => 
+        job.id === jobId ? { ...job, applied: true } : job
+      ));
+
+      // Notify parent to fetch new applied jobs
+      if (onJobApplied) onJobApplied();
+      
+      await fetchJobs();
     } catch (err) {
       console.error("Error applying:", err);
-      alert("Error submitting application.");
+      showNotification("Failed to submit application. Please try again.", "error", "student");
     } finally {
       setApplyingId(null);
     }
   };
 
-  const filtered = jobs; // All jobs from DB — no client-side type filtering needed
-
   if (loading) {
     return (
-      <div className="bj-root" style={{ textAlign: 'center', padding: '40px' }}>
-        <p style={{ color: '#888', fontWeight: 600 }}>Loading jobs...</p>
+      <div className="bj-root">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px', padding: '16px' }}>
+          {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} lines={4} />)}
+        </div>
       </div>
     );
   }
@@ -83,14 +90,24 @@ export default function BrowseJobs() {
 
       {/* Job Cards Grid */}
       <div className="bj-grid">
-        {filtered.length > 0 ? (
-          filtered.map((job) => (
-            <div key={job.job_id} className="bj-card">
+        {jobs.length === 0 ? (
+          <div style={{ gridColumn: '1 / -1' }}>
+            <EmptyState
+              icon="💼"
+              title="No jobs available right now"
+              subtitle="New positions are posted regularly. Check back soon!"
+              action={{ label: "Refresh", onClick: fetchJobs }}
+            />
+          </div>
+        ) : (
+          jobs.map((job) => (
+
+            <div key={job.id} className="bj-card">
               {/* Card Header */}
               <div className="bj-card-header">
                 <CompanyLogo job={job} />
                 <div className="bj-card-meta">
-                  <h3 className="bj-card-title">{job.title}</h3>
+                  <h3 className="bj-card-title">{job.role || job.title}</h3>
                   <p className="bj-card-company">{job.company_name || 'Company'}</p>
                 </div>
               </div>
@@ -105,33 +122,52 @@ export default function BrowseJobs() {
               {/* Info Row */}
               <div className="bj-info-row">
                 <span className="bj-info-pill">
-                  💰 {job.ctc || 'Not specified'}
+                  💰 {job.package || job.ctc || 'Not specified'}
                 </span>
                 <span className="bj-info-pill">
-                  🎓 Min CGPA: {job.min_cgpa || 'Any'}
+                  🎓 Min CGPA: {job.eligibility_cgpa || job.min_cgpa || 'Any'}
                 </span>
-                {job.max_backlogs !== undefined && job.max_backlogs !== null && (
-                  <span className="bj-info-pill">
-                    📋 Max Backlogs: {job.max_backlogs}
-                  </span>
+                {job.deadline && (
+                   <span className="bj-info-pill">
+                     📅 Deadline: {new Date(job.deadline).toLocaleDateString()}
+                   </span>
                 )}
               </div>
 
               {/* Apply Button */}
               <button 
                 className="bj-apply-btn" 
-                onClick={() => handleApply(job.job_id)}
-                disabled={applyingId === job.job_id}
-                style={applyingId === job.job_id ? { opacity: 0.6 } : {}}
+                onClick={() => handleApply(job.id)}
+                disabled={applyingId === job.id || job.applied}
+                style={(applyingId === job.id || job.applied) ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
               >
-                {applyingId === job.job_id ? 'Applying...' : 'Apply Now'}
+                {job.applied ? 'Applied' : applyingId === job.id ? 'Applying...' : 'Apply Now'}
               </button>
             </div>
           ))
-        ) : (
-          <div className="bj-empty">No jobs available at the moment. Check back soon!</div>
         )}
       </div>
+
+      {/* Pagination View (Simplified) */}
+      {totalPages > 1 && (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '15px', marginTop: '30px' }}>
+          <button 
+            disabled={currentPage === 1} 
+            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+            style={{ padding: '8px 16px', borderRadius: '12px', border: '1px solid #eee', background: '#fff', cursor: 'pointer' }}
+          >
+            Previous
+          </button>
+          <span style={{ fontWeight: 'bold', color: '#555' }}>Page {currentPage} of {totalPages}</span>
+          <button 
+            disabled={currentPage === totalPages} 
+            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+            style={{ padding: '8px 16px', borderRadius: '12px', border: '1px solid #eee', background: '#fff', cursor: 'pointer' }}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 }

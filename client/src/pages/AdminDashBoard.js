@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import socketService from "../services/socketService";
 import {
   LayoutDashboard,
   Users,
@@ -15,14 +16,22 @@ import {
   CheckCircle,
   XCircle,
   Megaphone,
+  Trophy,
+  Mic,
   LogOut
 } from "lucide-react";
+import { useNotification } from "../context/NotificationContext";
 
 import StudentManagement from "../components/dashboard/StudentManagement";
 import CompanyManagement from "../components/dashboard/CompanyManagement";
 import Announcements from "../components/dashboard/Announcements";
 import Settings from "../components/dashboard/Settings";
 import HelpSupport from "../components/dashboard/HelpSupport";
+import ThemeToggle from "../components/dashboard/ThemeToggle";
+import Competitions from "../components/dashboard/Competitions";
+import Events from "../components/dashboard/Events";
+import Assessments from "../components/dashboard/Assessments";
+import Interviews from "../components/dashboard/Interviews";
 
 import {
   BarChart,
@@ -38,21 +47,14 @@ import {
   Legend
 } from "recharts";
 
-import { getStats, getPendingUsers, approveUser, rejectUser } from "../services/adminService";
-
-const YEARLY_PLACEMENTS = [
-  { year: "2020", placements: 400 },
-  { year: "2021", placements: 650 },
-  { year: "2022", placements: 850 },
-  { year: "2023", placements: 1200 },
-  { year: "2024", placements: 1450 }
-];
+import { getStats, getPendingUsers, approveUser, rejectUser, getPlacementAnalytics, getProfile, updateProfile } from "../services/adminService";
 
 const PIE_COLORS = ["#16a34a", "#facc15", "#dc2626"];
 
 export default function AdminDashboard() {
-
+  const { showNotification } = useNotification();
   const [stats, setStats] = useState(null);
+  const [placementAnalytics, setPlacementAnalytics] = useState([]);
   const [pendingStudents, setPendingStudents] = useState([]);
   const [pendingRecruiters, setPendingRecruiters] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -61,7 +63,40 @@ export default function AdminDashboard() {
 
   const location = useLocation();
 
+  const fetchData = React.useCallback(async () => {
+    setLoading(true);
+    try {
+      const [statsData, pendingData, analyticsData] = await Promise.all([
+        getStats(),
+        getPendingUsers(),
+        getPlacementAnalytics().catch(() => [])
+      ]);
+
+      setStats(statsData);
+      setPlacementAnalytics(analyticsData);
+
+      setPendingStudents(
+        pendingData.filter(u => u.type === "student")
+      );
+
+      setPendingRecruiters(
+        pendingData.filter(u => u.type === "company")
+      );
+
+    } catch (err) {
+      console.error("Error fetching admin data:", err);
+      showNotification(`Failed to fetch dashboard data: ${err.message}`, "error", "admin");
+    } finally {
+      setLoading(false);
+    }
+  }, [showNotification]);
+
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      socketService.connect(token);
+    }
+
     const searchParams = new URLSearchParams(location.search);
     const scrollTarget = searchParams.get("scroll");
 
@@ -72,86 +107,45 @@ export default function AdminDashboard() {
       const element = document.getElementById("dashboard-top");
       if (element) element.scrollIntoView({ behavior: "smooth" });
     }
-  }, [location]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-
-        const [statsData, pendingData] = await Promise.all([
-          getStats(),
-          getPendingUsers()
-        ]);
-
-        setStats(statsData);
-
-        setPendingStudents(
-          pendingData.filter(u => u.type === "student")
-        );
-
-        setPendingRecruiters(
-          pendingData.filter(u => u.type === "company")
-        );
-
-      } catch (err) {
-        console.error("Error fetching admin data:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
 
     fetchData();
-  }, []);
+
+    return () => {
+      // Admin might not need many listeners yet, but we connect to the room
+    };
+  }, [fetchData, location]);
 
   const handleStudentAction = async (id, action) => {
-
     setActionLoading(`student-${id}-${action}`);
-
     try {
-
       if (action === "Approve") {
         await approveUser(id, "student");
       } else {
         await rejectUser(id, "student");
       }
-
-      setPendingStudents(prev => prev.filter(s => s.id !== id));
-
-      const updatedStats = await getStats();
-      setStats(updatedStats);
-
+      showNotification(`Student ${action}d successfully`, "success", "admin");
+      fetchData();
     } catch (err) {
-
       console.error(`Failed to ${action} student`, err);
-      alert(`Failed to ${action} student`);
-
+      showNotification(`Failed to ${action} student`, "error", "admin");
     } finally {
       setActionLoading(null);
     }
   };
 
-  const handleRecruiterAction = async (id, action) => {
-
-    setActionLoading(`recruiter-${id}-${action}`);
-
+  const handleActionRecruiter = async (id, action, type) => {
+    setActionLoading(id);
     try {
-
-      if (action === "Approve") {
-        await approveUser(id, "company");
+      if (action === "approve") {
+        await approveUser(id, type);
       } else {
-        await rejectUser(id, "company");
+        await rejectUser(id, type);
       }
-
-      setPendingRecruiters(prev => prev.filter(r => r.id !== id));
-
-      const updatedStats = await getStats();
-      setStats(updatedStats);
-
+      showNotification(`Recruiter ${action}d successfully`, "success", "admin");
+      fetchData();
     } catch (err) {
-
       console.error(`Failed to ${action} recruiter`, err);
-      alert(`Failed to ${action} recruiter`);
-
+      showNotification(`Failed to ${action} recruiter`, "error", "admin");
     } finally {
       setActionLoading(null);
     }
@@ -184,7 +178,7 @@ export default function AdminDashboard() {
       title: "Pending Approvals",
       value: String(stats.pendingApprovals || 0),
       icon: <FileCheck className="w-6 h-6 text-green-600" />,
-      change: `${pendingStudents.length + pendingRecruiters.length} pending`
+      change: "Action Required"
     },
 
     {
@@ -258,6 +252,22 @@ export default function AdminDashboard() {
             <Megaphone size={18}/> Announcements
           </Link>
 
+          <Link to="/admin-dashboard/competitions" className="flex items-center gap-2">
+            <Trophy size={18}/> Competitions
+          </Link>
+
+          <Link to="/admin-dashboard/events" className="flex items-center gap-2">
+            <Calendar size={18}/> Events
+          </Link>
+
+          <Link to="/admin-dashboard/assessments" className="flex items-center gap-2">
+            <FileCheck size={18}/> Assessments
+          </Link>
+
+          <Link to="/admin-dashboard/interviews" className="flex items-center gap-2">
+            <Mic size={18}/> Interviews
+          </Link>
+
           <Link to="/admin-dashboard/settings" className="flex items-center gap-2">
             <SettingsIcon size={18}/> Settings
           </Link>
@@ -285,13 +295,24 @@ export default function AdminDashboard() {
           <CompanyManagement />
         ) : location.pathname === "/admin-dashboard/announcements" ? (
           <Announcements />
+        ) : location.pathname === "/admin-dashboard/competitions" ? (
+          <Competitions role="admin" />
+        ) : location.pathname === "/admin-dashboard/events" ? (
+          <Events role="admin" />
+        ) : location.pathname === "/admin-dashboard/assessments" ? (
+          <Assessments role="admin" />
+        ) : location.pathname === "/admin-dashboard/interviews" ? (
+          <Interviews role="admin" />
         ) : location.pathname === "/admin-dashboard/settings" ? (
           <Settings />
         ) : location.pathname === "/admin-dashboard/help" ? (
-          <HelpSupport />
+          <HelpSupport role="admin" />
         ) : (
           <>
-            <h2 className="text-3xl font-bold mb-6">Overview Dashboard</h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-3xl font-bold">Overview Dashboard</h2>
+              <ThemeToggle role="admin" />
+            </div>
 
             <div className="grid grid-cols-3 gap-6 mb-10">
               {statCards.map((stat,i)=>(
@@ -305,33 +326,122 @@ export default function AdminDashboard() {
 
             <div className="grid grid-cols-2 gap-8">
 
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={YEARLY_PLACEMENTS}>
-                  <CartesianGrid strokeDasharray="3 3"/>
-                  <XAxis dataKey="year"/>
-                  <YAxis/>
-                  <Tooltip/>
-                  <Bar dataKey="placements" fill="#16a34a"/>
-                </BarChart>
-              </ResponsiveContainer>
+              <div className="w-full h-[300px]">
+                {placementAnalytics.length === 0 ? (
+                  <div className="w-full h-full border-2 border-dashed border-gray-100 rounded-xl flex items-center justify-center font-bold text-gray-400">
+                    No Data Available
+                  </div>
+                ) : (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={placementAnalytics}>
+                      <CartesianGrid strokeDasharray="3 3"/>
+                      <XAxis dataKey="year"/>
+                      <YAxis/>
+                      <Tooltip/>
+                      <Bar dataKey="placements" fill="#16a34a"/>
+                    </BarChart>
+                  </ResponsiveContainer>
+                )}
+              </div>
 
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={applicationStatus}
-                    dataKey="value"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={100}
-                  >
-                    {applicationStatus.map((entry,index)=>(
-                      <Cell key={index} fill={PIE_COLORS[index]} />
-                    ))}
-                  </Pie>
-                  <Legend/>
-                </PieChart>
-              </ResponsiveContainer>
+              <div className="w-full h-[300px]">
+                {applicationStatus.length === 0 || applicationStatus.every(s => s.value === 0) ? (
+                  <div className="w-full h-full border-2 border-dashed border-gray-100 rounded-xl flex items-center justify-center font-bold text-gray-400">
+                    No Data Available
+                  </div>
+                ) : (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={applicationStatus}
+                        dataKey="value"
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={100}
+                      >
+                        {applicationStatus.map((entry,index)=>(
+                          <Cell key={index} fill={PIE_COLORS[index]} />
+                        ))}
+                      </Pie>
+                      <Legend/>
+                    </PieChart>
+                  </ResponsiveContainer>
+                )}
+              </div>
 
+            </div>
+
+            {/* Pending Approvals Section */}
+            <div className="mt-10 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+              <div className="p-6 border-b border-gray-50 bg-gray-50/50 flex items-center justify-between">
+                <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+                  <UserPlus className="w-6 h-6 text-green-600" /> Pending Registrations
+                </h3>
+                <div className="flex gap-2">
+                  <span className="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">
+                    {pendingStudents.length} Students
+                  </span>
+                  <span className="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">
+                    {pendingRecruiters.length} Companies
+                  </span>
+                </div>
+              </div>
+              {pendingStudents.length === 0 && pendingRecruiters.length === 0 ? (
+                <div className="p-12 text-center text-gray-400 font-bold border-t border-gray-50">
+                  <UserPlus className="w-12 h-12 mx-auto mb-4 opacity-20" />
+                  No pending registrations to review at this time.
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left">
+                    <thead>
+                      <tr className="bg-white text-gray-400 text-[11px] uppercase tracking-widest font-bold border-b border-gray-50">
+                        <th className="px-6 py-4">Name</th>
+                        <th className="px-6 py-4">Email</th>
+                        <th className="px-6 py-4">Type</th>
+                        <th className="px-6 py-4">Date</th>
+                        <th className="px-6 py-4 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-50">
+                      {[...pendingStudents, ...pendingRecruiters].map((user) => (
+                        <tr key={user.id} className="hover:bg-gray-50/50 transition-all">
+                          <td className="px-6 py-4 font-bold text-sm text-gray-900">{user.name}</td>
+                          <td className="px-6 py-4 text-sm text-gray-500">{user.email}</td>
+                          <td className="px-6 py-4">
+                            <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${
+                              user.type === 'student' ? 'bg-blue-50 text-blue-600 border-blue-100' : 'bg-emerald-50 text-emerald-700 border-emerald-100'
+                            }`}>
+                              {user.type}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-500">
+                            {user.created_at ? new Date(user.created_at).toLocaleDateString() : 'N/A'}
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            <div className="flex justify-end gap-2">
+                              <button 
+                                onClick={() => user.type === 'student' ? handleStudentAction(user.id, "Approve") : handleActionRecruiter(user.id, "approve", "company")}
+                                className="p-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-600 hover:text-white transition-all shadow-sm active:scale-95"
+                                title="Approve"
+                              >
+                                <CheckCircle className="w-4 h-4" />
+                              </button>
+                              <button 
+                                onClick={() => user.type === 'student' ? handleStudentAction(user.id, "Reject") : handleActionRecruiter(user.id, "reject", "company")}
+                                className="p-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-600 hover:text-white transition-all shadow-sm active:scale-95"
+                                title="Reject"
+                              >
+                                <XCircle className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           </>
         )}

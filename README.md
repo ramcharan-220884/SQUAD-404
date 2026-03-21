@@ -1,133 +1,62 @@
-# Placement Management System
+<div align="center">
+  <h1>🚀 EDUVATE (SQUAD-404) Central Portal</h1>
+  <p><b>A modern, production-ready Student Placement & Innovation Hub designed for scale, security, and seamless user experiences.</b></p>
+</div>
 
-## Overview
+<br>
 
-The Placement Management System (PMS) is a web-based application designed to streamline and manage the campus placement process within a college or university. The platform provides a centralized system that connects students, companies, and administrators, enabling efficient coordination of recruitment activities.
+## 📖 Project Overview
+EDUVATE is a full-stack Placement Management System strictly engineered to connect Students, Corporate Recruiters, and University Administrators under a singular, dynamic nexus. Stripped of legacy bloat, the application features an incredibly robust defensive security architecture while maintaining a pristine, visually stunning user experience powered by React and Tailwind CSS.
 
-Students can explore available job opportunities and submit applications, companies can publish job openings and review candidates, and administrators can manage and monitor the overall placement process.
+## 🛠 Tech Stack
+- **Frontend Framework**: React.js, Tailwind CSS
+- **Backend Architecture**: Node.js, Express.js
+- **Database Layer**: MySQL (Structured Relational Data), Redis (In-Memory Token Blacklisting)
+- **Security & Auth**: Dual-Token JWT System, Double-Submit CSRF Interceptors, Argon2/Bcrypt Password Hashing, Google OAuth 2.0 Integration
+- **Infrastructure**: Express Rate Limiting, Joi Input Validation, Nodemailer Asynchronous Transporters
 
----
+## ✨ Core Features
+### 🔐 Hardened Security Pipeline
+* **Dual-Token Engine**: Utilizes 15-minute completely in-memory Access Tokens alongside 7-day HttpOnly Refresh Cookies.
+* **CSRF Immunity**: Automatically enforces cryptographically secure pseudo-random hashes via the Double-Submit Cookie pattern.
+* **Decentralized Validation**: Complete Express routing layer lockdown using strictly typed `Joi` validation schemas.
 
-## Team Name
+### 👥 Tri-State Role Architecture
+* **Student Dashboard**: Curate dynamic portfolios, apply for jobs/hackathons, track application progress seamlessly, and submit support tickets.
+* **Recruiter Suite**: Independently manage corporate branding, schedule interviews, post targeted job openings, and accept/reject applicants directly.
+* **Admin Overwatch**: Execute total domain control including managing global settings, approving newly registered accounts securely, and generating system-wide real-time announcements.
 
-Squad-404
+### 📧 Scalable Notification Engine
+* Fully decoupled `Nodemailer` integration handling strict single-use Tokenized Password Resets and workflow automation sequences safely.
 
----
+## ⚙️ Local Setup Instructions
+Follow these steps to spin up the EDUVATE environment locally.
 
-## Team Members
+### 1. Database Initialization
+1. Ensure **MySQL** and **Redis** are installed and running locally.
+2. Create a new MySQL instance/database (e.g., `squad404`).
+3. Execute the SQL migrations located securely in `/server/migrations/` to construct the schemas natively.
 
-1. Ram Charan
-2. Harsha
-3. Gowthami
-4. Prasanna
-5. Anusha
-6. Pushpa
-
----
-
-## Technology Stack
-
-### Frontend
-
-* React
-
-### Backend
-
-* Node.js
-* Express.js
-
-### Database
-
-* MySQL
-
----
-
-## System Modules
-
-### Authentication
-
-Handles secure login and registration for students, companies, and administrators.
-
-### Student Portal
-
-Allows students to:
-
-* Create and manage their profiles
-* Browse available job opportunities
-* Apply for jobs
-* Track application status
-
-### Company Portal
-
-Allows companies to:
-
-* Register and manage company profiles
-* Post job openings
-* View student applications
-
-### Job Application System
-
-Manages job listings, application submissions, and candidate selection workflow.
-
-### Interview Management
-
-Supports scheduling and managing interview rounds between companies and selected students.
-
-### Admin Dashboard
-
-Provides administrative tools to:
-
-* Manage users and companies
-* Monitor job postings and applications
-* Track placement statistics
-
----
-
-## Project Structure
-
-```
-placement-management-system
-│
-├── client        # Frontend application (React)
-├── server        # Backend application (Node.js + Express)
-├── database      # SQL schema and database setup
-└── docs          # Project documentation
-```
-
----
-
-## Setup Instructions
-
-### 1. Clone the Repository
-
-```
-git clone https://github.com/<username>/squad-404.git
-cd squad-404
-```
-
-### 2. Backend Setup
-
-```
+### 2. Backend Initialization
+\`\`\`bash
 cd server
 npm install
-npm start
-```
+npm run dev
+\`\`\`
+*Before starting, duplicate `server/.env.example` to `server/.env` and securely populate your authentication keys (MySQL strings, JWT Secret, Google Auth ID, Redis).*
 
-### 3. Frontend Setup
-
-```
+### 3. Frontend Initialization
+\`\`\`bash
 cd client
 npm install
 npm start
-```
+\`\`\`
+*The React application natively proxies API queries to the explicit `http://localhost:5000` gateway.*
 
-### 4. Database Setup
+## 📐 Architecture Explanation
+The repository is segmented into a deeply decoupled **Client-Server Hierarchy**:
+- `/client`: Houses the isolated React ecosystem, featuring unified contextual global stores (`AuthContext`, `NotificationContext`) resolving directly to the customized `services/api.js` HTTP Interceptor wrapper.
+- `/server`: Features a strictly tiered architectural pattern (`Routes -> Middleware (Validation/Auth) -> Controllers (Business Logic) -> Services (Data Access)`). Heavily enforces dependency injection mapping methodologies.
 
-1. Create a database in MySQL.
-2. Import the SQL file located in the `database` folder.
-
----
-
-## License
-
-This project is developed for academic and learning purposes.
+## 🛡️ License
+Proprietary deployment. All structural rights secured internally securely by the SQUAD-404 Development Nexus.
