@@ -119,7 +119,13 @@ export default function StudentManagement() {
           <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">Student Management</h2>
           <p className="text-gray-500 font-medium mt-1">Manage and track student placement progress.</p>
         </div>
-        <button onClick={() => setIsDark(prev => !prev)} className="bg-gray-200 text-gray-800 px-4 py-2 rounded text-sm font-bold shadow-sm">Toggle Theme</button>
+        <button 
+          onClick={() => setIsDark(prev => !prev)} 
+          className={`w-[45px] h-[24px] rounded-[20px] relative cursor-pointer transition-colors duration-300 flex-shrink-0 ${isDark ? 'bg-[#22c55e]' : 'bg-[#d1d5db]'}`}
+          title="Toggle Theme"
+        >
+          <div className={`w-[20px] h-[20px] bg-white rounded-full absolute top-[2px] transition-transform duration-300 shadow-sm ${isDark ? 'translate-x-[21px]' : 'translate-x-[2px]'}`} />
+        </button>
       </div>
 
       <div className="max-w-5xl">

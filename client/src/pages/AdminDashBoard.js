@@ -310,10 +310,11 @@ export default function AdminDashboard() {
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-3xl font-bold">Overview Dashboard</h2>
               <button 
-                onClick={() => setIsDarkMode(prev => !prev)}
-                className="bg-gray-200 px-4 py-2 rounded text-sm font-bold shadow-sm"
+                onClick={() => setIsDarkMode(prev => !prev)} 
+                className={`w-[45px] h-[24px] rounded-[20px] relative cursor-pointer transition-colors duration-300 flex-shrink-0 ${isDarkMode ? 'bg-[#22c55e]' : 'bg-[#d1d5db]'}`}
+                title="Toggle Theme"
               >
-                Toggle Theme
+                <div className={`w-[20px] h-[20px] bg-white rounded-full absolute top-[2px] transition-transform duration-300 shadow-sm ${isDarkMode ? 'translate-x-[21px]' : 'translate-x-[2px]'}`} />
               </button>
             </div>
 

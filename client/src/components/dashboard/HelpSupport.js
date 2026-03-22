@@ -124,7 +124,13 @@ export default function HelpSupport({ role }) {
           <p className="text-gray-500 font-medium mt-1">Find answers, report issues, or contact the support team.</p>
         </div>
         <div className="flex items-center gap-4 w-full md:w-auto">
-          <button onClick={() => setIsDark(prev => !prev)} className="bg-gray-200 text-gray-800 px-4 py-2 rounded text-sm font-bold shadow-sm h-full whitespace-nowrap">Toggle Theme</button>
+          <button 
+            onClick={() => setIsDark(prev => !prev)} 
+            className={`w-[45px] h-[24px] rounded-[20px] relative cursor-pointer transition-colors duration-300 flex-shrink-0 ${isDark ? 'bg-[#22c55e]' : 'bg-[#d1d5db]'}`}
+            title="Toggle Theme"
+          >
+            <div className={`w-[20px] h-[20px] bg-white rounded-full absolute top-[2px] transition-transform duration-300 shadow-sm ${isDark ? 'translate-x-[21px]' : 'translate-x-[2px]'}`} />
+          </button>
           <div className="relative w-full md:w-80 group">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-green-600 transition-colors">
               <Search className="w-4.5 h-4.5" />

@@ -115,7 +115,13 @@ export default function Events({ role = "student" }) {
           <h2 className="text-2xl font-black text-gray-900 dark:text-gray-100">Campus Events</h2>
         </div>
         <div className="flex items-center gap-4">
-          <button onClick={() => setIsDark(prev => !prev)} className="bg-gray-200 text-gray-800 px-4 py-2 rounded text-sm font-bold shadow-sm">Toggle Theme</button>
+          <button 
+            onClick={() => setIsDark(prev => !prev)} 
+            className={`w-[45px] h-[24px] rounded-[20px] relative cursor-pointer transition-colors duration-300 flex-shrink-0 ${isDark ? 'bg-[#22c55e]' : 'bg-[#d1d5db]'}`}
+            title="Toggle Theme"
+          >
+            <div className={`w-[20px] h-[20px] bg-white rounded-full absolute top-[2px] transition-transform duration-300 shadow-sm ${isDark ? 'translate-x-[21px]' : 'translate-x-[2px]'}`} />
+          </button>
           {role === 'admin' && (
             <button onClick={() => { resetForm(); setShowModal(true); }} className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-all shadow-lg active:scale-95">
               <Plus className="w-5 h-5" /> Schedule Event

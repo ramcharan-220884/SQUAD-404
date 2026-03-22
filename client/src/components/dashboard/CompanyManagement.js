@@ -111,7 +111,13 @@ export default function CompanyManagement() {
     <div className={`space-y-6 animate-in fade-in duration-500 max-w-7xl mx-auto ${isDark ? "feature-dark rounded-3xl p-6" : ""}`}>
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-800">Company Management</h2>
-        <button onClick={() => setIsDark(prev => !prev)} className="bg-gray-200 text-gray-800 px-4 py-2 rounded text-sm font-bold shadow-sm">Toggle Theme</button>
+        <button 
+          onClick={() => setIsDark(prev => !prev)} 
+          className={`w-[45px] h-[24px] rounded-[20px] relative cursor-pointer transition-colors duration-300 flex-shrink-0 ${isDark ? 'bg-[#22c55e]' : 'bg-[#d1d5db]'}`}
+          title="Toggle Theme"
+        >
+          <div className={`w-[20px] h-[20px] bg-white rounded-full absolute top-[2px] transition-transform duration-300 shadow-sm ${isDark ? 'translate-x-[21px]' : 'translate-x-[2px]'}`} />
+        </button>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
