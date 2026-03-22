@@ -93,6 +93,7 @@ code {
 }
 
 .feature-dark input,
+.feature-dark textarea,
 .feature-dark select {
   color: #ffffff !important;
   background-color: #1f2937 !important;
@@ -102,6 +103,21 @@ code {
 .feature-dark .bg-white {
   background-color: #1f2937 !important;
   border-color: #374151 !important;
+  color: #ffffff !important;
+}
+
+/* Strong CSS for My Profile specifically */
+.profile-container.feature-dark,
+.profile-container.feature-dark *:not(button):not(svg):not(path) {
+  background-color: #111827 !important;
+  color: #ffffff !important;
+  border-color: #1f2937 !important;
+}
+
+.profile-container.feature-dark input,
+.profile-container.feature-dark textarea,
+.profile-container.feature-dark select {
+  background-color: #1f2937 !important;
   color: #ffffff !important;
 }
 

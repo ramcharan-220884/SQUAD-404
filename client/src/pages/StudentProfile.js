@@ -267,13 +267,21 @@ export default function StudentProfile({ isPortal = false }) {
   }
 
   return (
-    <div className={isDark ? "feature-dark" : "feature-light"}>
+    <div className={isDark ? "feature-dark profile-container" : "profile-container"}>
       <div className={isPortal ? "profile-wizard-portal" : "db-root"}>
         {!isPortal && <Sidebar activeItem="profile" />}
         <div className={isPortal ? "" : "db-main-wrapper"}>
           {!isPortal && <Header isDarkMode={isDark} onToggle={toggleTheme} />}
         <div className={isPortal ? "p-4" : "db-body"} style={{ display: 'block', overflowY: 'auto', padding: isPortal ? '0' : '20px' }}>
           
+          <div className="flex justify-end mb-4">
+            <button 
+              onClick={() => setIsDark(prev => !prev)}
+              className="bg-[#800000] text-white px-4 py-2 rounded shadow text-sm font-bold hover:bg-[#4a0000] transition-colors"
+            >
+              Toggle Theme
+            </button>
+          </div>
           {viewMode === "card" && profileData && (
             <ProfileCardView 
               profile={profileData} 
