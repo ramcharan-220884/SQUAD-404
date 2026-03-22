@@ -26,6 +26,11 @@ export default function StudentProfile({ isPortal = false }) {
   const [profileData, setProfileData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const [isDark, setIsDark] = useState(false);
+  const toggleTheme = () => {
+    setIsDark(prev => !prev);
+  };
+
   const fetchInitialData = async () => {
     setIsLoading(true);
     try {
@@ -40,8 +45,9 @@ export default function StudentProfile({ isPortal = false }) {
 
         // Apply dark mode if set
         if (data.dark_mode === 1 || data.dark_mode === true) {
-          document.documentElement.classList.add('dark');
-          document.body.classList.add('dark-mode');
+          setIsDark(true);
+        } else {
+          setIsDark(false);
         }
 
         setBasicInfo({
@@ -261,10 +267,11 @@ export default function StudentProfile({ isPortal = false }) {
   }
 
   return (
-    <div className={isPortal ? "profile-wizard-portal" : "db-root"}>
-      {!isPortal && <Sidebar activeItem="profile" />}
-      <div className={isPortal ? "" : "db-main-wrapper"}>
-        {!isPortal && <Header />}
+    <div className={isDark ? "feature-dark" : "feature-light"}>
+      <div className={isPortal ? "profile-wizard-portal" : "db-root"}>
+        {!isPortal && <Sidebar activeItem="profile" />}
+        <div className={isPortal ? "" : "db-main-wrapper"}>
+          {!isPortal && <Header isDarkMode={isDark} onToggle={toggleTheme} />}
         <div className={isPortal ? "p-4" : "db-body"} style={{ display: 'block', overflowY: 'auto', padding: isPortal ? '0' : '20px' }}>
           
           {viewMode === "card" && profileData && (
@@ -283,6 +290,8 @@ export default function StudentProfile({ isPortal = false }) {
               profile={profileData} 
               onBack={() => setViewMode(profileData.profile_completed ? "card" : "wizard")} 
               onUpdate={fetchInitialData}
+              isDark={isDark}
+              onToggleTheme={toggleTheme}
             />
           )}
 
@@ -545,6 +554,7 @@ export default function StudentProfile({ isPortal = false }) {
 
         </div>
       </div>
+    </div>
     </div>
   );
 }

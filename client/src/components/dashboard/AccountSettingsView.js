@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { authFetch } from '../../services/api';
 
-export default function AccountSettingsView({ profile, onBack, onUpdate }) {
+export default function AccountSettingsView({ profile, onBack, onUpdate, isDark, onToggleTheme }) {
   const [email, setEmail] = useState(profile.email || '');
   const [password, setPassword] = useState('');
   const [darkMode, setDarkMode] = useState(profile.dark_mode === 1 || profile.dark_mode === true);
@@ -11,13 +11,9 @@ export default function AccountSettingsView({ profile, onBack, onUpdate }) {
   const handleToggleDarkMode = async () => {
     const newVal = !darkMode;
     setDarkMode(newVal);
-    // Apply immediate UI change
-    if (newVal) {
-      document.documentElement.classList.add('dark');
-      document.body.classList.add('dark-mode');
-    } else {
-      document.documentElement.classList.remove('dark');
-      document.body.classList.remove('dark-mode');
+    // Apply immediate UI change via parent
+    if (onToggleTheme) {
+      onToggleTheme();
     }
     
     // Persist to backend

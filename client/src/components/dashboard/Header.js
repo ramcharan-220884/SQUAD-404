@@ -1,7 +1,7 @@
 import React from 'react';
 import ThemeToggle from './ThemeToggle';
 
-export default function Header() {
+export default function Header({ isDarkMode, onToggle }) {
   const currentDate = new Date().toLocaleDateString("en-IN", {
     weekday: "long",
     day: "numeric",
@@ -39,7 +39,7 @@ export default function Header() {
         </button>
 
         {/* Theme Toggle */}
-        <ThemeToggle role="student" />
+        <ThemeToggle role="student" isDarkMode={isDarkMode} onToggle={onToggle} />
 
         {/* Avatar — initials only (no hardcoded image) */}
         <div className="db-avatar" title={userName}>

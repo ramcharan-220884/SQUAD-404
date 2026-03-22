@@ -78,3 +78,60 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+/* Localized Feature Dark Mode */
+.feature-light {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.feature-dark {
+  background-color: #111827 !important;
+  color: #ffffff !important;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.feature-dark input,
+.feature-dark select {
+  color: #ffffff !important;
+  background-color: #1f2937 !important;
+  border-color: #374151 !important;
+}
+
+.feature-dark .bg-white {
+  background-color: #1f2937 !important;
+  border-color: #374151 !important;
+  color: #ffffff !important;
+}
+
+.feature-dark .text-gray-900,
+.feature-dark .text-gray-800,
+.feature-dark .text-gray-700 {
+  color: #f3f4f6 !important;
+}
+
+.feature-dark .text-gray-500,
+.feature-dark .text-gray-600 {
+  color: #9ca3af !important;
+}
+
+.feature-dark .bg-gray-50,
+.feature-dark .bg-gray-100 {
+  background-color: #111827 !important;
+  border-color: #374151 !important;
+}
+
+.feature-dark th,
+.feature-dark td {
+  border-color: #374151 !important;
+}
+
+.feature-dark thead tr {
+  background-color: #1f2937 !important;
+}
+
+.feature-dark .border-gray-200,
+.feature-dark .border-gray-100 {
+  border-color: #374151 !important;
+}

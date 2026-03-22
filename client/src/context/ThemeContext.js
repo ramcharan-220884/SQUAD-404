@@ -19,19 +19,11 @@ export const ThemeProvider = ({ children }) => {
         if (json.success && json.user) {
           const isDark = json.user.darkMode;
           setDarkMode(isDark);
-          if (isDark) {
-            document.documentElement.classList.add('dark');
-          } else {
-            document.documentElement.classList.remove('dark');
-          }
         } else {
-          // Fallback
-          document.documentElement.classList.remove('dark');
           setDarkMode(false);
         }
       } catch (err) {
         console.error("Failed to fetch user theme:", err);
-        document.documentElement.classList.remove('dark');
         setDarkMode(false);
       } finally {
         setIsInitializing(false);
@@ -50,11 +42,6 @@ export const ThemeProvider = ({ children }) => {
     
     // Optimistic UI update
     setDarkMode(newVal);
-    if (newVal) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
 
     try {
       await authFetch('/auth/theme', {

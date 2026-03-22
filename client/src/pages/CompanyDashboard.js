@@ -43,6 +43,12 @@ import {
 export default function CompanyDashboard() {
   const { showNotification } = useNotification();
   const [activeTab, setActiveTab] = useState("Home");
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Reset dark mode when navigating between tabs
+  useEffect(() => {
+    setIsDarkMode(false);
+  }, [activeTab]);
   const [, setJobs] = useState([]);
   const [showStudentModal, setShowStudentModal] = useState(false);
   const [selectedStudent] = useState(null);
@@ -417,7 +423,11 @@ export default function CompanyDashboard() {
               <h2 className="text-4xl font-black text-gray-900 tracking-tight">Welcome back, {companyProfile.name}!</h2>
               <p className="text-gray-500 text-lg mt-2 font-medium">Here's what's happening with your recruitment today.</p>
             </div>
-            <ThemeToggle role="company" />
+            <ThemeToggle 
+              role="company" 
+              isDarkMode={isDarkMode} 
+              onToggle={() => setIsDarkMode(!isDarkMode)} 
+            />
           </div>
           
           {/* Dashboard Statistics Cards */}
@@ -1397,7 +1407,7 @@ export default function CompanyDashboard() {
   };
 
   return (
-    <div className="h-screen flex font-sans bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-50/50 via-gray-50 to-white overflow-hidden">
+    <div className={`h-screen flex font-sans bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-50/50 via-gray-50 to-white overflow-hidden ${isDarkMode ? 'feature-dark' : ''}`}>
       {/* Sidebar */}
       <CompanySidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 

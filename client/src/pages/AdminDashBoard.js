@@ -51,6 +51,7 @@ const PIE_COLORS = ["#16a34a", "#facc15", "#dc2626"];
 
 export default function AdminDashboard() {
   const { showNotification } = useNotification();
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const [stats, setStats] = useState(null);
   const [placementAnalytics, setPlacementAnalytics] = useState([]);
   const [pendingStudents, setPendingStudents] = useState([]);
@@ -60,6 +61,11 @@ export default function AdminDashboard() {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const location = useLocation();
+
+  // Reset dark mode on navigation
+  useEffect(() => {
+    setIsDarkMode(false);
+  }, [location.pathname]);
 
   const fetchData = React.useCallback(async () => {
     setLoading(true);
@@ -217,7 +223,7 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className={`flex h-screen bg-gray-50 ${isDarkMode ? 'feature-dark' : ''}`}>
 
       <aside className="w-64 bg-green-900 text-green-50 flex flex-col hidden md:flex">
 
@@ -303,7 +309,11 @@ export default function AdminDashboard() {
           <>
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-3xl font-bold">Overview Dashboard</h2>
-              <ThemeToggle role="admin" />
+              <ThemeToggle 
+                role="admin" 
+                isDarkMode={isDarkMode} 
+                onToggle={() => setIsDarkMode(!isDarkMode)} 
+              />
             </div>
 
             <div className="grid grid-cols-3 gap-6 mb-10">

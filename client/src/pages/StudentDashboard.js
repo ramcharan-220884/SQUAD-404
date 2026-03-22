@@ -276,7 +276,13 @@ function ResourcesSection() {
 export default function StudentDashboard() {
   const { showNotification } = useNotification();
   const [activePage, setActivePage] = useState('home');
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const [appliedJobs, setAppliedJobs] = useState([]);
+
+  // Reset dark mode when feature/tab changes
+  useEffect(() => {
+    setIsDarkMode(false);
+  }, [activePage]);
 
   const fetchAppliedJobs = React.useCallback(async () => {
     try {
@@ -342,13 +348,13 @@ export default function StudentDashboard() {
   };
 
   return (
-    <div className="db-root">
+    <div className={`db-root ${isDarkMode ? 'feature-dark' : ''}`}>
       {/* Sidebar */}
       <Sidebar activeItem={activePage} onItemClick={setActivePage} />
 
       {/* Main wrapper (header + body) */}
       <div className="db-main-wrapper">
-        <Header />
+        <Header isDarkMode={isDarkMode} onToggle={() => setIsDarkMode(!isDarkMode)} />
 
         <div className="db-body">
           {/* Center content */}
