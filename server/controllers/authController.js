@@ -4,7 +4,7 @@ import { pool } from "../config/db.js";
 import redisClient from "../config/redisClient.js";
 import { OAuth2Client } from 'google-auth-library';
 import crypto from 'crypto';
-import { sendPasswordResetEmail } from '../utils/mailer.js';
+import { sendPasswordResetEmail, sendOTPEmail } from '../utils/mailer.js';
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -243,7 +243,7 @@ export const login = async (req, res, next) => {
 
 export const register = async (req, res, next) => {
   try {
-    const { name, email, password, role, ...otherData } = req.body;
+    const { name, email, password, role, otp, ...otherData } = req.body;
 
     if (!name || !email || !password || !role) {
       return res.status(400).json({ success: false, message: "Name, email, password, and role are required" });
@@ -268,6 +268,41 @@ export const register = async (req, res, next) => {
       return res.status(400).json({ success: false, message: "Email already registered" });
     }
 
+    // ── OTP Verification for Company Registration ────────────────────────────
+    if (role === "company") {
+      if (!otp) {
+        return res.status(400).json({ success: false, message: "OTP is required for company registration" });
+      }
+
+      // Look up the most recent valid OTP for this email
+      const [otpRecords] = await pool.query(
+        `SELECT id, otp_hash, attempts FROM email_otps WHERE email = ? AND expires_at > NOW() ORDER BY created_at DESC LIMIT 1`,
+        [email]
+      );
+
+      if (otpRecords.length === 0) {
+        return res.status(400).json({ success: false, message: "OTP expired or not found. Please request a new one." });
+      }
+
+      const otpRecord = otpRecords[0];
+
+      if (otpRecord.attempts >= 5) {
+        return res.status(429).json({ success: false, message: "Too many failed attempts. Please request a new OTP." });
+      }
+
+      const isOtpValid = await bcrypt.compare(otp, otpRecord.otp_hash);
+
+      if (!isOtpValid) {
+        // Increment attempts
+        await pool.query(`UPDATE email_otps SET attempts = attempts + 1 WHERE id = ?`, [otpRecord.id]);
+        return res.status(400).json({ success: false, message: "Invalid OTP. Please try again." });
+      }
+
+      // OTP is valid — delete it so it can't be reused
+      await pool.query(`DELETE FROM email_otps WHERE id = ?`, [otpRecord.id]);
+    }
+    // ── End OTP Verification ─────────────────────────────────────────────────
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     if (role === "student") {
@@ -281,14 +316,11 @@ export const register = async (req, res, next) => {
       );
     } else {
       await pool.query(
-        "INSERT INTO companies (name, email, password, description, contact_person, contact_number, status, approved) VALUES (?, ?, ?, ?, ?, ?, 'Pending', 0)",
+        "INSERT INTO companies (name, email, password, description, contact_person, contact_number, status, approved, email_verified) VALUES (?, ?, ?, ?, ?, ?, 'Pending', 0, 1)",
         [name, email, hashedPassword, otherData.description || null, otherData.contact_person || null, otherData.phone || otherData.contact_number || null]
       );
     }
 
-    // Generate tokens automatically upon successful registration for a smoother UX (though pending users still get blocked by checks later)
-    // Wait, the specification says "Return: accessToken... refreshToken..." for login/register
-    // But since they are pending approval, we do NOT log them in automatically. We just return a success message.
     res.status(201).json({
       success: true,
       message: `${role.charAt(0).toUpperCase() + role.slice(1)} registered successfully. Pending approval.`
@@ -300,11 +332,54 @@ export const register = async (req, res, next) => {
   }
 };
 
+// ── Send OTP for Email Verification ──────────────────────────────────────────
+export const sendOTP = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ success: false, message: "Email is required" });
+    }
+
+    // Check if email is already registered across all tables
+    const [existingStudents] = await pool.query(`SELECT id FROM students WHERE email = ?`, [email]);
+    const [existingCompanies] = await pool.query(`SELECT id FROM companies WHERE email = ?`, [email]);
+    const [existingAdmins] = await pool.query(`SELECT id FROM admins WHERE email = ?`, [email]);
+
+    if (existingStudents.length > 0 || existingCompanies.length > 0 || existingAdmins.length > 0) {
+      return res.status(400).json({ success: false, message: "Email already registered" });
+    }
+
+    // Delete any existing OTPs for this email to prevent spam
+    await pool.query(`DELETE FROM email_otps WHERE email = ?`, [email]);
+
+    // Generate 6-digit OTP
+    const otp = crypto.randomInt(100000, 999999).toString();
+    const otpHash = await bcrypt.hash(otp, 10);
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+    // Store in DB
+    await pool.query(
+      `INSERT INTO email_otps (email, otp_hash, expires_at) VALUES (?, ?, ?)`,
+      [email, otpHash, expiresAt]
+    );
+
+    // Send OTP email
+    await sendOTPEmail(email, otp);
+
+    res.json({ success: true, message: "Verification code sent to your email" });
+
+  } catch (err) {
+    console.error("Send OTP error:", err);
+    next(err);
+  }
+};
+
 export const logout = async (req, res) => {
   const token = req.cookies?.refreshToken || (req.headers["authorization"] && req.headers["authorization"].split(" ")[1]);
   if (token) {
     try {
-      if (redisClient.status === "ready") {
+      if (redisClient?.status === "ready") {
         // Blacklist token for 7 days (matches Refresh Token expiry)
         await redisClient.set(`blacklist:${token}`, "true", "EX", 7 * 24 * 60 * 60);
       }
@@ -326,7 +401,7 @@ export const refresh = async (req, res, next) => {
       return res.status(401).json({ success: false, message: "No refresh token provided" });
     }
 
-    if (redisClient.status === "ready") {
+    if (redisClient?.status === "ready") {
       const isBlacklisted = await redisClient.get(`blacklist:${refreshToken}`);
       if (isBlacklisted) {
         res.clearCookie("refreshToken");

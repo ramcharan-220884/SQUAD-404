@@ -6,6 +6,7 @@ export const registerSchema = {
     email: Joi.string().email().lowercase().required(),
     password: Joi.string().min(8).required(),
     role: Joi.string().valid('student', 'company', 'admin').required(),
+    otp: Joi.string().length(6).pattern(/^\d+$/).optional(),
     branch: Joi.string().optional().allow(''),
     cgpa: Joi.alternatives().try(Joi.number().min(0).max(10), Joi.string().allow('')).optional(),
     company_name: Joi.string().optional().allow('')
@@ -38,5 +39,11 @@ export const resetPasswordSchema = {
   body: Joi.object({
     token: Joi.string().required(),
     newPassword: Joi.string().min(8).required()
+  })
+};
+
+export const sendOTPSchema = {
+  body: Joi.object({
+    email: Joi.string().email().lowercase().required()
   })
 };
