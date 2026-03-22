@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getEvents } from '../../services/studentService';
-import { Calendar, MapPin, Loader2 } from 'lucide-react';
+import { Calendar, Loader2 } from 'lucide-react';
 
 export default function RightPanel() {
   const [events, setEvents] = useState([]);

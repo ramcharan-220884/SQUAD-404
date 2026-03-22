@@ -9,8 +9,6 @@ import {
   FileCheck,
   Settings as SettingsIcon,
   HelpCircle,
-  TrendingUp,
-  Activity,
   UserPlus,
   Building,
   CheckCircle,
@@ -47,7 +45,7 @@ import {
   Legend
 } from "recharts";
 
-import { getStats, getPendingUsers, approveUser, rejectUser, getPlacementAnalytics, getProfile, updateProfile } from "../services/adminService";
+import { getStats, getPendingUsers, approveUser, rejectUser, getPlacementAnalytics } from "../services/adminService";
 
 const PIE_COLORS = ["#16a34a", "#facc15", "#dc2626"];
 
@@ -58,7 +56,7 @@ export default function AdminDashboard() {
   const [pendingStudents, setPendingStudents] = useState([]);
   const [pendingRecruiters, setPendingRecruiters] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [actionLoading, setActionLoading] = useState(null);
+
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const location = useLocation();
@@ -116,7 +114,6 @@ export default function AdminDashboard() {
   }, [fetchData, location]);
 
   const handleStudentAction = async (id, action) => {
-    setActionLoading(`student-${id}-${action}`);
     try {
       if (action === "Approve") {
         await approveUser(id, "student");
@@ -128,13 +125,10 @@ export default function AdminDashboard() {
     } catch (err) {
       console.error(`Failed to ${action} student`, err);
       showNotification(`Failed to ${action} student`, "error", "admin");
-    } finally {
-      setActionLoading(null);
     }
   };
 
   const handleActionRecruiter = async (id, action, type) => {
-    setActionLoading(id);
     try {
       if (action === "approve") {
         await approveUser(id, type);
@@ -146,8 +140,6 @@ export default function AdminDashboard() {
     } catch (err) {
       console.error(`Failed to ${action} recruiter`, err);
       showNotification(`Failed to ${action} recruiter`, "error", "admin");
-    } finally {
-      setActionLoading(null);
     }
   };
 

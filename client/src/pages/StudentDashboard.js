@@ -12,10 +12,6 @@ import Events from '../components/dashboard/Events';
 import AppliedJobs from '../components/dashboard/AppliedJobs';
 import Competitions from '../components/dashboard/Competitions';
 import { 
-  getProfile, 
-  updateProfile, 
-  getAvailableJobs, 
-  applyForJob, 
   getMyApplications 
 } from "../services/studentService";
 import BrowseJobs from "../components/dashboard/BrowseJobs";

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import API_BASE, { authFetch } from '../../services/api';
+import { authFetch } from '../../services/api';
 import { useNotification } from '../../context/NotificationContext';
 
 function StatCard({ value, label, iconClass, icon }) {

@@ -1,0 +1,140 @@
+
+> client@0.1.0 build
+> react-scripts build
+
+Creating an optimized production build...
+
+Treating warnings as errors because process.env.CI = true.
+Most CI servers set it automatically.
+
+Failed to compile.
+
+[eslint] 
+src\components\CompanyLoginModal.js
+  Line 15:10:  'googleLoading' is assigned a value but never used  no-unused-vars
+
+src\components\CompanyRegisterModal.js
+  Line 2:10:  'X' is defined but never used          no-unused-vars
+  Line 2:13:  'Building2' is defined but never used  no-unused-vars
+  Line 2:24:  'Mail' is defined but never used       no-unused-vars
+  Line 2:30:  'Lock' is defined but never used       no-unused-vars
+  Line 2:36:  'FileText' is defined but never used   no-unused-vars
+
+src\components\LoginForm.js
+  Line 2:10:  'Link' is defined but never used  no-unused-vars
+
+src\components\LoginModal.js
+  Line 15:10:  'loading' is assigned a value but never used           no-unused-vars
+  Line 15:19:  'setLoading' is assigned a value but never used        no-unused-vars
+  Line 16:10:  'googleLoading' is assigned a value but never used     no-unused-vars
+  Line 16:25:  'setGoogleLoading' is assigned a value but never used  no-unused-vars
+
+src\components\Navbar.js
+  Line 7:9:  'navigate' is assigned a value but never used  no-unused-vars
+
+src\components\NotificationCard.js
+  Line 1:17:  'useEffect' is defined but never used  no-unused-vars
+
+src\components\UploadSection.jsx
+  Line 2:10:  'Upload' is defined but never used  no-unused-vars
+  Line 2:18:  'File' is defined but never used    no-unused-vars
+  Line 2:24:  'X' is defined but never used       no-unused-vars
+
+src\components\dashboard\Announcements.js
+  Line 7:20:  'Filter' is defined but never used                                                                                     no-unused-vars
+  Line 50:6:  React Hook useEffect has a missing dependency: 'fetchAnnouncements'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\dashboard\Assessments.js
+  Line 35:6:  React Hook useEffect has a missing dependency: 'fetchAssessments'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\dashboard\BrowseJobs.js
+  Line 26:9:  'limit' is assigned a value but never used                                                                    no-unused-vars
+  Line 30:6:  React Hook useEffect has a missing dependency: 'fetchJobs'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\dashboard\CompanyManagement.js
+  Line 5:3:   'Search' is defined but never used                                                                                 no-unused-vars
+  Line 5:11:  'Plus' is defined but never used                                                                                   no-unused-vars
+  Line 5:27:  'ChevronDown' is defined but never used                                                                            no-unused-vars
+  Line 5:64:  'Target' is defined but never used                                                                                 no-unused-vars
+  Line 6:78:  'Trash2' is defined but never used                                                                                 no-unused-vars
+  Line 61:6:  React Hook useEffect has a missing dependency: 'fetchCompanies'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\dashboard\Competitions.js
+  Line 40:6:  React Hook useEffect has a missing dependency: 'fetchComps'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\dashboard\Events.js
+  Line 4:34:  'MapPin' is defined but never used                                                                              no-unused-vars
+  Line 40:6:  React Hook useEffect has a missing dependency: 'fetchEvents'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\dashboard\HelpSupport.js
+  Line 13:3:  'Upload' is defined but never used  no-unused-vars
+
+src\components\dashboard\HomeContent.js
+  Line 2:8:  'API_BASE' is defined but never used  no-unused-vars
+
+src\components\dashboard\Interviews.js
+  Line 4:29:  'Calendar' is defined but never used                                                                                no-unused-vars
+  Line 37:6:  React Hook useEffect has a missing dependency: 'fetchInterviews'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\components\dashboard\RightPanel.js
+  Line 3:20:  'MapPin' is defined but never used  no-unused-vars
+
+src\components\dashboard\StudentManagement.js
+  Line 5:11:  'Plus' is defined but never used                                                                                  no-unused-vars
+  Line 5:27:  'Filter' is defined but never used                                                                                no-unused-vars
+  Line 6:66:  'Trash2' is defined but never used                                                                                no-unused-vars
+  Line 57:6:  React Hook useEffect has a missing dependency: 'fetchStudents'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src\context\ThemeContext.js
+  Line 2:8:  'API_BASE' is defined but never used  no-unused-vars
+
+src\pages\AdminDashBoard.js
+  Line 12:3:   'TrendingUp' is defined but never used              no-unused-vars
+  Line 13:3:   'Activity' is defined but never used                no-unused-vars
+  Line 50:85:  'getProfile' is defined but never used              no-unused-vars
+  Line 50:97:  'updateProfile' is defined but never used           no-unused-vars
+  Line 61:10:  'actionLoading' is assigned a value but never used  no-unused-vars
+
+src\pages\CompanyDashboard.js
+  Line 2:10:    'useNavigate' is defined but never used                  no-unused-vars
+  Line 5:10:    'Loader2' is defined but never used                      no-unused-vars
+  Line 14:3:    'HelpCircle' is defined but never used                   no-unused-vars
+  Line 17:3:    'LogOut' is defined but never used                       no-unused-vars
+  Line 25:3:    'Trophy' is defined but never used                       no-unused-vars
+  Line 26:3:    'Calendar' is defined but never used                     no-unused-vars
+  Line 51:10:   'jobs' is assigned a value but never used                no-unused-vars
+  Line 52:10:   'newJob' is assigned a value but never used              no-unused-vars
+  Line 52:18:   'setNewJob' is assigned a value but never used           no-unused-vars
+  Line 53:10:   'message' is assigned a value but never used             no-unused-vars
+  Line 53:19:   'setMessage' is assigned a value but never used          no-unused-vars
+  Line 55:27:   'setSelectedStudent' is assigned a value but never used  no-unused-vars
+  Line 140:10:  'loading' is assigned a value but never used             no-unused-vars
+
+src\pages\Home.js
+  Line 19:28:  'setInitialLoginRole' is assigned a value but never used  no-unused-vars
+
+src\pages\StudentDashboard.js
+  Line 15:3:  'getProfile' is defined but never used        no-unused-vars
+  Line 16:3:  'updateProfile' is defined but never used     no-unused-vars
+  Line 17:3:  'getAvailableJobs' is defined but never used  no-unused-vars
+  Line 18:3:  'applyForJob' is defined but never used       no-unused-vars
+
+src\pages\home\AdminSection.js
+  Line 2:10:  'useNavigate' is defined but never used  no-unused-vars
+
+src\pages\home\CompanySection.js
+  Line 2:10:  'useNavigate' is defined but never used  no-unused-vars
+
+src\pages\home\HeroSection.js
+  Line 2:10:  'useNavigate' is defined but never used  no-unused-vars
+
+src\pages\home\StudentSection.js
+  Line 2:10:  'useNavigate' is defined but never used  no-unused-vars
+
+src\services\adminService.js
+  Line 1:8:  'API_BASE' is defined but never used  no-unused-vars
+
+src\services\profileService.js
+  Line 1:8:  'API_BASE' is defined but never used  no-unused-vars
+
+

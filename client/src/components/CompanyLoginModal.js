@@ -12,7 +12,7 @@ const CompanyLoginModal = ({ isOpen, onClose, onSwitchToRegister }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
+
   const [showForgot, setShowForgot] = useState(false);
   const navigate = useNavigate();
 
@@ -22,7 +22,7 @@ const CompanyLoginModal = ({ isOpen, onClose, onSwitchToRegister }) => {
     try {
       showNotification("Verifying Google Profile...", "info");
       setLoading(true);
-      setGoogleLoading(true);
+
       setError('');
       
       const response = await googleLoginAPI(credentialResponse.credential, 'company');
@@ -43,7 +43,6 @@ const CompanyLoginModal = ({ isOpen, onClose, onSwitchToRegister }) => {
       showNotification(errMsg, "error");
     } finally {
       setLoading(false);
-      setGoogleLoading(false);
     }
   };
 

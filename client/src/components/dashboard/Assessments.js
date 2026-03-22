@@ -32,6 +32,7 @@ export default function Assessments({ role = "student" }) {
 
   useEffect(() => {
     fetchAssessments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [role]);
 
   const handleDelete = async (id) => {

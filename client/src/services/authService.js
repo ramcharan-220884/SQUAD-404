@@ -72,3 +72,14 @@ export const registerUser = async (data) => {
 
   return result;
 };
+
+export const sendOTPAPI = async (email) => {
+  const res = await fetch(`${API_BASE}/auth/send-otp`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+  const result = await res.json();
+  if (!res.ok) throw new Error(result.message || "Failed to send OTP");
+  return result;
+};

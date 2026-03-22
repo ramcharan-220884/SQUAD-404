@@ -16,7 +16,7 @@ import AdminLoginModal from "../components/AdminLoginModal";
 const Home = () => {
   const [modalData, setModalData] = useState({ isOpen: false, role: "Student" });
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [initialLoginRole, setInitialLoginRole] = useState("student");
+  const [initialLoginRole] = useState("student");
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [isCompanyLoginOpen, setIsCompanyLoginOpen] = useState(false);
   const [isCompanyRegisterOpen, setIsCompanyRegisterOpen] = useState(false);
