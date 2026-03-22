@@ -105,6 +105,10 @@ const resourcesData = {
     {
       title: "Python Crash Course by Eric Matthes",
       link: "https://share.google/PAwpx8UvD2ppUTRWK"
+    },
+    {
+      title: "Full Stack",
+      link: "https://share.google/sAynTel4CZ7mjq0LX"
     }
   ],
   "Core Subjects": [
