@@ -1,4 +1,4 @@
-import API_BASE, { authFetch } from "./api";
+import { authFetch } from "./api";
 
 // Helper to handle standardized response structure { success, data }
 const handleResponse = async (res) => {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getInterviews } from '../../services/studentService';
 import { getAdminInterviews, createInterview, deleteInterview } from '../../services/adminService';
-import { Mic, Plus, Trash2, Calendar, Clock, Building, User, Loader2, AlertCircle } from 'lucide-react';
+import { Mic, Plus, Trash2, Clock, Building, User, Loader2, AlertCircle } from 'lucide-react';
 import { useNotification } from '../../context/NotificationContext';
 import { MoreVertical, Edit2, Eye } from 'lucide-react';
 
@@ -34,6 +34,7 @@ export default function Interviews({ role = "student" }) {
 
   useEffect(() => {
     fetchInterviews();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [role]);
 
   const handleDelete = async (id) => {

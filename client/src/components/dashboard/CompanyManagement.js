@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { getAllCompanies, approveUser, rejectUser, updateCompanyAdmin } from "../../services/adminService";
 import { useNotification } from "../../context/NotificationContext";
 import {
-  Search, Plus, Download, ChevronDown, MoreVertical, Building, Target,
-  Users, CheckCircle, XCircle, Clock, ChevronLeft, ChevronRight, Eye, Edit2, Trash2, Loader2
+  Download, MoreVertical, Building,
+  Users, CheckCircle, XCircle, Clock, ChevronLeft, ChevronRight, Eye, Edit2, Loader2
 } from "lucide-react";
 
 export default function CompanyManagement() {
@@ -58,6 +58,7 @@ export default function CompanyManagement() {
 
   useEffect(() => {
     fetchCompanies();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   const handleAction = async (id, action) => {

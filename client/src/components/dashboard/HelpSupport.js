@@ -10,7 +10,6 @@ import {
   MessageSquare,
   ChevronDown,
   ChevronUp,
-  Upload,
   Mail,
   Phone,
   Clock,

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getEvents, registerForEvent } from '../../services/studentService';
 import { getAdminEvents, createEvent, updateEvent, deleteEvent } from '../../services/adminService';
-import { Plus, Trash2, Calendar, MapPin, Users, Loader2, AlertCircle, Edit2, Eye, CheckCircle, Search } from 'lucide-react';
+import { Plus, Trash2, Calendar, Users, Loader2, AlertCircle, Edit2, Eye, CheckCircle, Search } from 'lucide-react';
 import { useNotification } from '../../context/NotificationContext';
 
 export default function Events({ role = "student" }) {
@@ -37,6 +37,7 @@ export default function Events({ role = "student" }) {
 
   useEffect(() => {
     fetchEvents();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [role]);
 
   const handleRegister = async (eventId) => {

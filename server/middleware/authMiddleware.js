@@ -13,7 +13,7 @@ export const verifyToken = async (req, res, next) => {
 
   try {
     // Graceful Redis check — skip if Redis is disconnected
-    if (redisClient.status === "ready") {
+    if (redisClient?.status === "ready") {
       const isBlacklisted = await redisClient.get(`blacklist:${token}`);
       if (isBlacklisted) {
         if (res.sendError) return res.sendError("Invalid token (Logged out).", 401);
