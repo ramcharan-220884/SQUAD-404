@@ -25,7 +25,6 @@ export default function CompanySidebar({ activeTab, setActiveTab }) {
     { name: "Announcements", icon: Bell },
     { name: "Competitions", icon: Trophy },
     { name: "Events", icon: Calendar },
-    { name: "Assessments", icon: FileText },
     { name: "Settings", icon: Settings },
     { name: "Help & Support", icon: HelpCircle },
     { name: "Logout", icon: LogOut, isAction: true },

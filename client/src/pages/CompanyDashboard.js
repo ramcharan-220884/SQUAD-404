@@ -23,7 +23,6 @@ import {
 import Announcements from "../components/dashboard/Announcements";
 import Competitions from "../components/dashboard/Competitions";
 import Events from "../components/dashboard/Events";
-import Assessments from "../components/dashboard/Assessments";
 import ThemeToggle from "../components/dashboard/ThemeToggle";
 import CompanySidebar from "../components/dashboard/CompanySidebar";
 import { 
@@ -1168,14 +1167,6 @@ export default function CompanyDashboard() {
       return (
         <div className="animate-in fade-in duration-300">
            <Events role="company" />
-        </div>
-      );
-    }
-
-    if (activeTab === "Assessments") {
-      return (
-        <div className="animate-in fade-in duration-300">
-           <Assessments role="company" />
         </div>
       );
     }
