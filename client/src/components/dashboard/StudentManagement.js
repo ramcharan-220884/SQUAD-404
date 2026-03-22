@@ -24,6 +24,8 @@ export default function StudentManagement() {
   const [isEditMode, setIsEditMode] = useState(false);
   const [editForm, setEditForm] = useState({ name: '', email: '', branch: '', cgpa: '', status: '', placed_status: '' });
 
+  const [isDark, setIsDark] = useState(false);
+
   const { showNotification } = useNotification();
 
   const fetchStudents = async () => {
@@ -111,12 +113,13 @@ export default function StudentManagement() {
   );
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className={`space-y-8 animate-in fade-in duration-500 ${isDark ? "feature-dark rounded-3xl p-6" : ""}`}>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">Student Management</h2>
           <p className="text-gray-500 font-medium mt-1">Manage and track student placement progress.</p>
         </div>
+        <button onClick={() => setIsDark(prev => !prev)} className="bg-gray-200 text-gray-800 px-4 py-2 rounded text-sm font-bold shadow-sm">Toggle Theme</button>
       </div>
 
       <div className="max-w-5xl">

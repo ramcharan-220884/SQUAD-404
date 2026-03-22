@@ -223,7 +223,7 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className={`flex h-screen bg-gray-50 ${isDarkMode ? 'feature-dark' : ''}`}>
+    <div className="flex h-screen bg-gray-50">
 
       <aside className="w-64 bg-green-900 text-green-50 flex flex-col hidden md:flex">
 
@@ -306,14 +306,15 @@ export default function AdminDashboard() {
         ) : location.pathname === "/admin-dashboard/help" ? (
           <HelpSupport role="admin" />
         ) : (
-          <>
+          <div className={isDarkMode ? "feature-dark h-full pb-10" : "h-full pb-10"}>
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-3xl font-bold">Overview Dashboard</h2>
-              <ThemeToggle 
-                role="admin" 
-                isDarkMode={isDarkMode} 
-                onToggle={() => setIsDarkMode(!isDarkMode)} 
-              />
+              <button 
+                onClick={() => setIsDarkMode(prev => !prev)}
+                className="bg-gray-200 px-4 py-2 rounded text-sm font-bold shadow-sm"
+              >
+                Toggle Theme
+              </button>
             </div>
 
             <div className="grid grid-cols-3 gap-6 mb-10">
@@ -445,7 +446,7 @@ export default function AdminDashboard() {
                 </div>
               )}
             </div>
-          </>
+          </div>
         )}
 
       </main>

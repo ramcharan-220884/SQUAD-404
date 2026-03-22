@@ -26,6 +26,8 @@ export default function CompanyManagement() {
   const [isEditMode, setIsEditMode] = useState(false);
   const [editForm, setEditForm] = useState({ name: '', email: '', status: '', package: '', deadline: '' });
 
+  const [isDark, setIsDark] = useState(false);
+
   const { showNotification } = useNotification();
 
   const fetchCompanies = async () => {
@@ -106,9 +108,10 @@ export default function CompanyManagement() {
   const filteredCompanies = companies.filter(c => c.name?.toLowerCase().includes(searchQuery.toLowerCase()));
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500 max-w-7xl mx-auto">
+    <div className={`space-y-6 animate-in fade-in duration-500 max-w-7xl mx-auto ${isDark ? "feature-dark rounded-3xl p-6" : ""}`}>
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-800">Company Management</h2>
+        <button onClick={() => setIsDark(prev => !prev)} className="bg-gray-200 text-gray-800 px-4 py-2 rounded text-sm font-bold shadow-sm">Toggle Theme</button>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

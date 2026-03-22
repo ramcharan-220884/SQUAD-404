@@ -19,6 +19,7 @@ import {
 
 export default function HelpSupport({ role }) {
   const { showNotification } = useNotification();
+  const [isDark, setIsDark] = useState(false);
   const [openFaq, setOpenFaq] = useState(null);
   const [reportForm, setReportForm] = useState({
     title: "",
@@ -115,22 +116,25 @@ export default function HelpSupport({ role }) {
   };
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-500 pb-10">
+    <div className={`space-y-10 animate-in fade-in duration-500 pb-10 ${isDark ? "feature-dark p-6 rounded-3xl" : ""}`}>
       {/* Header & Search */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
           <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">Help & Support</h2>
           <p className="text-gray-500 font-medium mt-1">Find answers, report issues, or contact the support team.</p>
         </div>
-        <div className="relative w-full md:w-80 group">
-          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-green-600 transition-colors">
-            <Search className="w-4.5 h-4.5" />
-          </div>
+        <div className="flex items-center gap-4 w-full md:w-auto">
+          <button onClick={() => setIsDark(prev => !prev)} className="bg-gray-200 text-gray-800 px-4 py-2 rounded text-sm font-bold shadow-sm h-full whitespace-nowrap">Toggle Theme</button>
+          <div className="relative w-full md:w-80 group">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-green-600 transition-colors">
+              <Search className="w-4.5 h-4.5" />
+            </div>
           <input 
             type="text" 
             placeholder="Search help articles..." 
             className="w-full pl-11 pr-4 py-3 bg-white border-2 border-gray-100 rounded-2xl outline-none focus:border-green-500 transition-all font-bold text-gray-700 shadow-sm"
           />
+        </div>
         </div>
       </div>
 

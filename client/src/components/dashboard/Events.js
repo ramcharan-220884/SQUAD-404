@@ -8,6 +8,7 @@ export default function Events({ role = "student" }) {
   const { showNotification } = useNotification();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isDark, setIsDark] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -107,17 +108,20 @@ export default function Events({ role = "student" }) {
   if (loading) return <div className="p-8 text-center text-gray-500 font-bold flex flex-col items-center gap-2"><Loader2 className="animate-spin" /> Loading...</div>;
 
   return (
-    <div className="p-4 md:p-8 space-y-6">
+    <div className={`p-4 md:p-8 space-y-6 ${isDark ? "feature-dark rounded-[2rem]" : ""}`}>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="flex items-center gap-3">
           <Calendar className="w-8 h-8 text-blue-500" />
           <h2 className="text-2xl font-black text-gray-900 dark:text-gray-100">Campus Events</h2>
         </div>
-        {role === 'admin' && (
-          <button onClick={() => { resetForm(); setShowModal(true); }} className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-all shadow-lg active:scale-95">
-            <Plus className="w-5 h-5" /> Schedule Event
-          </button>
-        )}
+        <div className="flex items-center gap-4">
+          <button onClick={() => setIsDark(prev => !prev)} className="bg-gray-200 text-gray-800 px-4 py-2 rounded text-sm font-bold shadow-sm">Toggle Theme</button>
+          {role === 'admin' && (
+            <button onClick={() => { resetForm(); setShowModal(true); }} className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-all shadow-lg active:scale-95">
+              <Plus className="w-5 h-5" /> Schedule Event
+            </button>
+          )}
+        </div>
       </div>
       <p className="text-gray-500 dark:text-gray-400 font-medium">Stay updated with campus events, seminars, and workshops.</p>
       

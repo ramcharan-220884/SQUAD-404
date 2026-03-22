@@ -16,6 +16,7 @@ export default function Announcements({ role = "admin" }) {
   const [activeMenu, setActiveMenu] = useState(null);
   const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isDark, setIsDark] = useState(false);
   
   // Pagination State
   const [page, setPage] = useState(1);
@@ -174,7 +175,7 @@ export default function Announcements({ role = "admin" }) {
   const getCategoryStyle = (category) => category === "Placement" ? "bg-indigo-100 text-indigo-700 border-indigo-200" : (category === "Event" ? "bg-purple-100 text-purple-700 border-purple-200" : "bg-orange-100 text-orange-700 border-orange-200");
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className={`space-y-8 animate-in fade-in duration-500 ${isDark ? "feature-dark p-6 rounded-3xl" : ""}`}>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">Announcements</h2>
@@ -183,9 +184,12 @@ export default function Announcements({ role = "admin" }) {
           </p>
         </div>
         {role === 'admin' && (
+          <div className="flex items-center gap-4">
+            <button onClick={() => setIsDark(prev => !prev)} className="bg-gray-200 text-gray-800 px-4 py-2 rounded text-sm font-bold shadow-sm">Toggle Theme</button>
             <button onClick={() => { resetForm(); setShowModal(true); }} className="flex items-center gap-2 px-5 py-2.5 bg-green-600 text-white font-bold rounded-xl hover:bg-green-700 transition-all shadow-lg active:scale-95">
               <Plus className="w-5 h-5" /> Create
             </button>
+          </div>
         )}
       </div>
 

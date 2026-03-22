@@ -39,6 +39,7 @@ export default function Settings() {
   });
 
   const [darkMode, setDarkMode] = useState(false);
+  const [isDark, setIsDark] = useState(false);
 
   // Password Modal
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -108,11 +109,7 @@ export default function Settings() {
 
       await updateSettings(payload);
       
-      if (darkMode) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
+      // Removed global document modification to obey feature-scoping rules
 
       showNotification("Settings saved successfully!", "success", "admin");
     } catch (err) {
@@ -158,13 +155,15 @@ export default function Settings() {
   }
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className={`space-y-8 animate-in fade-in duration-500 ${isDark ? "feature-dark p-6 rounded-3xl" : ""}`}>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">Settings</h2>
           <p className="text-gray-500 font-medium mt-1">Configure system preferences and manage administrative controls.</p>
         </div>
-        <button 
+        <div className="flex items-center gap-4">
+          <button onClick={() => setIsDark(prev => !prev)} className="bg-gray-200 text-gray-800 px-4 py-2 rounded text-sm font-bold shadow-sm">Toggle Theme</button>
+          <button 
           onClick={handleSave} 
           disabled={saving}
           className={`flex items-center gap-2 px-6 py-3 font-bold rounded-2xl transition-all shadow-lg active:scale-95 ${saving ? "bg-gray-400 text-gray-100 cursor-not-allowed shadow-none" : "bg-green-600 text-white hover:bg-green-700 shadow-green-600/20"}`}
@@ -172,6 +171,7 @@ export default function Settings() {
           {saving ? <div className="w-5 h-5 border-2 border-white/50 border-t-white rounded-full animate-spin"/> : <Save className="w-5 h-5" />}
           {saving ? "Saving..." : "Save Changes"}
         </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
