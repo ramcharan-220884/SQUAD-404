@@ -105,10 +105,6 @@ const resourcesData = {
     {
       title: "Python Crash Course by Eric Matthes",
       link: "https://share.google/PAwpx8UvD2ppUTRWK"
-    },
-    {
-      title: "Top 100 DSA Problems",
-      link: "https://share.google/nd2eggncHVQ1TrzGZ"
     }
   ],
   "Core Subjects": [
