@@ -125,7 +125,10 @@ const resourcesData = {
     }
   ],
   Analog: [
-    { title: "Analog Circuits Basics", link: "#" }
+    {
+      title: "MCQ Questions",
+      link: "https://share.google/qj4GcJCaceRjJrQHE"
+    }
   ],
   Chemical: [
     { title: "Chemical Engineering Interview Questions", link: "#" }
