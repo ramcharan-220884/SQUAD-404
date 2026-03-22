@@ -67,7 +67,8 @@ export default function CompanyDashboard() {
     deadline: "",
     description: "",
     skills: "",
-    experience: ""
+    experience: "",
+    min_cgpa: ""
   });
 
   // New Dashboard Stats and Table State
@@ -311,7 +312,7 @@ export default function CompanyDashboard() {
           description: postJobFormData.description,
           skills: postJobFormData.skills,
           experience: postJobFormData.experience,
-          min_cgpa: null,
+          min_cgpa: postJobFormData.min_cgpa,
           max_backlogs: null
         };
 
@@ -349,7 +350,8 @@ export default function CompanyDashboard() {
       deadline: "",
       description: "",
       skills: "",
-      experience: ""
+      experience: "",
+      min_cgpa: ""
     });
     setIsEditing(false);
     setEditJobId(null);
@@ -366,7 +368,8 @@ export default function CompanyDashboard() {
       deadline: job.deadline || "",
       description: job.description || "",
       skills: job.skills || "",
-      experience: job.experience || ""
+      experience: job.experience || "",
+      min_cgpa: job.min_cgpa || ""
     });
     setIsEditing(true);
     setEditJobId(job.id);
@@ -955,17 +958,7 @@ export default function CompanyDashboard() {
             </div>
           </div>
           
-          {/* Detailed Analytics Call to Action - Optional placeholder */}
-          <div className="bg-gradient-to-r from-[#1e293b] to-[#0f172a] rounded-3xl p-10 text-white shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8 border border-white/5 relative overflow-hidden group">
-             <div className="absolute top-0 right-0 p-20 bg-blue-500/10 rounded-full blur-3xl -mr-20 -mt-20 group-hover:bg-blue-500/20 transition-colors duration-700"></div>
-             <div className="relative z-10">
-               <h3 className="text-2xl font-black mb-3 tracking-tight">Want deeper insights?</h3>
-               <p className="text-white/70 font-medium text-base md:max-w-md leading-relaxed">Upgrade to Eduvate Employer Pro to unlock advanced candidate tracking, custom reports, and predictive hiring analytics.</p>
-             </div>
-             <button className="relative z-10 bg-[#3b82f6] text-white px-10 py-5 rounded-2xl font-black text-base shadow-xl shadow-blue-500/30 hover:bg-[#2563eb] hover:shadow-2xl transition-all active:scale-95 whitespace-nowrap">
-               Upgrade to Pro
-             </button>
-          </div>
+
         </div>
       );
     }
@@ -1687,6 +1680,19 @@ export default function CompanyDashboard() {
                     onChange={handlePostJobChange}
                     placeholder="e.g. 3+ years"
                     className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#346b41] focus:bg-white outline-none transition-all font-medium"
+                  />
+                </div>
+
+                {/* Minimum CGPA Required */}
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-2">Minimum CGPA Required</label>
+                  <input
+                    type="text"
+                    name="min_cgpa"
+                    value={postJobFormData.min_cgpa}
+                    onChange={handlePostJobChange}
+                    placeholder="e.g. 7.5"
+                    className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#3b82f6] focus:bg-white outline-none transition-all font-medium"
                   />
                 </div>
 
