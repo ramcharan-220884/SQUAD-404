@@ -151,3 +151,27 @@ code {
 .feature-dark .border-gray-100 {
   border-color: #374151 !important;
 }
+
+/* Student Dashboard Style Toggle Button */
+.theme-btn {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.theme-btn.light {
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+.theme-btn.dark {
+  background-color: #111827;
+  color: #ffffff;
+}

@@ -5,7 +5,8 @@ import { getAnnouncements as getCompanyAnnouncements } from "../../services/comp
 import { useNotification } from "../../context/NotificationContext";
 import {
   Megaphone, Plus, Calendar, Download, Search, MoreVertical,
-  CheckCircle, AlertCircle, Trash2, Pin, ChevronLeft, ChevronRight, User, Tag, Clock, Loader2, Edit2, Eye
+  CheckCircle, AlertCircle, Trash2, Pin, ChevronLeft, ChevronRight, User, Tag, Clock, Loader2, Edit2, Eye,
+  Sun, Moon
 } from "lucide-react";
 
 import socketService from "../../services/socketService";
@@ -187,10 +188,10 @@ export default function Announcements({ role = "admin" }) {
           <div className="flex items-center gap-4">
             <button 
               onClick={() => setIsDark(prev => !prev)} 
-              className={`w-[45px] h-[24px] rounded-[20px] relative cursor-pointer transition-colors duration-300 flex-shrink-0 ${isDark ? 'bg-[#22c55e]' : 'bg-[#d1d5db]'}`}
-              title="Toggle Theme"
+              className={`theme-btn ${isDark ? 'dark' : 'light'}`}
             >
-              <div className={`w-[20px] h-[20px] bg-white rounded-full absolute top-[2px] transition-transform duration-300 shadow-sm ${isDark ? 'translate-x-[21px]' : 'translate-x-[2px]'}`} />
+              {isDark ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+              <span>{isDark ? "Dark" : "Light"}</span>
             </button>
             <button onClick={() => { resetForm(); setShowModal(true); }} className="flex items-center gap-2 px-5 py-2.5 bg-green-600 text-white font-bold rounded-xl hover:bg-green-700 transition-all shadow-lg active:scale-95">
               <Plus className="w-5 h-5" /> Create

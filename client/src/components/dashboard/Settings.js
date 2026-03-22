@@ -3,7 +3,8 @@ import { getSettings, updateSettings, getProfile, changeAdminPassword } from "..
 import { useNotification } from "../../context/NotificationContext";
 import {
   Settings as SettingsIcon, Save, Building, Mail, Phone, Calendar, Layers, Shield,
-  Bell, Lock, Key, Clock, ChevronRight, CheckCircle2, Globe, Users, X
+  Bell, Lock, Key, Clock, ChevronRight, CheckCircle2, Globe, Users, X,
+  Sun, Moon
 } from "lucide-react";
 
 export default function Settings() {
@@ -164,10 +165,10 @@ export default function Settings() {
         <div className="flex items-center gap-4">
           <button 
             onClick={() => setIsDark(prev => !prev)} 
-            className={`w-[45px] h-[24px] rounded-[20px] relative cursor-pointer transition-colors duration-300 flex-shrink-0 ${isDark ? 'bg-[#22c55e]' : 'bg-[#d1d5db]'}`}
-            title="Toggle Theme"
+            className={`theme-btn ${isDark ? 'dark' : 'light'}`}
           >
-            <div className={`w-[20px] h-[20px] bg-white rounded-full absolute top-[2px] transition-transform duration-300 shadow-sm ${isDark ? 'translate-x-[21px]' : 'translate-x-[2px]'}`} />
+            {isDark ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+            <span>{isDark ? "Dark" : "Light"}</span>
           </button>
           <button 
           onClick={handleSave} 

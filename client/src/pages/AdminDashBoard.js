@@ -16,7 +16,9 @@ import {
   Megaphone,
   Trophy,
   Mic,
-  LogOut
+  LogOut,
+  Sun,
+  Moon
 } from "lucide-react";
 import { useNotification } from "../context/NotificationContext";
 
@@ -311,10 +313,10 @@ export default function AdminDashboard() {
               <h2 className="text-3xl font-bold">Overview Dashboard</h2>
               <button 
                 onClick={() => setIsDarkMode(prev => !prev)} 
-                className={`w-[45px] h-[24px] rounded-[20px] relative cursor-pointer transition-colors duration-300 flex-shrink-0 ${isDarkMode ? 'bg-[#22c55e]' : 'bg-[#d1d5db]'}`}
-                title="Toggle Theme"
+                className={`theme-btn ${isDarkMode ? 'dark' : 'light'}`}
               >
-                <div className={`w-[20px] h-[20px] bg-white rounded-full absolute top-[2px] transition-transform duration-300 shadow-sm ${isDarkMode ? 'translate-x-[21px]' : 'translate-x-[2px]'}`} />
+                {isDarkMode ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+                <span>{isDarkMode ? "Dark" : "Light"}</span>
               </button>
             </div>
 
