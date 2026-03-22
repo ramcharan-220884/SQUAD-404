@@ -115,7 +115,14 @@ const resourcesData = {
     { title: "Operating Systems Notes", link: "#" }
   ],
   Digital: [
-    { title: "Digital Electronics Notes", link: "#" }
+    {
+      title: "Digital Electronics MCQ",
+      link: "https://share.google/HJ7jsa3u6oT79wKSu"
+    },
+    {
+      title: "Questions on VLSI",
+      link: "https://share.google/Gjat9LRly9AVDlaff"
+    }
   ],
   Analog: [
     { title: "Analog Circuits Basics", link: "#" }
