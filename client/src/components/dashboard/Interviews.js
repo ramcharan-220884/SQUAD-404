@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { Mic, Search, ChevronDown, ChevronUp, Clock, Building, User, AlertCircle, Eye, Plus, X } from 'lucide-react';
+import { Mic, Search, ChevronDown, ChevronUp, Clock, Building, User, AlertCircle, Eye, Plus, X, CheckSquare, Users } from 'lucide-react';
+
+const MOCK_STUDENTS = [
+  { id: 1, name: "Rahul" },
+  { id: 2, name: "Anjali" },
+  { id: 3, name: "Kiran" }
+];
 
 export default function Interviews({ role = "student" }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -11,6 +17,11 @@ export default function Interviews({ role = "student" }) {
     date: ""
   });
   
+  // Track assigned students per interview ID: { interviewId: [studentId, ...] }
+  const [assignedStudents, setAssignedStudents] = useState({});
+  // Track active mode per interview ID: { interviewId: "details" | "assign" | "view" }
+  const [interviewModes, setInterviewModes] = useState({});
+
   const [interviews, setInterviews] = useState([
     {
       id: 1,
@@ -36,6 +47,10 @@ export default function Interviews({ role = "student" }) {
     setInterviews(interviews.map(inv => 
       inv.id === id ? { ...inv, expanded: !inv.expanded } : inv
     ));
+    // Reset mode to details when expanding/collapsing
+    if (!interviewModes[id]) {
+      setInterviewModes({ ...interviewModes, [id]: "details" });
+    }
   };
 
   const updateStatus = (id, newStatus) => {
@@ -64,6 +79,25 @@ export default function Interviews({ role = "student" }) {
     setInterviews([newInterview, ...interviews]);
     setShowModal(false);
     setFormData({ company: "", role: "", round: "Technical", date: "" });
+  };
+
+  const handleStudentSelect = (interviewId, studentId) => {
+    const currentAssigned = assignedStudents[interviewId] || [];
+    if (currentAssigned.includes(studentId)) {
+      setAssignedStudents({
+        ...assignedStudents,
+        [interviewId]: currentAssigned.filter(id => id !== studentId)
+      });
+    } else {
+      setAssignedStudents({
+        ...assignedStudents,
+        [interviewId]: [...currentAssigned, studentId]
+      });
+    }
+  };
+
+  const setMode = (interviewId, mode) => {
+    setInterviewModes({ ...interviewModes, [interviewId]: mode });
   };
 
   const filteredInterviews = interviews.filter(inv =>
@@ -130,100 +164,178 @@ export default function Interviews({ role = "student" }) {
                   </td>
                 </tr>
               ) : (
-                filteredInterviews.map((inv) => (
-                  <React.Fragment key={inv.id}>
-                    <tr className="bg-white hover:bg-gray-50/50 transition-all border-y border-gray-100">
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 bg-emerald-50 rounded-lg text-emerald-600">
-                            <Building size={16} />
-                          </div>
-                          <span className="font-bold text-gray-900">{inv.company}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-sm font-bold text-gray-600">
-                        <div className="flex items-center gap-2">
-                          <User size={14} className="text-gray-400" />
-                          {inv.role}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="px-3 py-1 bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-widest rounded-full border border-blue-100">
-                          {inv.round}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-sm font-bold text-gray-500">
-                        <div className="flex items-center gap-2">
-                          <Clock size={14} className="text-gray-400" />
-                          {inv.date}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <select
-                          value={inv.status}
-                          onChange={(e) => updateStatus(inv.id, e.target.value)}
-                          className={`px-3 py-1.5 rounded-xl text-xs font-bold outline-none border-2 transition-all ${
-                            inv.status === 'Completed' 
-                              ? 'bg-emerald-50 text-emerald-700 border-emerald-100' 
-                              : inv.status === 'Ongoing'
-                              ? 'bg-amber-50 text-amber-700 border-amber-100'
-                              : 'bg-blue-50 text-blue-700 border-blue-100'
-                          }`}
-                        >
-                          <option value="Scheduled">Scheduled</option>
-                          <option value="Ongoing">Ongoing</option>
-                          <option value="Completed">Completed</option>
-                        </select>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <button
-                          onClick={() => toggleExpand(inv.id)}
-                          className={`flex items-center gap-2 ml-auto px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 ${
-                            inv.expanded 
-                              ? 'bg-gray-900 text-white shadow-lg' 
-                              : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100 border border-emerald-100'
-                          }`}
-                        >
-                          <Eye size={14} />
-                          {inv.expanded ? 'Hide Details' : 'View'}
-                          {inv.expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-                        </button>
-                      </td>
-                    </tr>
-                    {inv.expanded && (
-                      <tr className="bg-gray-50/50">
-                        <td colSpan="6" className="px-6 py-6 border-x border-b border-gray-100 rounded-b-2xl animate-in slide-in-from-top-2 duration-200">
-                          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-4">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-emerald-600 flex items-center gap-2">
-                              <AlertCircle size={14} />
-                              Interview Details & Instructions
-                            </h4>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                              <div className="space-y-2">
-                                <p className="text-sm font-bold text-gray-400 uppercase tracking-tight">Instructions for Admin</p>
-                                <p className="text-sm text-gray-600 leading-relaxed font-medium">
-                                  Please ensure the candidate has received the meeting link via email. 
-                                  Check if the interviewer is available and confirmed for this {inv.round} round.
-                                </p>
-                              </div>
-                              <div className="space-y-2">
-                                <p className="text-sm font-bold text-gray-400 uppercase tracking-tight">Candidate Profile</p>
-                                <p className="text-sm text-gray-600 leading-relaxed font-medium">
-                                  A list of eligible candidates for the {inv.role} role at {inv.company} will appear here 
-                                  once the selection process is integrated with the student database.
-                                </p>
-                              </div>
+                filteredInterviews.map((inv) => {
+                  const mode = interviewModes[inv.id] || "details";
+                  const assigned = assignedStudents[inv.id] || [];
+                  
+                  return (
+                    <React.Fragment key={inv.id}>
+                      <tr className="bg-white hover:bg-gray-50/50 transition-all border-y border-gray-100">
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-emerald-50 rounded-lg text-emerald-600">
+                              <Building size={16} />
                             </div>
-                            <div className="pt-4 mt-4 border-t border-gray-50 flex justify-end gap-3">
-                              <button className="px-4 py-2 bg-gray-100 text-gray-600 text-xs font-bold rounded-lg hover:bg-gray-200 transition-all">Send Reminder</button>
-                              <button className="px-4 py-2 bg-emerald-600 text-white text-xs font-bold rounded-lg hover:bg-emerald-700 transition-all shadow-md">Email Link</button>
-                            </div>
+                            <span className="font-bold text-gray-900">{inv.company}</span>
                           </div>
                         </td>
+                        <td className="px-6 py-4 text-sm font-bold text-gray-600">
+                          <div className="flex items-center gap-2">
+                            <User size={14} className="text-gray-400" />
+                            {inv.role}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className="px-3 py-1 bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-widest rounded-full border border-blue-100">
+                            {inv.round}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-sm font-bold text-gray-500">
+                          <div className="flex items-center gap-2">
+                            <Clock size={14} className="text-gray-400" />
+                            {inv.date}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <select
+                            value={inv.status}
+                            onChange={(e) => updateStatus(inv.id, e.target.value)}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold outline-none border-2 transition-all ${
+                              inv.status === 'Completed' 
+                                ? 'bg-emerald-50 text-emerald-700 border-emerald-100' 
+                                : inv.status === 'Ongoing'
+                                ? 'bg-amber-50 text-amber-700 border-amber-100'
+                                : 'bg-blue-50 text-blue-700 border-blue-100'
+                            }`}
+                          >
+                            <option value="Scheduled">Scheduled</option>
+                            <option value="Ongoing">Ongoing</option>
+                            <option value="Completed">Completed</option>
+                          </select>
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <button
+                            onClick={() => toggleExpand(inv.id)}
+                            className={`flex items-center gap-2 ml-auto px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 ${
+                              inv.expanded 
+                                ? 'bg-gray-900 text-white shadow-lg' 
+                                : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100 border border-emerald-100'
+                            }`}
+                          >
+                            <Eye size={14} />
+                            {inv.expanded ? 'Hide Details' : 'View'}
+                            {inv.expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                          </button>
+                        </td>
                       </tr>
-                    )}
-                  </React.Fragment>
-                ))
+                      {inv.expanded && (
+                        <tr className="bg-gray-50/50">
+                          <td colSpan="6" className="px-6 py-6 border-x border-b border-gray-100 rounded-b-2xl animate-in slide-in-from-top-2 duration-200">
+                            <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-6">
+                              <div className="flex justify-between items-start">
+                                <div className="space-y-4 flex-1">
+                                  <h4 className="text-xs font-black uppercase tracking-widest text-emerald-600 flex items-center gap-2">
+                                    <AlertCircle size={14} />
+                                    Interview Details & Instructions
+                                  </h4>
+                                  <div className="space-y-2">
+                                    <p className="text-sm font-bold text-gray-400 uppercase tracking-tight">Instructions for Admin</p>
+                                    <p className="text-sm text-gray-600 leading-relaxed font-medium">
+                                      Please ensure the candidate has received the meeting link via email. 
+                                      Check if the interviewer is available and confirmed for this {inv.round} round.
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="pt-6 border-t border-gray-50">
+                                {mode === "details" && (
+                                  <button 
+                                    onClick={() => setMode(inv.id, "assign")}
+                                    className="px-6 py-2.5 bg-emerald-600 text-white text-xs font-bold rounded-xl hover:bg-emerald-700 transition-all shadow-md flex items-center gap-2 active:scale-95"
+                                  >
+                                    <Plus size={14} /> Assign Students
+                                  </button>
+                                )}
+
+                                {mode === "assign" && (
+                                  <div className="space-y-4 animate-in fade-in slide-in-from-left-2 duration-200">
+                                    <h5 className="text-sm font-bold text-gray-800 flex items-center gap-2">
+                                      <CheckSquare size={16} className="text-emerald-500" />
+                                      Select Students to Assign
+                                    </h5>
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                      {MOCK_STUDENTS.map(student => (
+                                        <label key={student.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-emerald-50 transition-colors border border-transparent hover:border-emerald-100 group">
+                                          <input 
+                                            type="checkbox" 
+                                            checked={assigned.includes(student.id)}
+                                            onChange={() => handleStudentSelect(inv.id, student.id)}
+                                            className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-gray-300"
+                                          />
+                                          <span className="text-sm font-bold text-gray-700 group-hover:text-emerald-700">{student.name}</span>
+                                        </label>
+                                      ))}
+                                    </div>
+                                    <div className="flex gap-3 pt-2">
+                                      <button 
+                                        onClick={() => setMode(inv.id, "view")}
+                                        className="px-6 py-2.5 bg-gray-900 text-white text-xs font-bold rounded-xl hover:bg-black transition-all shadow-md flex items-center gap-2 active:scale-95"
+                                      >
+                                        <Users size={14} /> View Students
+                                      </button>
+                                      <button 
+                                        onClick={() => setMode(inv.id, "details")}
+                                        className="px-6 py-2.5 bg-gray-100 text-gray-600 text-xs font-bold rounded-xl hover:bg-gray-200 transition-all active:scale-95"
+                                      >
+                                        Back to Details
+                                      </button>
+                                    </div>
+                                  </div>
+                                )}
+
+                                {mode === "view" && (
+                                  <div className="space-y-4 animate-in fade-in slide-in-from-right-2 duration-200">
+                                    <h5 className="text-sm font-bold text-gray-800 flex items-center gap-2">
+                                      <Users size={16} className="text-emerald-500" />
+                                      Assigned Students
+                                    </h5>
+                                    <div className="bg-emerald-50/50 p-4 rounded-2xl border border-emerald-100/50">
+                                      {assigned.length === 0 ? (
+                                        <p className="text-sm text-gray-400 font-medium italic">No students assigned yet.</p>
+                                      ) : (
+                                        <ul className="list-disc list-inside space-y-1">
+                                          {assigned.map(id => {
+                                            const student = MOCK_STUDENTS.find(s => s.id === id);
+                                            return <li key={id} className="text-sm font-bold text-emerald-700">{student?.name}</li>;
+                                          })}
+                                        </ul>
+                                      )}
+                                    </div>
+                                    <div className="flex gap-3">
+                                      <button 
+                                        onClick={() => setMode(inv.id, "assign")}
+                                        className="px-6 py-2.5 bg-emerald-600 text-white text-xs font-bold rounded-xl hover:bg-emerald-700 transition-all shadow-md flex items-center gap-2 active:scale-95"
+                                      >
+                                        <Plus size={14} /> Assign Students
+                                      </button>
+                                      <button 
+                                        onClick={() => setMode(inv.id, "details")}
+                                        className="px-6 py-2.5 bg-gray-100 text-gray-600 text-xs font-bold rounded-xl hover:bg-gray-200 transition-all active:scale-95"
+                                      >
+                                        Back to Details
+                                      </button>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
+                  );
+                })
               )}
             </tbody>
           </table>
