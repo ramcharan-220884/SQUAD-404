@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Upload, File, X } from 'lucide-react';
+
 import { useNotification } from '../context/NotificationContext';
 
 const UploadSection = ({ type, file, onUpload }) => {

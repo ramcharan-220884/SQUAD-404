@@ -4,7 +4,7 @@ import { getAnnouncements as getStudentAnnouncements } from "../../services/stud
 import { getAnnouncements as getCompanyAnnouncements } from "../../services/companyService";
 import { useNotification } from "../../context/NotificationContext";
 import {
-  Megaphone, Plus, Filter, Calendar, Download, Search, MoreVertical,
+  Megaphone, Plus, Calendar, Download, Search, MoreVertical,
   CheckCircle, AlertCircle, Trash2, Pin, ChevronLeft, ChevronRight, User, Tag, Clock, Loader2, Edit2, Eye
 } from "lucide-react";
 
@@ -47,6 +47,7 @@ export default function Announcements({ role = "admin" }) {
 
     socketService.on("newAnnouncement", handleNewAnnouncement);
     return () => socketService.off("newAnnouncement");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [role]);
 
   const fetchAnnouncements = async () => {

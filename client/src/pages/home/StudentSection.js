@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+
 
 const StudentSection = ({ onLoginClick }) => {
   const [visible, setVisible] = useState(false);

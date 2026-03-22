@@ -12,8 +12,7 @@ const LoginModal = ({ isOpen, onClose, onSwitchToRegister, initialRole = "studen
   const [showForgot, setShowForgot] = React.useState(false);
   const [currentRole, setCurrentRole] = React.useState(initialRole);
   const [error, setError] = React.useState('');
-  const [loading, setLoading] = React.useState(false);
-  const [googleLoading, setGoogleLoading] = React.useState(false);
+
   const navigate = useNavigate();
 
   React.useEffect(() => {

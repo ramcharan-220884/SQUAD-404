@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+
 import { useNotification } from "../context/NotificationContext";
 import { getPostedJobs, getCompanyStats, postJob, updateApplicationStatus, getApplicants, getProfile, updateProfile } from "../services/companyService";
-import { Loader2 } from "lucide-react";
 import socketService from "../services/socketService";
 import { 
   LayoutDashboard, 
@@ -11,19 +10,15 @@ import {
   Users, 
   BarChart2, 
   Settings, 
-  HelpCircle, 
   Search, 
   Bell,
-  LogOut,
   ChevronDown,
   ChevronUp,
   Mail,
   Phone,
   Clock,
   ArrowLeft,
-  GraduationCap,
-  Trophy,
-  Calendar
+  GraduationCap
 } from "lucide-react";
 import Announcements from "../components/dashboard/Announcements";
 import Competitions from "../components/dashboard/Competitions";
@@ -48,11 +43,9 @@ import {
 export default function CompanyDashboard() {
   const { showNotification } = useNotification();
   const [activeTab, setActiveTab] = useState("Home");
-  const [jobs, setJobs] = useState([]);
-  const [newJob, setNewJob] = useState({ title: "", min_cgpa: "", ctc: "" });
-  const [message, setMessage] = useState("");
+  const [, setJobs] = useState([]);
   const [showStudentModal, setShowStudentModal] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [selectedStudent] = useState(null);
   const [viewingProfile, setViewingProfile] = useState(null);
   const [showPostJobModal, setShowPostJobModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -137,13 +130,12 @@ export default function CompanyDashboard() {
     description: "",
     status: ""
   });
-  const [loading, setLoading] = useState(true);
+
 
   const COLORS = ['#3b82f6', '#818cf8', '#f59e0b']; // Blue, Indigo, Amber
 
   const fetchDashboardData = React.useCallback(async () => {
     try {
-      setLoading(true);
 
       // 1. Fetch company profile
       const profileData = await getProfile();
@@ -246,11 +238,9 @@ export default function CompanyDashboard() {
         ].filter(d => d.value > 0);
         if (computedPlacement.length > 0) setPlacementData(computedPlacement);
       }
-    } catch (err) {
-      console.error("Error fetching company data:", err);
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
       showNotification("Failed to load dashboard data", "error", "company");
-    } finally {
-      setLoading(false);
     }
   }, [showNotification]);
 

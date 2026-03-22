@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import API_BASE, { authFetch } from '../services/api';
+import { authFetch } from '../services/api';
 
 const ThemeContext = createContext();
 

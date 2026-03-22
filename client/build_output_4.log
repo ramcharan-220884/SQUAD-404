@@ -1,0 +1,1174 @@
+
+> client@0.1.0 build
+> react-scripts build
+
+Creating an optimized production build...
+Compiled with warnings.
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\percent.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\percent.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\person-standing.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\person-standing.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\philippine-peso.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\philippine-peso.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\phone-call.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\phone-call.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\phone-forwarded.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\phone-forwarded.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\phone-incoming.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\phone-incoming.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\phone-missed.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\phone-missed.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\phone-off.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\phone-off.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\phone-outgoing.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\phone-outgoing.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\phone.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\phone.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pi.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pi.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\piano.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\piano.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pickaxe.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pickaxe.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\picture-in-picture-2.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\picture-in-picture-2.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\picture-in-picture.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\picture-in-picture.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\piggy-bank.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\piggy-bank.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pilcrow-left.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pilcrow-left.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pilcrow-right.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pilcrow-right.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pilcrow.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pilcrow.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pill-bottle.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pill-bottle.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pill.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pill.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pin-off.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pin-off.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pin.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pin.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pipette.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pipette.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pizza.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pizza.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\plane-landing.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\plane-landing.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\plane-takeoff.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\plane-takeoff.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\plane.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\plane.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\play.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\play.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\plug-zap.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\plug-zap.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\plug-2.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\plug-2.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\plug.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\plug.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\plus.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\plus.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pocket-knife.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pocket-knife.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pocket.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pocket.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\podcast.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\podcast.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pointer-off.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pointer-off.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pointer.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pointer.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\popcorn.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\popcorn.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\popsicle.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\popsicle.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pound-sterling.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pound-sterling.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\power-off.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\power-off.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\power.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\power.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\presentation.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\presentation.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\printer-check.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\printer-check.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\printer-x.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\printer-x.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\printer.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\printer.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\projector.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\projector.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\proportions.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\proportions.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\puzzle.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\puzzle.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pyramid.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\pyramid.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\qr-code.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\qr-code.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\quote.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\quote.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rabbit.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rabbit.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\radar.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\radar.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\radiation.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\radiation.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\radical.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\radical.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\radio-receiver.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\radio-receiver.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\radio-tower.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\radio-tower.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\radio.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\radio.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\radius.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\radius.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rail-symbol.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rail-symbol.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rainbow.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rainbow.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rat.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rat.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\ratio.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\ratio.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\receipt-cent.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\receipt-cent.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\receipt-euro.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\receipt-euro.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\receipt-indian-rupee.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\receipt-indian-rupee.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\receipt-japanese-yen.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\receipt-japanese-yen.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\receipt-pound-sterling.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\receipt-pound-sterling.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\receipt-russian-ruble.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\receipt-russian-ruble.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\receipt-swiss-franc.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\receipt-swiss-franc.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\receipt-text.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\receipt-text.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\receipt-turkish-lira.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\receipt-turkish-lira.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\receipt.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\receipt.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rectangle-circle.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rectangle-circle.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rectangle-ellipsis.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rectangle-ellipsis.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rectangle-goggles.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rectangle-goggles.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rectangle-horizontal.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rectangle-horizontal.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rectangle-vertical.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rectangle-vertical.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\recycle.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\recycle.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\redo-dot.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\redo-dot.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\redo-2.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\redo-2.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\redo.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\redo.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\refresh-ccw-dot.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\refresh-ccw-dot.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\refresh-ccw.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\refresh-ccw.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\refresh-cw-off.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\refresh-cw-off.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\refresh-cw.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\refresh-cw.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\refrigerator.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\refrigerator.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\regex.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\regex.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\remove-formatting.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\remove-formatting.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\repeat-1.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\repeat-1.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\repeat-2.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\repeat-2.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\repeat.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\repeat.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\replace-all.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\replace-all.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\replace.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\replace.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\reply-all.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\reply-all.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\reply.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\reply.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rewind.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rewind.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\ribbon.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\ribbon.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rocket.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rocket.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rocking-chair.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rocking-chair.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\roller-coaster.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\roller-coaster.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rose.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rose.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rotate-ccw-key.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rotate-ccw-key.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rotate-ccw-square.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rotate-ccw-square.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rotate-ccw.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rotate-ccw.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rotate-cw-square.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rotate-cw-square.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rotate-cw.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rotate-cw.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rotate-3d.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rotate-3d.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\route-off.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\route-off.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\route.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\route.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\router.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\router.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rows-2.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rows-2.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rows-3.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rows-3.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rows-4.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rows-4.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rss.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\rss.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\ruler-dimension-line.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\ruler-dimension-line.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\ruler.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\ruler.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\russian-ruble.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\russian-ruble.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sailboat.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sailboat.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\salad.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\salad.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sandwich.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sandwich.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\satellite-dish.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\satellite-dish.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\satellite.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\satellite.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\saudi-riyal.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\saudi-riyal.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\save-all.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\save-all.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\save-off.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\save-off.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\save.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\save.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scale-3d.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scale-3d.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scale.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scale.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scaling.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scaling.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scan-barcode.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scan-barcode.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scan-eye.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scan-eye.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scan-face.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scan-face.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scan-heart.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scan-heart.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scan-line.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scan-line.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scan-qr-code.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scan-qr-code.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scan-search.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scan-search.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scan-text.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scan-text.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scan.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scan.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\school.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\school.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scissors-line-dashed.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scissors-line-dashed.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scissors.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scissors.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scooter.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scooter.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\screen-share-off.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\screen-share-off.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\screen-share.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\screen-share.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scroll-text.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scroll-text.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scroll.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\scroll.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\search-alert.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\search-alert.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\search-check.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\search-check.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\search-code.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\search-code.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\search-slash.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\search-slash.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\search-x.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\search-x.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\search.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\search.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\section.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\section.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\send-horizontal.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\send-horizontal.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\send-to-back.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\send-to-back.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\send.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\send.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\separator-horizontal.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\separator-horizontal.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\separator-vertical.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\separator-vertical.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\server-cog.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\server-cog.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\server-crash.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\server-crash.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\server-off.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\server-off.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\server.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\server.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\settings-2.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\settings-2.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\settings.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\settings.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shapes.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shapes.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\share-2.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\share-2.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\share.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\share.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sheet.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sheet.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shell.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shell.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shelving-unit.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shelving-unit.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shield-alert.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shield-alert.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shield-ban.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shield-ban.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shield-check.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shield-check.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shield-ellipsis.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shield-ellipsis.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shield-half.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shield-half.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shield-minus.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shield-minus.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shield-off.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shield-off.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shield-plus.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shield-plus.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shield-question-mark.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shield-question-mark.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shield-user.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shield-user.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shield-x.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shield-x.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shield.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shield.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\ship-wheel.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\ship-wheel.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\ship.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\ship.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shirt.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shirt.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shopping-bag.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shopping-bag.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shopping-basket.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shopping-basket.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shopping-cart.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shopping-cart.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shovel.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shovel.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shower-head.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shower-head.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shredder.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shredder.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shrimp.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shrimp.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shrink.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shrink.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shrub.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shrub.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shuffle.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\shuffle.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sigma.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sigma.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\signal-high.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\signal-high.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\signal-low.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\signal-low.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\signal-medium.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\signal-medium.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\signal-zero.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\signal-zero.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\signal.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\signal.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\signature.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\signature.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\signpost-big.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\signpost-big.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\signpost.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\signpost.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\siren.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\siren.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\skip-back.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\skip-back.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\skip-forward.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\skip-forward.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\skull.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\skull.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\slack.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\slack.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\slash.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\slash.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\slice.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\slice.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sliders-horizontal.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sliders-horizontal.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sliders-vertical.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sliders-vertical.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\smartphone-charging.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\smartphone-charging.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\smartphone-nfc.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\smartphone-nfc.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\smartphone.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\smartphone.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\smile-plus.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\smile-plus.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\smile.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\smile.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\snail.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\snail.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\snowflake.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\snowflake.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\soap-dispenser-droplet.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\soap-dispenser-droplet.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sofa.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sofa.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\solar-panel.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\solar-panel.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\soup.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\soup.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\space.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\space.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\spade.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\spade.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sparkle.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sparkle.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sparkles.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sparkles.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\speaker.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\speaker.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\speech.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\speech.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\spell-check-2.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\spell-check-2.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\spell-check.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\spell-check.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\spline-pointer.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\spline-pointer.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\spline.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\spline.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\split.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\split.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\spool.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\spool.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\spotlight.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\spotlight.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\spray-can.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\spray-can.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sprout.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sprout.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-activity.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-activity.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-arrow-down-left.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-arrow-down-left.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-arrow-down-right.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-arrow-down-right.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-arrow-down.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-arrow-down.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-arrow-left.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-arrow-left.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-arrow-out-down-left.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-arrow-out-down-left.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-arrow-out-down-right.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-arrow-out-down-right.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-arrow-out-up-left.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-arrow-out-up-left.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-arrow-out-up-right.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-arrow-out-up-right.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-arrow-right-enter.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-arrow-right-enter.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-arrow-right-exit.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-arrow-right-exit.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-arrow-right.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-arrow-right.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-arrow-up-left.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-arrow-up-left.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-arrow-up-right.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-arrow-up-right.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-arrow-up.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-arrow-up.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-asterisk.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-asterisk.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-bottom-dashed-scissors.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-bottom-dashed-scissors.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-centerline-dashed-horizontal.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-centerline-dashed-horizontal.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-centerline-dashed-vertical.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-centerline-dashed-vertical.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-chart-gantt.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-chart-gantt.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-check-big.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-check-big.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-check.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-check.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-chevron-down.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-chevron-down.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-chevron-left.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-chevron-left.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-chevron-right.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-chevron-right.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-chevron-up.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-chevron-up.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-code.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-code.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-dashed-bottom-code.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-dashed-bottom-code.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-dashed-bottom.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-dashed-bottom.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-dashed-kanban.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-dashed-kanban.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-dashed-mouse-pointer.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-dashed-mouse-pointer.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-dashed-top-solid.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-dashed-top-solid.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-dashed.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-dashed.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-divide.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-divide.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-dot.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-dot.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-equal.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-equal.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-function.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-function.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-kanban.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-kanban.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-library.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-library.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-m.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-m.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-menu.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-menu.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-minus.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-minus.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-mouse-pointer.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-mouse-pointer.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-parking-off.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-parking-off.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-parking.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-parking.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-pause.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-pause.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-pen.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-pen.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-percent.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-percent.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-pi.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-pi.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-pilcrow.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-pilcrow.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-play.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-play.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-plus.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-plus.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-power.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-power.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-radical.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-radical.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-round-corner.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-round-corner.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-scissors.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-scissors.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-sigma.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-sigma.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-slash.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-slash.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-split-horizontal.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-split-horizontal.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-split-vertical.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-split-vertical.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-square.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-square.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-stack.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-stack.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-star.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-star.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-stop.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-stop.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-terminal.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-terminal.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-user-round.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-user-round.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-user.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-user.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-x.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square-x.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\square.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\squares-exclude.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\squares-exclude.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\squares-intersect.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\squares-intersect.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\squares-subtract.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\squares-subtract.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\squares-unite.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\squares-unite.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\squircle-dashed.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\squircle-dashed.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\squircle.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\squircle.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\squirrel.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\squirrel.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\stamp.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\stamp.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\star-half.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\star-half.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\star-off.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\star-off.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\star.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\star.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\step-back.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\step-back.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\step-forward.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\step-forward.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\stethoscope.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\stethoscope.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sticker.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sticker.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sticky-note.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sticky-note.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\stone.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\stone.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\store.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\store.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\stretch-horizontal.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\stretch-horizontal.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\stretch-vertical.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\stretch-vertical.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\strikethrough.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\strikethrough.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\subscript.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\subscript.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sun-dim.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sun-dim.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sun-medium.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sun-medium.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sun-moon.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sun-moon.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sun-snow.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sun-snow.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sun.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sun.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sunrise.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sunrise.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sunset.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sunset.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\superscript.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\superscript.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\swatch-book.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\swatch-book.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\swiss-franc.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\swiss-franc.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\switch-camera.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\switch-camera.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sword.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\sword.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\swords.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\swords.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\syringe.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\syringe.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\table-cells-merge.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\table-cells-merge.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\table-cells-split.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\table-cells-split.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\table-columns-split.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\table-columns-split.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\table-of-contents.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\table-of-contents.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\table-properties.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\table-properties.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\table-rows-split.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\table-rows-split.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\table-2.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\table-2.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\table.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\table.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tablet-smartphone.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tablet-smartphone.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tablet.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tablet.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tablets.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tablets.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tag.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tag.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tags.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tags.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tally-1.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tally-1.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tally-2.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tally-2.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tally-3.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tally-3.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tally-4.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tally-4.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tally-5.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tally-5.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tangent.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tangent.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\target.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\target.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\telescope.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\telescope.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tent-tree.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tent-tree.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tent.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tent.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\terminal.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\terminal.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\test-tube-diagonal.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\test-tube-diagonal.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\test-tube.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\test-tube.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\test-tubes.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\test-tubes.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\text-align-center.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\text-align-center.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\text-align-end.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\text-align-end.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\text-align-justify.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\text-align-justify.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\text-align-start.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\text-align-start.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\text-cursor-input.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\text-cursor-input.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\text-cursor.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\text-cursor.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\text-initial.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\text-initial.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\text-quote.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\text-quote.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\text-search.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\text-search.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\text-select.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\text-select.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\text-wrap.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\text-wrap.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\theater.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\theater.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\thermometer-snowflake.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\thermometer-snowflake.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\thermometer-sun.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\thermometer-sun.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\thermometer.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\thermometer.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\thumbs-down.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\thumbs-down.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\thumbs-up.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\thumbs-up.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\ticket-check.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\ticket-check.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\ticket-minus.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\ticket-minus.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\ticket-percent.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\ticket-percent.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\ticket-plus.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\ticket-plus.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\ticket-slash.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\ticket-slash.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\ticket-x.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\ticket-x.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\ticket.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\ticket.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tickets-plane.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tickets-plane.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tickets.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tickets.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\timer-off.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\timer-off.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\timer-reset.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\timer-reset.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\timer.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\timer.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\toggle-left.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\toggle-left.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\toggle-right.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\toggle-right.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\toilet.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\toilet.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tool-case.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tool-case.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\toolbox.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\toolbox.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tornado.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tornado.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\torus.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\torus.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\touchpad-off.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\touchpad-off.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\touchpad.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\touchpad.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\towel-rack.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\towel-rack.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tower-control.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tower-control.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\toy-brick.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\toy-brick.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tractor.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tractor.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\traffic-cone.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\traffic-cone.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\train-front-tunnel.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\train-front-tunnel.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\train-front.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\train-front.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\train-track.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\train-track.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tram-front.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tram-front.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\transgender.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\transgender.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\trash-2.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\trash-2.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\trash.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\trash.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tree-deciduous.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tree-deciduous.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tree-palm.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tree-palm.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tree-pine.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tree-pine.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\trees.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\trees.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\trello.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\trello.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\trending-down.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\trending-down.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\trending-up-down.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\trending-up-down.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\trending-up.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\trending-up.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\triangle-alert.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\triangle-alert.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\triangle-dashed.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\triangle-dashed.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\triangle-right.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\triangle-right.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\triangle.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\triangle.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\trophy.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\trophy.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\truck-electric.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\truck-electric.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\truck.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\truck.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\turkish-lira.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\turkish-lira.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\turntable.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\turntable.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\turtle.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\turtle.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tv-minimal-play.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tv-minimal-play.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tv-minimal.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tv-minimal.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tv.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\tv.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\twitch.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\twitch.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\twitter.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\twitter.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\type-outline.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\type-outline.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\type.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\type.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\umbrella-off.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\umbrella-off.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\umbrella.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\umbrella.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\underline.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\underline.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\undo-dot.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\undo-dot.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\undo-2.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\undo-2.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\undo.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\undo.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\unfold-horizontal.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\unfold-horizontal.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\unfold-vertical.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\unfold-vertical.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\ungroup.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\ungroup.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\university.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\university.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\unlink-2.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\unlink-2.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\unlink.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\unlink.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\unplug.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\unplug.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\upload.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\upload.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\usb.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\usb.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-check.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-check.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-cog.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-cog.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-key.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-key.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-lock.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-lock.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-minus.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-minus.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-pen.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-pen.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-plus.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-plus.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-round-check.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-round-check.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-round-cog.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-round-cog.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-round-key.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-round-key.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-round-minus.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-round-minus.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-round-pen.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-round-pen.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-round-plus.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-round-plus.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-round-search.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-round-search.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-round-x.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-round-x.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-round.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-round.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-search.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-search.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-star.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-star.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-x.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user-x.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\user.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\users-round.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\users-round.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\users.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\users.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\utensils-crossed.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\utensils-crossed.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\utensils.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\utensils.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\utility-pole.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\utility-pole.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\van.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\van.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\variable.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\variable.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\vault.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\vault.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\vector-square.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\vector-square.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\vegan.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\vegan.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\venetian-mask.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\venetian-mask.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\venus-and-mars.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\venus-and-mars.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\venus.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\venus.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\vibrate-off.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\vibrate-off.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\vibrate.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\vibrate.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\video-off.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\video-off.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\video.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\video.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\videotape.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\videotape.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\view.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\view.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\voicemail.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\voicemail.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\volleyball.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\volleyball.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\volume-off.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\volume-off.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\volume-x.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\volume-x.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\volume-1.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\volume-1.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\volume-2.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\volume-2.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\volume.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\volume.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\vote.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\vote.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wallet-cards.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wallet-cards.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wallet-minimal.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wallet-minimal.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wallet.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wallet.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wallpaper.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wallpaper.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wand-sparkles.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wand-sparkles.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wand.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wand.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\warehouse.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\warehouse.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\washing-machine.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\washing-machine.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\watch.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\watch.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\waves-arrow-down.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\waves-arrow-down.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\waves-arrow-up.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\waves-arrow-up.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\waves-ladder.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\waves-ladder.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\waves.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\waves.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\waypoints.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\waypoints.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\webcam.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\webcam.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\webhook-off.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\webhook-off.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\webhook.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\webhook.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\weight-tilde.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\weight-tilde.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\weight.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\weight.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wheat-off.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wheat-off.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wheat.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wheat.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\whole-word.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\whole-word.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wifi-cog.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wifi-cog.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wifi-high.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wifi-high.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wifi-low.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wifi-low.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wifi-off.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wifi-off.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wifi-pen.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wifi-pen.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wifi-sync.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wifi-sync.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wifi-zero.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wifi-zero.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wifi.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wifi.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wind-arrow-down.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wind-arrow-down.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wind.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wind.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wine-off.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wine-off.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wine.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wine.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\workflow.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\workflow.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\worm.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\worm.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wrench.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\wrench.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\x-line-top.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\x-line-top.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\x.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\x.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\youtube.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\youtube.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zap-off.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zap-off.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zap.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zap.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zodiac-aquarius.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zodiac-aquarius.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zodiac-aries.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zodiac-aries.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zodiac-cancer.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zodiac-cancer.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zodiac-capricorn.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zodiac-capricorn.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zodiac-gemini.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zodiac-gemini.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zodiac-leo.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zodiac-leo.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zodiac-libra.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zodiac-libra.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zodiac-ophiuchus.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zodiac-ophiuchus.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zodiac-pisces.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zodiac-pisces.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zodiac-sagittarius.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zodiac-sagittarius.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zodiac-scorpio.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zodiac-scorpio.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zodiac-taurus.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zodiac-taurus.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zodiac-virgo.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zodiac-virgo.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zoom-in.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zoom-in.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zoom-out.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\icons\zoom-out.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\shared\src\utils\toCamelCase.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\shared\src\utils\toCamelCase.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\shared\src\utils\toKebabCase.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\shared\src\utils\toKebabCase.js.map'
+
+Failed to parse source map from 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\shared\src\utils\toPascalCase.js.map' file: Error: ENOENT: no such file or directory, open 'C:\Users\krc18\Videos\SQUAD-404\client\node_modules\lucide-react\dist\esm\shared\src\utils\toPascalCase.js.map'
+
+[eslint] 
+src\pages\CompanyDashboard.js
+  Line 46:10:  'jobs' is assigned a value but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+File sizes after gzip:
+
+  272.74 kB  build\static\js\main.e0d12cdf.js
+  18.74 kB   build\static\css\main.749c2e36.css
+
+The project was built assuming it is hosted at /.
+You can control this with the homepage field in your package.json.
+
+The build folder is ready to be deployed.
+You may serve it with a static server:
+
+  npm install -g serve
+  serve -s build
+
+Find out more about deployment here:
+
+  https://cra.link/deployment
+

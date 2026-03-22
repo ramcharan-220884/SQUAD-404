@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Building2, Mail, Lock, FileText } from 'lucide-react';
+
 import { useNotification } from '../context/NotificationContext';
 import { registerUser, googleLoginAPI } from '../services/authService';
 import { GoogleLogin } from '@react-oauth/google';

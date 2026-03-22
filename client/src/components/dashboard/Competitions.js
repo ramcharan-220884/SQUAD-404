@@ -37,6 +37,7 @@ export default function Competitions({ role = "student" }) {
 
   useEffect(() => {
     fetchComps();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [role]);
 
   const handleRegister = async (compId) => {
