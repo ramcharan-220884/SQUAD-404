@@ -5,7 +5,10 @@ export const updateProfileSchema = {
     name: Joi.string().min(2).max(100).optional(),
     first_name: Joi.string().optional().allow(''),
     last_name: Joi.string().optional().allow(''),
-    phone: Joi.string().optional().allow(''),
+    phone: Joi.string().pattern(/^[0-9]{10}$/).allow('').messages({
+      'string.pattern.base': 'Must be a valid 10-digit phone number'
+    }),
+    country_code: Joi.string().default('+91').allow(''),
     cgpa: Joi.alternatives().try(Joi.number().min(0).max(10), Joi.string().allow('')).optional(),
     branch: Joi.string().optional().allow(''),
     github_id: Joi.string().uri().optional().allow(''),

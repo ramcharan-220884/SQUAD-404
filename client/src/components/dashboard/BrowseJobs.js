@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAvailableJobs, applyForJob } from '../../services/studentService';
+import { getAvailableJobs, applyForJob, getProfile } from '../../services/studentService';
 import { useNotification } from '../../context/NotificationContext';
 import { SkeletonCard } from '../LoadingSpinner';
 import EmptyState from '../EmptyState';
@@ -20,6 +20,8 @@ export default function BrowseJobs({ onJobApplied }) {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [applyingId, setApplyingId] = useState(null);
+  const [hasPhone, setHasPhone] = useState(true); // default true to avoid flashing disabled state
+  
   
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -37,6 +39,11 @@ export default function BrowseJobs({ onJobApplied }) {
       // Since the current backend getAvailableJobs is a simple list
       setJobs(Array.isArray(data) ? data : []);
       setTotalPages(1); // Reset pagination for flat list
+      
+      const profile = await getProfile();
+      if (profile) {
+        setHasPhone(!!(profile.phone && profile.phone.trim() !== ''));
+      }
     } catch (err) {
       console.error("Error fetching jobs:", err);
       showNotification("Failed to fetch available jobs", "error", "student");
@@ -46,6 +53,10 @@ export default function BrowseJobs({ onJobApplied }) {
   };
 
   const handleApply = async (jobId) => {
+    if (!hasPhone) {
+      showNotification("Please complete your profile (phone number required to apply)", "warning", "student");
+      return;
+    }
     setApplyingId(jobId);
     try {
       await applyForJob(jobId);
@@ -139,10 +150,10 @@ export default function BrowseJobs({ onJobApplied }) {
               <button 
                 className="bj-apply-btn" 
                 onClick={() => handleApply(job.id)}
-                disabled={applyingId === job.id || job.applied}
-                style={(applyingId === job.id || job.applied) ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
+                disabled={applyingId === job.id || job.applied || !hasPhone}
+                style={(applyingId === job.id || job.applied || !hasPhone) ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
               >
-                {job.applied ? 'Applied' : applyingId === job.id ? 'Applying...' : 'Apply Now'}
+                {!hasPhone ? 'Phone Required' : job.applied ? 'Applied' : applyingId === job.id ? 'Applying...' : 'Apply Now'}
               </button>
             </div>
           ))

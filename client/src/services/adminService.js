@@ -8,6 +8,22 @@ const handleResponse = async (res) => {
   return (json.success && json.data !== undefined) ? json.data : json;
 };
 
+export const getAdminApplications = async (jobId, status) => {
+  const queryParams = new URLSearchParams();
+  if (jobId) queryParams.append("job_id", jobId);
+  if (status) queryParams.append("status", status);
+  const res = await authFetch(`/admin/applications?${queryParams.toString()}`);
+  return handleResponse(res);
+};
+
+export const notifyCandidates = async (data) => {
+  const res = await authFetch(`/admin/notify-candidates`, {
+    method: "POST",
+    body: JSON.stringify(data)
+  });
+  return handleResponse(res);
+};
+
 export const getStats = async () => {
   const res = await authFetch(`/admin/stats`);
   return handleResponse(res);

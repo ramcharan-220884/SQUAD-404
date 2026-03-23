@@ -1,14 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import JobProgressBar from './JobProgressBar';
 import { useNotification } from '../../context/NotificationContext';
-import { withdrawApplication } from '../../services/studentService';
+import { withdrawApplication, getStudentApplicationRounds } from '../../services/studentService';
 import { X, MapPin, Briefcase, DollarSign, Calendar, GraduationCap, ClipboardList, Building } from 'lucide-react';
 
 const AppliedJobsList = ({ jobs, onRefresh }) => {
   const [selectedJob, setSelectedJob] = useState(null);
   const [showWithdrawConfirm, setShowWithdrawConfirm] = useState(false);
   const [isWithdrawing, setIsWithdrawing] = useState(false);
+  const [rounds, setRounds] = useState([]);
+  const [loadingRounds, setLoadingRounds] = useState(false);
   const { showNotification } = useNotification();
+
+  useEffect(() => {
+    if (selectedJob) {
+      setLoadingRounds(true);
+      getStudentApplicationRounds(selectedJob.id)
+        .then(res => setRounds(res || []))
+        .catch(err => console.error(err))
+        .finally(() => setLoadingRounds(false));
+    } else {
+      setRounds([]);
+    }
+  }, [selectedJob]);
 
   const handleWithdraw = async () => {
     if (!selectedJob) return;
@@ -82,7 +96,12 @@ const AppliedJobsList = ({ jobs, onRefresh }) => {
                   {selectedJob.company.charAt(0)}
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-gray-900 leading-tight">{selectedJob.title}</h2>
+                  <h2 className="text-xl font-bold text-gray-900 leading-tight">
+                    {selectedJob.title}
+                    <span className="ml-3 px-2 py-0.5 bg-blue-50 text-blue-600 text-xs font-bold rounded-full border border-blue-100 align-middle">
+                      {selectedJob.application_code || `APP-${selectedJob.id?.toString().padStart(5, '0')}`}
+                    </span>
+                  </h2>
                   <p className="text-sm font-medium text-gray-500">{selectedJob.company}</p>
                 </div>
               </div>
@@ -130,6 +149,41 @@ const AppliedJobsList = ({ jobs, onRefresh }) => {
                   {selectedJob.description || "No detailed description provided by the company."}
                 </p>
               </div>
+
+              {/* Rounds Timeline */}
+              {rounds.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-extrabold text-[#052c42] uppercase tracking-[0.1em] mb-4 flex items-center gap-2">
+                    <Calendar size={16} /> Interview timeline / Rounds
+                  </h3>
+                  <div className="space-y-4 relative border-l-2 border-gray-200 ml-3 pl-6">
+                    {rounds.map((round, idx) => (
+                      <div key={idx} className="relative">
+                        <div className={`absolute -left-[30px] top-1 w-4 h-4 rounded-full border-2 border-white ${
+                            round.status === 'Passed' ? 'bg-green-500' : 
+                            round.status === 'Failed' ? 'bg-red-500' :
+                            round.status === 'Completed' ? 'bg-blue-500' :
+                            'bg-yellow-400'
+                        }`}></div>
+                        <div className="bg-gray-50 border border-gray-100 p-4 rounded-2xl shadow-sm">
+                          <h4 className="font-bold text-gray-900 text-sm">{round.round_name}</h4>
+                          <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs text-gray-600">
+                            <span className="flex items-center gap-1"><Calendar size={12}/> {new Date(round.date).toLocaleDateString()}</span>
+                            <span className="flex items-center gap-1"><Calendar size={12}/> {round.time}</span>
+                            <span className="flex items-center gap-1"><MapPin size={12}/> {round.location}</span>
+                            <span className={`font-bold uppercase tracking-wider ${
+                              round.status === 'Passed' ? 'text-green-600' : 
+                              round.status === 'Failed' ? 'text-red-600' :
+                              round.status === 'Completed' ? 'text-blue-600' :
+                              'text-yellow-600'
+                            }`}>{round.status}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Requirements Grid */}
               <div className="grid md:grid-cols-2 gap-6">

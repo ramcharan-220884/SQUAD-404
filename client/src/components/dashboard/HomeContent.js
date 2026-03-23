@@ -49,6 +49,7 @@ export default function HomeContent() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [applyingJobId, setApplyingJobId] = useState(null);
+  const [hasPhone, setHasPhone] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -70,6 +71,12 @@ export default function HomeContent() {
             shortlisted: apps.filter(a => a.status === 'Shortlisted' || a.status === 'Selected').length,
             openJobs: actualJobs.length
           });
+          
+          const profileRes = await authFetch("/students/profile");
+          const profileData = await profileRes.json();
+          if (profileData.success && profileData.data) {
+            setHasPhone(!!(profileData.data.phone && profileData.data.phone.trim() !== ''));
+          }
         }
       } catch (err) {
         console.error("Error fetching home data:", err);
@@ -81,6 +88,10 @@ export default function HomeContent() {
   }, []);
 
   const handleApply = async (jobId) => {
+    if (!hasPhone) {
+      showNotification("Please complete your profile (phone number required to apply)", "warning", "student");
+      return;
+    }
     if (applyingJobId === jobId) return; // prevent double-click
     const token = localStorage.getItem("token");
     if (!token) {
@@ -190,10 +201,10 @@ export default function HomeContent() {
                 <button 
                     className="home-opp-btn" 
                     onClick={() => handleApply(opp.id)}
-                    disabled={applyingJobId === opp.id || opp.applied}
-                    style={(applyingJobId === opp.id || opp.applied) ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
+                    disabled={applyingJobId === opp.id || opp.applied || !hasPhone}
+                    style={(applyingJobId === opp.id || opp.applied || !hasPhone) ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
                   >
-                    {opp.applied ? 'Applied ✓' : applyingJobId === opp.id ? 'Applying...' : 'Apply Now →'}
+                    {!hasPhone ? 'Phone Required' : opp.applied ? 'Applied ✓' : applyingJobId === opp.id ? 'Applying...' : 'Apply Now →'}
                   </button>
                 </div>
               );

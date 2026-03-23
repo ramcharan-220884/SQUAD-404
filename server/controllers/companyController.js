@@ -233,3 +233,40 @@ export const getCompanyStats = async (req, res, next) => {
     next(err);
   }
 };
+
+// Manage Application Rounds
+export const getApplicationRounds = async (req, res, next) => {
+  try {
+    const { id } = req.params; // application_id
+    const [rounds] = await pool.query("SELECT * FROM application_rounds WHERE application_id = ? ORDER BY date ASC, time ASC", [id]);
+    res.json({ success: true, data: rounds });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const createApplicationRound = async (req, res, next) => {
+  try {
+    const { id } = req.params; // application_id
+    const { round_name, date, time, location } = req.body;
+    await pool.query(
+      "INSERT INTO application_rounds (application_id, round_name, date, time, location) VALUES (?, ?, ?, ?, ?)",
+      [id, round_name, date, time, location]
+    );
+    res.json({ success: true, message: "Round created successfully" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const updateApplicationRound = async (req, res, next) => {
+  try {
+    const { roundId } = req.params;
+    const { status } = req.body;
+    await pool.query("UPDATE application_rounds SET status = ? WHERE id = ?", [status, roundId]);
+    res.json({ success: true, message: "Round status updated" });
+  } catch (err) {
+    next(err);
+  }
+};
+

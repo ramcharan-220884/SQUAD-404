@@ -16,6 +16,7 @@ import {
   Megaphone,
   Trophy,
   Mic,
+  MessageSquare,
   LogOut
 } from "lucide-react";
 import { useNotification } from "../context/NotificationContext";
@@ -30,6 +31,7 @@ import Competitions from "../components/dashboard/Competitions";
 import Events from "../components/dashboard/Events";
 import Assessments from "../components/dashboard/Assessments";
 import Interviews from "../components/dashboard/Interviews";
+import CandidateCommunication from "../components/dashboard/CandidateCommunication";
 
 import {
   BarChart,
@@ -260,6 +262,10 @@ export default function AdminDashboard() {
             <Mic size={18}/> Interviews
           </Link>
 
+          <Link to="/admin-dashboard/applications" className="flex items-center gap-2">
+            <MessageSquare size={18}/> Applications
+          </Link>
+
           <Link to="/admin-dashboard/settings" className="flex items-center gap-2">
             <SettingsIcon size={18}/> Settings
           </Link>
@@ -295,6 +301,8 @@ export default function AdminDashboard() {
           <Assessments role="admin" />
         ) : location.pathname === "/admin-dashboard/interviews" ? (
           <Interviews role="admin" />
+        ) : location.pathname === "/admin-dashboard/applications" ? (
+          <CandidateCommunication />
         ) : location.pathname === "/admin-dashboard/settings" ? (
           <Settings />
         ) : location.pathname === "/admin-dashboard/help" ? (

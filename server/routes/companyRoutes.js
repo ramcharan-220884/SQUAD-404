@@ -2,7 +2,8 @@ import express from "express";
 import { 
   updateJobDetails, getMyCompanyDetails, 
   getCompanyStats, getCompanyJobs, getCompanyApplicants,
-  updateCompanyApplicationStatus, getCompanyAnnouncements
+  updateCompanyApplicationStatus, getCompanyAnnouncements,
+  getApplicationRounds, createApplicationRound, updateApplicationRound
 } from "../controllers/companyController.js";
 import { postJob } from "../controllers/jobController.js";
 import { verifyToken, requireRole } from "../middleware/authMiddleware.js";
@@ -32,6 +33,11 @@ router.get("/stats", getCompanyStats);
 
 // Announcements (read-only for company role)
 router.get("/announcements", getCompanyAnnouncements);
+
+// Rounds
+router.get("/applications/:id/rounds", getApplicationRounds);
+router.post("/applications/:id/rounds", createApplicationRound);
+router.put("/rounds/:roundId/status", updateApplicationRound);
 
 // Legacy
 router.put("/job", validate(updateCompanyProfileSchema), updateJobDetails);
