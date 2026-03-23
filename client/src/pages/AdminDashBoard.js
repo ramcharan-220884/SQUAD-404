@@ -15,7 +15,6 @@ import {
   XCircle,
   Megaphone,
   Trophy,
-  Mic,
   LogOut
 } from "lucide-react";
 import { useNotification } from "../context/NotificationContext";
@@ -249,10 +248,6 @@ export default function AdminDashboard() {
 
           <Link to="/admin-dashboard/events" className="flex items-center gap-2">
             <Calendar size={18}/> Events
-          </Link>
-
-          <Link to="/admin-dashboard/interviews" className="flex items-center gap-2">
-            <Mic size={18}/> Interviews
           </Link>
 
           <Link to="/admin-dashboard/settings" className="flex items-center gap-2">

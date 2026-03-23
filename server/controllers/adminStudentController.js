@@ -39,8 +39,13 @@ export const rejectUser = async (req, res, next) => {
 
 export const getAllStudents = async (req, res, next) => {
   try {
-    const { page, limit } = req.query;
-    const { students, total } = await studentService.fetchAllStudents({ page, limit });
+    const { page, limit, status, company } = req.query;
+    const { students, total } = await studentService.fetchAllStudents({ 
+      page, 
+      limit, 
+      applicationStatus: status,
+      companyName: company
+    });
     res.json({ success: true, data: students, pagination: { total, page: parseInt(page) || 1, limit: parseInt(limit) || 1000 } });
   } catch (err) { next(err); }
 };

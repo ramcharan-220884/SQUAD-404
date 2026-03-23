@@ -1,11 +1,6 @@
-import React, { useState } from 'react';
-import { Mic, Search, ChevronDown, ChevronUp, Clock, Building, User, AlertCircle, Eye, Plus, X, CheckSquare, Users } from 'lucide-react';
-
-const MOCK_STUDENTS = [
-  { id: 1, name: "Rahul" },
-  { id: 2, name: "Anjali" },
-  { id: 3, name: "Kiran" }
-];
+import React, { useState, useEffect } from 'react';
+import { Mic, Search, ChevronDown, ChevronUp, Clock, Building, User, AlertCircle, Eye, Plus, X, CheckSquare, Users, Filter } from 'lucide-react';
+import { authFetch } from '../../services/api';
 
 export default function Interviews({ role = "student" }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -21,27 +16,60 @@ export default function Interviews({ role = "student" }) {
   const [assignedStudents, setAssignedStudents] = useState({});
   // Track active mode per interview ID: { interviewId: "details" | "assign" | "view" }
   const [interviewModes, setInterviewModes] = useState({});
+  const [studentsList, setStudentsList] = useState([]);
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [loadingStudents, setLoadingStudents] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const [interviews, setInterviews] = useState([
-    {
-      id: 1,
-      company: "Google",
-      role: "SDE-1",
-      round: "Technical",
-      date: "25-03-2026 10:00 AM",
-      status: "Scheduled",
-      expanded: false
-    },
-    {
-      id: 2,
-      company: "Amazon",
-      role: "Intern",
-      round: "HR",
-      date: "26-03-2026 02:00 PM",
-      status: "Scheduled",
-      expanded: false
+  const fetchInterviews = async () => {
+    setLoading(true);
+    try {
+      const response = await authFetch("/admin/interviews");
+      const data = await response.json();
+      console.log("Interviews from DB:", data);
+      if (data.success) {
+        const mappedData = (data.data || []).map(inv => ({
+          ...inv,
+          status: inv.status || "Scheduled",
+          expanded: false
+        }));
+        setInterviews(mappedData);
+      }
+    } catch (error) {
+      console.error("Failed to fetch interviews:", error);
+    } finally {
+      setLoading(false);
     }
-  ]);
+  };
+
+  useEffect(() => {
+    fetchInterviews();
+  }, []);
+
+  const fetchStudents = async (status = "All", company = "") => {
+    setLoadingStudents(true);
+    try {
+      let endpoint = `/admin/students?status=${status}`;
+      if (company) {
+        endpoint += `&company=${encodeURIComponent(company)}`;
+      }
+      const response = await authFetch(endpoint);
+      const data = await response.json();
+      if (data.success) {
+        setStudentsList(data.data || []);
+      }
+    } catch (error) {
+      console.error("Failed to fetch students:", error);
+    } finally {
+      setLoadingStudents(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchStudents(statusFilter);
+  }, [statusFilter]);
+
+  const [interviews, setInterviews] = useState([]);
 
   const toggleExpand = (id) => {
     setInterviews(interviews.map(inv => 
@@ -53,32 +81,50 @@ export default function Interviews({ role = "student" }) {
     }
   };
 
-  const updateStatus = (id, newStatus) => {
+  const updateStatus = async (id, newStatus) => {
     setInterviews(interviews.map(inv => 
       inv.id === id ? { ...inv, status: newStatus } : inv
     ));
+
+    try {
+      await authFetch(`/admin/interviews/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify({ status: newStatus })
+      });
+    } catch (error) {
+      console.error("Failed to update status:", error);
+    }
   };
 
-  const handleSchedule = (e) => {
+  const handleSchedule = async (e) => {
     e.preventDefault();
     if (!formData.company || !formData.role || !formData.date || !formData.round) {
       alert("Please fill in all fields");
       return;
     }
 
-    const newInterview = {
-      id: Date.now(),
-      company: formData.company,
-      role: formData.role,
-      round: formData.round,
-      date: formData.date.replace('T', ' '),
-      status: "Scheduled",
-      expanded: false
-    };
-
-    setInterviews([newInterview, ...interviews]);
-    setShowModal(false);
-    setFormData({ company: "", role: "", round: "Technical", date: "" });
+    try {
+      const response = await authFetch("/admin/interviews", {
+        method: "POST",
+        body: JSON.stringify({
+          company: formData.company,
+          role: formData.role,
+          round: formData.round,
+          date: formData.date
+        })
+      });
+      const data = await response.json();
+      if (data.success) {
+        fetchInterviews();
+        setShowModal(false);
+        setFormData({ company: "", role: "", round: "Technical", date: "" });
+      } else {
+        alert(data.message || "Failed to schedule interview");
+      }
+    } catch (error) {
+      console.error("Error scheduling interview:", error);
+      alert("Failed to connect to server");
+    }
   };
 
   const handleStudentSelect = (interviewId, studentId) => {
@@ -98,6 +144,12 @@ export default function Interviews({ role = "student" }) {
 
   const setMode = (interviewId, mode) => {
     setInterviewModes({ ...interviewModes, [interviewId]: mode });
+    if (mode === "assign") {
+      const interview = interviews.find(inv => inv.id === interviewId);
+      if (interview) {
+        fetchStudents("Shortlisted", interview.company);
+      }
+    }
   };
 
   const filteredInterviews = interviews.filter(inv =>
@@ -157,10 +209,16 @@ export default function Interviews({ role = "student" }) {
               </tr>
             </thead>
             <tbody>
-              {filteredInterviews.length === 0 ? (
+              {loading ? (
+                <tr>
+                  <td colSpan="6" className="px-6 py-12 text-center text-gray-400 font-bold animate-pulse">
+                    Loading interviews from database...
+                  </td>
+                </tr>
+              ) : filteredInterviews.length === 0 ? (
                 <tr>
                   <td colSpan="6" className="px-6 py-12 text-center text-gray-400 font-bold">
-                    No interviews found matching "{searchTerm}"
+                    {searchTerm ? `No interviews found matching "${searchTerm}"` : "No interviews scheduled yet"}
                   </td>
                 </tr>
               ) : (
@@ -193,7 +251,7 @@ export default function Interviews({ role = "student" }) {
                         <td className="px-6 py-4 text-sm font-bold text-gray-500">
                           <div className="flex items-center gap-2">
                             <Clock size={14} className="text-gray-400" />
-                            {inv.date}
+                            {new Date(inv.date).toLocaleString([], { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}
                           </div>
                         </td>
                         <td className="px-6 py-4">
@@ -260,24 +318,57 @@ export default function Interviews({ role = "student" }) {
 
                                 {mode === "assign" && (
                                   <div className="space-y-4 animate-in fade-in slide-in-from-left-2 duration-200">
-                                    <h5 className="text-sm font-bold text-gray-800 flex items-center gap-2">
-                                      <CheckSquare size={16} className="text-emerald-500" />
-                                      Select Students to Assign
-                                    </h5>
-                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                                      {MOCK_STUDENTS.map(student => (
-                                        <label key={student.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-emerald-50 transition-colors border border-transparent hover:border-emerald-100 group">
-                                          <input 
-                                            type="checkbox" 
-                                            checked={assigned.includes(student.id)}
-                                            onChange={() => handleStudentSelect(inv.id, student.id)}
-                                            className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-gray-300"
-                                          />
-                                          <span className="text-sm font-bold text-gray-700 group-hover:text-emerald-700">{student.name}</span>
-                                        </label>
-                                      ))}
+                                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                                      <h5 className="text-sm font-bold text-gray-800 flex items-center gap-2">
+                                        <CheckSquare size={16} className="text-emerald-500" />
+                                        Shortlisted Students for {inv.company}
+                                      </h5>
+                                      <div className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-xl border border-gray-100">
+                                        <Filter size={14} className="text-gray-400" />
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Filter:</span>
+                                        <select 
+                                          disabled
+                                          value="Shortlisted"
+                                          className="bg-transparent text-xs font-bold text-gray-700 outline-none cursor-not-allowed"
+                                        >
+                                          <option value="Shortlisted">Shortlisted</option>
+                                        </select>
+                                      </div>
                                     </div>
+
+                                    {loadingStudents ? (
+                                      <div className="py-8 text-center text-gray-400 text-xs font-bold animate-pulse">
+                                        Fetching shortlisted students...
+                                      </div>
+                                    ) : studentsList.length === 0 ? (
+                                      <div className="py-8 text-center text-gray-400 text-xs font-bold">
+                                        No shortlisted students found for {inv.company}.
+                                      </div>
+                                    ) : (
+                                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                        {studentsList.map(student => (
+                                          <div key={student.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-emerald-100 group">
+                                            <div className="flex flex-col">
+                                              <span className="text-sm font-bold text-gray-700 group-hover:text-emerald-700">{student.name}</span>
+                                              <span className="text-[10px] font-black uppercase tracking-tighter text-gray-400">
+                                                ID: {student.id}
+                                              </span>
+                                            </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    )}
                                     <div className="flex gap-3 pt-2">
+                                      <button 
+                                        onClick={() => {
+                                          const ids = studentsList.map(s => s.id);
+                                          setAssignedStudents({ ...assignedStudents, [inv.id]: ids });
+                                          setMode(inv.id, "view");
+                                        }}
+                                        className="px-6 py-2.5 bg-emerald-600 text-white text-xs font-bold rounded-xl hover:bg-emerald-700 transition-all shadow-md flex items-center gap-2 active:scale-95"
+                                      >
+                                        <CheckSquare size={14} /> Assign
+                                      </button>
                                       <button 
                                         onClick={() => setMode(inv.id, "view")}
                                         className="px-6 py-2.5 bg-gray-900 text-white text-xs font-bold rounded-xl hover:bg-black transition-all shadow-md flex items-center gap-2 active:scale-95"
@@ -304,10 +395,17 @@ export default function Interviews({ role = "student" }) {
                                       {assigned.length === 0 ? (
                                         <p className="text-sm text-gray-400 font-medium italic">No students assigned yet.</p>
                                       ) : (
-                                        <ul className="list-disc list-inside space-y-1">
+                                        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                           {assigned.map(id => {
-                                            const student = MOCK_STUDENTS.find(s => s.id === id);
-                                            return <li key={id} className="text-sm font-bold text-emerald-700">{student?.name}</li>;
+                                            const student = studentsList.find(s => s.id === id);
+                                            return (
+                                              <li key={id} className="flex items-center justify-between p-3 bg-white rounded-xl border border-emerald-100">
+                                                <span className="text-sm font-bold text-emerald-700">{student?.name || `Student #${id}`} (ID: {id})</span>
+                                                <span className="px-2 py-0.5 bg-emerald-100 text-emerald-600 text-[9px] font-black uppercase tracking-widest rounded-md">
+                                                  {student?.application_status || 'Assigned'}
+                                                </span>
+                                              </li>
+                                            );
                                           })}
                                         </ul>
                                       )}
