@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { getAllStudents, approveUser, rejectUser, updateStudentAdmin } from "../../services/adminService";
 import { useNotification } from "../../context/NotificationContext";
 import {
-  Search, Plus, Download, Filter, MoreVertical, Users, CheckCircle,
-  XCircle, ChevronLeft, ChevronRight, GraduationCap, Eye, Edit2, Trash2, User, Loader2
+  Search, Download, MoreVertical, Users, CheckCircle,
+  XCircle, ChevronLeft, ChevronRight, GraduationCap, Eye, Edit2, User, Loader2
 } from "lucide-react";
 
 export default function StudentManagement() {
@@ -54,6 +54,7 @@ export default function StudentManagement() {
 
   useEffect(() => {
     fetchStudents();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   const handleAction = async (id, action) => {

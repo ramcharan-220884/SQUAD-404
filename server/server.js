@@ -133,13 +133,21 @@ async function testDB() {
 testDB();
 
 // Cleanup expired password reset tokens every hour
-setInterval(async () => {
+// Retry once on ECONNRESET — happens when the Aiven pool connection is stale after idle time
+async function cleanupExpiredTokens() {
   try {
     await pool.query("DELETE FROM password_resets WHERE expires_at < NOW()");
   } catch (err) {
-    console.error("Token cleanup error:", err.message);
+    if (err.code === "ECONNRESET" || err.code === "PROTOCOL_CONNECTION_LOST") {
+      await new Promise(res => setTimeout(res, 2000));
+      try { await pool.query("DELETE FROM password_resets WHERE expires_at < NOW()"); } catch (_) {}
+    } else {
+      console.error("Token cleanup error:", err.message);
+    }
   }
-}, 60 * 60 * 1000);
+}
+
+setInterval(cleanupExpiredTokens, 60 * 60 * 1000);
 
 // Run once on startup
 pool.query("DELETE FROM password_resets WHERE expires_at < NOW()").catch(() => {});

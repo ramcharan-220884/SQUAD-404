@@ -72,3 +72,29 @@ export const sendNotificationEmail = async (email, subject, message) => {
   `;
   return sendEmail({ to: email, subject, html });
 };
+
+/**
+ * Sends a styled OTP verification email for company registration
+ */
+export const sendOTPEmail = async (email, otp) => {
+  const html = `
+    <div style="font-family: 'Helvetica Neue', Arial, sans-serif; padding: 30px; max-width: 600px; margin: 0 auto; background-color: #f9f9fa; border-radius: 12px; border: 1px solid #eaebed;">
+        <div style="text-align: center; margin-bottom: 25px;">
+           <h2 style="color: #052c42; font-weight: 900; margin: 0; letter-spacing: -0.5px;">EDUVATE <span style="color: #7c3aed;">PORTAL</span></h2>
+           <p style="color: #888; font-size: 11px; margin-top: 5px; text-transform: uppercase; letter-spacing: 2px;">Email Verification</p>
+        </div>
+        <div style="background-color: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+            <p style="color: #333; font-size: 15px; line-height: 1.6; margin-top: 0;">Hello,</p>
+            <p style="color: #555; font-size: 15px; line-height: 1.6;">Thank you for registering on EDUVATE. Use the verification code below to complete your company sign-up. This code will expire in <strong>10 minutes</strong>.</p>
+            
+            <div style="text-align: center; margin: 35px 0;">
+                <div style="display: inline-block; padding: 18px 40px; background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); color: white; font-weight: 900; font-size: 32px; letter-spacing: 12px; border-radius: 12px; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);">${otp}</div>
+            </div>
+            
+            <p style="color: #888; font-size: 13px; line-height: 1.5; border-top: 1px solid #eee; padding-top: 20px;">If you did not request this code, please ignore this email. Do not share this code with anyone.</p>
+        </div>
+    </div>
+  `;
+
+  return sendEmail({ to: email, subject: "EDUVATE - Email Verification Code", html });
+};

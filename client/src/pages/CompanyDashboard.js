@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+
 import { useNotification } from "../context/NotificationContext";
 import { getPostedJobs, getCompanyStats, postJob, updateApplicationStatus, getApplicants, getProfile, updateProfile } from "../services/companyService";
-import { Loader2 } from "lucide-react";
 import socketService from "../services/socketService";
 import { 
   LayoutDashboard, 
@@ -11,25 +10,22 @@ import {
   Users, 
   BarChart2, 
   Settings, 
-  HelpCircle, 
   Search, 
   Bell,
-  LogOut,
   ChevronDown,
   ChevronUp,
   Mail,
   Phone,
   Clock,
   ArrowLeft,
-  GraduationCap,
-  Trophy,
-  Calendar
+  GraduationCap
 } from "lucide-react";
 import Announcements from "../components/dashboard/Announcements";
 import Competitions from "../components/dashboard/Competitions";
 import Events from "../components/dashboard/Events";
 import Assessments from "../components/dashboard/Assessments";
 import ThemeToggle from "../components/dashboard/ThemeToggle";
+import CompanySidebar from "../components/dashboard/CompanySidebar";
 import { 
   BarChart, 
   Bar, 
@@ -47,12 +43,9 @@ import {
 export default function CompanyDashboard() {
   const { showNotification } = useNotification();
   const [activeTab, setActiveTab] = useState("Home");
-  const [jobs, setJobs] = useState([]);
-  const [newJob, setNewJob] = useState({ title: "", min_cgpa: "", ctc: "" });
-  const [message, setMessage] = useState("");
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [, setJobs] = useState([]);
   const [showStudentModal, setShowStudentModal] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [selectedStudent] = useState(null);
   const [viewingProfile, setViewingProfile] = useState(null);
   const [showPostJobModal, setShowPostJobModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -67,7 +60,8 @@ export default function CompanyDashboard() {
     deadline: "",
     description: "",
     skills: "",
-    experience: ""
+    experience: "",
+    min_cgpa: ""
   });
 
   // New Dashboard Stats and Table State
@@ -137,13 +131,12 @@ export default function CompanyDashboard() {
     description: "",
     status: ""
   });
-  const [loading, setLoading] = useState(true);
+
 
   const COLORS = ['#3b82f6', '#818cf8', '#f59e0b']; // Blue, Indigo, Amber
 
   const fetchDashboardData = React.useCallback(async () => {
     try {
-      setLoading(true);
 
       // 1. Fetch company profile
       const profileData = await getProfile();
@@ -246,11 +239,9 @@ export default function CompanyDashboard() {
         ].filter(d => d.value > 0);
         if (computedPlacement.length > 0) setPlacementData(computedPlacement);
       }
-    } catch (err) {
-      console.error("Error fetching company data:", err);
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
       showNotification("Failed to load dashboard data", "error", "company");
-    } finally {
-      setLoading(false);
     }
   }, [showNotification]);
 
@@ -311,7 +302,7 @@ export default function CompanyDashboard() {
           description: postJobFormData.description,
           skills: postJobFormData.skills,
           experience: postJobFormData.experience,
-          min_cgpa: null,
+          min_cgpa: postJobFormData.min_cgpa,
           max_backlogs: null
         };
 
@@ -349,7 +340,8 @@ export default function CompanyDashboard() {
       deadline: "",
       description: "",
       skills: "",
-      experience: ""
+      experience: "",
+      min_cgpa: ""
     });
     setIsEditing(false);
     setEditJobId(null);
@@ -366,7 +358,8 @@ export default function CompanyDashboard() {
       deadline: job.deadline || "",
       description: job.description || "",
       skills: job.skills || "",
-      experience: job.experience || ""
+      experience: job.experience || "",
+      min_cgpa: job.min_cgpa || ""
     });
     setIsEditing(true);
     setEditJobId(job.id);
@@ -399,29 +392,6 @@ export default function CompanyDashboard() {
       setIsSubmitting(false);
     }
   };
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userName");
-    localStorage.removeItem("userEmail");
-    localStorage.removeItem("userRole");
-    socketService.disconnect();
-    window.location.href = "/";
-  };
-
-  const sidebarItems = [
-    { name: "Home", icon: LayoutDashboard },
-    { name: "Posted Jobs", icon: Briefcase },
-    { name: "Applications", icon: FileText },
-    { name: "Students", icon: Users },
-    { name: "Analytics", icon: BarChart2 },
-    { name: "Announcements", icon: Bell },
-    { name: "Competitions", icon: Trophy },
-    { name: "Events", icon: Calendar },
-    { name: "Assessments", icon: FileText },
-    { name: "Settings", icon: Settings },
-    { name: "Help & Support", icon: HelpCircle },
-  ];
 
   const renderContent = () => {
     const filteredJobs = (dashboardJobs || []).filter(job => {
@@ -978,17 +948,7 @@ export default function CompanyDashboard() {
             </div>
           </div>
           
-          {/* Detailed Analytics Call to Action - Optional placeholder */}
-          <div className="bg-gradient-to-r from-[#1e293b] to-[#0f172a] rounded-3xl p-10 text-white shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8 border border-white/5 relative overflow-hidden group">
-             <div className="absolute top-0 right-0 p-20 bg-blue-500/10 rounded-full blur-3xl -mr-20 -mt-20 group-hover:bg-blue-500/20 transition-colors duration-700"></div>
-             <div className="relative z-10">
-               <h3 className="text-2xl font-black mb-3 tracking-tight">Want deeper insights?</h3>
-               <p className="text-white/70 font-medium text-base md:max-w-md leading-relaxed">Upgrade to Eduvate Employer Pro to unlock advanced candidate tracking, custom reports, and predictive hiring analytics.</p>
-             </div>
-             <button className="relative z-10 bg-[#3b82f6] text-white px-10 py-5 rounded-2xl font-black text-base shadow-xl shadow-blue-500/30 hover:bg-[#2563eb] hover:shadow-2xl transition-all active:scale-95 whitespace-nowrap">
-               Upgrade to Pro
-             </button>
-          </div>
+
         </div>
       );
     }
@@ -1439,60 +1399,7 @@ export default function CompanyDashboard() {
   return (
     <div className="h-screen flex font-sans bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-50/50 via-gray-50 to-white overflow-hidden">
       {/* Sidebar */}
-      <aside className="w-80 bg-gradient-to-b from-[#0f172a] to-[#1e293b] flex flex-col py-6 z-10 shrink-0 shadow-xl relative">
-        {/* Eduvate Branding - Moved to Sidebar */}
-        <div className="px-8 pb-10 flex items-center gap-4">
-          <div className="w-12 h-12 bg-gradient-to-tr from-[#3b82f6] to-[#60a5fa] rounded-2xl flex items-center justify-center text-white shadow-lg shadow-blue-500/20 transform -rotate-3 hover:rotate-0 transition-transform duration-300 ring-2 ring-white/10">
-            <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.989-2.386l-.548-.547z" />
-            </svg>
-          </div>
-          <div>
-            <h1 className="text-2xl font-black text-white leading-none tracking-tight">EDUVATE</h1>
-            <p className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mt-1.5">Company Portal</p>
-          </div>
-        </div>
-
-        <nav className="flex-1 px-4 space-y-1.5">
-          {sidebarItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = activeTab === item.name;
-            const isSupportItem = item.name === "Help & Support";
-            
-            return (
-              <React.Fragment key={item.name}>
-                {isSupportItem && (
-                  <div className="px-4 mt-14 mb-2">
-                    <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest opacity-70">Support</p>
-                  </div>
-                )}
-                <button
-                  onClick={() => setActiveTab(item.name)}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-base transition-all duration-200 group ${
-                    isActive 
-                      ? "bg-[#3b82f6] text-white shadow-lg shadow-blue-500/20 font-bold" 
-                      : "text-gray-400 hover:bg-white/10 hover:text-white font-medium"
-                  }`}
-                >
-                  <Icon className={`w-5 h-5 transition-colors ${isActive ? "text-white" : "text-gray-400 group-hover:text-white"}`} />
-                  {item.name}
-                  {isActive && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-white animate-pulse"></div>}
-                </button>
-              </React.Fragment>
-            );
-          })}
-        </nav>
-        
-        <div className="px-4 mt-6 pt-6 border-t border-white/10 space-y-1.5">
-          <button 
-            onClick={() => setShowLogoutModal(true)}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors group"
-          >
-            <LogOut className="w-5 h-5 text-red-400 group-hover:text-red-300" />
-            Logout
-          </button>
-        </div>
-      </aside>
+      <CompanySidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top Navbar */}
@@ -1649,37 +1556,6 @@ export default function CompanyDashboard() {
           </div>
         </div>
       )}
-
-      {/* Logout Confirmation Modal */}
-      {showLogoutModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm transition-all duration-300">
-          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden p-8 animate-in fade-in zoom-in duration-200 border border-white/20">
-            <div className="flex flex-col items-center text-center mb-6">
-              <div className="p-4 bg-red-50 rounded-2xl mb-4 text-red-600">
-                <LogOut className="w-8 h-8" />
-              </div>
-              <h3 className="text-2xl font-black text-gray-900 tracking-tight">Sign Out</h3>
-            </div>
-            <p className="text-gray-600 text-sm text-center mb-8 font-medium leading-relaxed">
-              Are you sure you want to log out? You will need to sign back in to manage your job postings and applications.
-            </p>
-            <div className="flex flex-col gap-3">
-              <button 
-                onClick={handleLogout}
-                className="w-full py-3 rounded-xl font-bold text-white bg-red-600 hover:bg-red-700 transition-all shadow-md hover:shadow-lg focus:ring-4 focus:ring-red-600/20"
-              >
-                Yes, Sign Out
-              </button>
-              <button 
-                onClick={() => setShowLogoutModal(false)}
-                className="w-full py-3 rounded-xl font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-all"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
       {/* Job Posting Modal */}
       {showPostJobModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
@@ -1794,6 +1670,19 @@ export default function CompanyDashboard() {
                     onChange={handlePostJobChange}
                     placeholder="e.g. 3+ years"
                     className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#346b41] focus:bg-white outline-none transition-all font-medium"
+                  />
+                </div>
+
+                {/* Minimum CGPA Required */}
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-2">Minimum CGPA Required</label>
+                  <input
+                    type="text"
+                    name="min_cgpa"
+                    value={postJobFormData.min_cgpa}
+                    onChange={handlePostJobChange}
+                    placeholder="e.g. 7.5"
+                    className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#3b82f6] focus:bg-white outline-none transition-all font-medium"
                   />
                 </div>
 

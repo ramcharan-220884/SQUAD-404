@@ -3,33 +3,40 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-// Initialize Redis client
-// If REDIS_URL is not set, it defaults to localhost:6379
-const redisClient = new Redis(process.env.REDIS_URL || "redis://localhost:6379", {
-  // Graceful fallback settings
-  lazyConnect: true,
-  maxRetriesPerRequest: 1,
-  retryStrategy(times) {
-    // Stop retrying after 3 attempts, allowing the app to degrade gracefully
-    if (times >= 3) {
-      console.warn("Redis connection failed. Blacklist will be temporarily disabled.");
-      return null; 
+// If no REDIS_URL is configured, skip Redis entirely.
+// The app runs fine without it — token blacklist will just be disabled.
+if (!process.env.REDIS_URL) {
+  console.warn("REDIS_URL not set — Redis disabled. Token blacklist will not be active.");
+}
+
+const redisClient = process.env.REDIS_URL
+  ? new Redis(process.env.REDIS_URL, {
+      lazyConnect: true,
+      maxRetriesPerRequest: 1,
+      retryStrategy(times) {
+        if (times >= 3) {
+          console.warn("Redis connection failed after 3 attempts. Token blacklist disabled.");
+          return null;
+        }
+        return Math.min(times * 200, 2000);
+      }
+    })
+  : null;
+
+if (redisClient) {
+  redisClient.on("error", (err) => {
+    if (err && err.message) {
+      console.warn("Redis Error:", err.message);
     }
-    return Math.min(times * 50, 2000);
-  }
-});
+  });
 
-redisClient.on("error", (err) => {
-  console.warn("Redis Error:", err.message);
-});
+  redisClient.on("connect", () => {
+    console.log("Connected to Redis for token blacklist");
+  });
 
-redisClient.on("connect", () => {
-  console.log("Connected to Redis for token blacklist");
-});
-
-// Connect lazily (does not block app startup if Redis is down)
-redisClient.connect().catch((err) => {
-  console.warn("Initial Redis connection failed, proceeding without Redis");
-});
+  redisClient.connect().catch(() => {
+    console.warn("Initial Redis connection failed, proceeding without Redis");
+  });
+}
 
 export default redisClient;
