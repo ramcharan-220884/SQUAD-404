@@ -88,4 +88,11 @@ router.post("/interviews", validate(createInterviewSchema), createInterview);
 router.patch("/interviews/:id", validate(createInterviewSchema), updateInterview);
 router.delete("/interviews/:id", deleteInterview);
 
+// ── Applications & Candidate Communication ─────────────────────────────────
+import { getAdminApplications, notifyCandidates } from "../controllers/adminApplicationController.js";
+import { notifyCandidatesSchema } from "../validations/admin.validation.js";
+
+router.get("/applications", getAdminApplications);
+router.post("/notify-candidates", validate(notifyCandidatesSchema), notifyCandidates);
+
 export default router;

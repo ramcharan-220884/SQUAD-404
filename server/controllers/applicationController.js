@@ -23,6 +23,11 @@ export const applyJob = async (req, res) => {
     const [[student]] = await pool.query("SELECT * FROM students WHERE id = ?", [student_id]);
     if (!student) return res.status(404).json({ success: false, message: "Student profile not found" });
 
+    // Enforce Phone requirement for WhatsApp communications
+    if (!student.phone || student.phone.trim() === '') {
+      return res.status(400).json({ success: false, message: "Please complete your profile (Phone number required to apply)" });
+    }
+
     if (job.min_cgpa !== null && parseFloat(student.cgpa || 0) < parseFloat(job.min_cgpa)) {
       return res.status(400).json({ success: false, message: `Minimum CGPA required is ${job.min_cgpa}` });
     }
@@ -56,9 +61,18 @@ export const applyJob = async (req, res) => {
     }
 
     // 6. Insert new application
-    await connection.query(
+    const [result] = await connection.query(
       "INSERT INTO applications (job_id, student_id, resume_url) VALUES (?, ?, ?)",
       [job_id, student_id, student.resume_url]
+    );
+
+    const applicationId = result.insertId;
+    const year = new Date().getFullYear();
+    const appCode = `APP-${year}-${String(applicationId).padStart(5, '0')}`;
+
+    await connection.query(
+      "UPDATE applications SET application_code = ? WHERE id = ?",
+      [appCode, applicationId]
     );
 
     await connection.commit();

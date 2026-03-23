@@ -7,12 +7,11 @@ import RightPanel from '../components/dashboard/RightPanel';
 import HomeContent from '../components/dashboard/HomeContent';
 import HelpSupport from '../components/dashboard/HelpSupport';
 import Interviews from '../components/dashboard/Interviews';
-import Assessments from '../components/dashboard/Assessments';
 import Events from '../components/dashboard/Events';
 import AppliedJobs from '../components/dashboard/AppliedJobs';
 import Competitions from '../components/dashboard/Competitions';
-import { 
-  getMyApplications 
+import {
+  getMyApplications
 } from "../services/studentService";
 import BrowseJobs from "../components/dashboard/BrowseJobs";
 import StudentProfile from "./StudentProfile";
@@ -151,7 +150,7 @@ function ResourcesSection() {
           <p className="bj-sub">Explore study materials and interview prep</p>
         </div>
       </div>
-      
+
       {/* Branches */}
       <h3 style={{ fontSize: '16px', fontWeight: 600, color: '#0a2540', marginBottom: '12px' }}>Branches</h3>
       <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '24px' }}>
@@ -209,10 +208,10 @@ function ResourcesSection() {
       <h3 style={{ fontSize: '16px', fontWeight: 600, color: '#0a2540', marginBottom: '12px' }}>Resources</h3>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
         {resourcesData[selectedCategory]?.map((item, idx) => (
-          <div key={idx} style={{ 
-            background: '#fff', 
-            borderRadius: '12px', 
-            padding: '20px', 
+          <div key={idx} style={{
+            background: '#fff',
+            borderRadius: '12px',
+            padding: '20px',
             border: '1px solid #e8ecf0',
             boxShadow: '0 2px 8px rgba(10,37,64,0.04)',
             transition: 'transform 0.2s ease, box-shadow 0.2s ease',
@@ -220,11 +219,11 @@ function ResourcesSection() {
             flexDirection: 'column',
             justifyContent: 'space-between'
           }}
-          onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 8px 20px rgba(10,37,64,0.09)'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(10,37,64,0.04)'; }}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 8px 20px rgba(10,37,64,0.09)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(10,37,64,0.04)'; }}
           >
             <div>
-              <h4 
+              <h4
                 className="resource-title"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -293,7 +292,7 @@ export default function StudentDashboard() {
     const token = localStorage.getItem("token");
     if (token) {
       socketService.connect(token);
-      
+
       socketService.on("applicationStatusUpdated", (data) => {
         showNotification(`Application Status Updated: Your application for ${data.jobTitle} is now ${data.status}`, "info", "student");
         fetchAppliedJobs(); // Refresh state
@@ -331,7 +330,6 @@ export default function StudentDashboard() {
       case 'applied-jobs': return <AppliedJobs jobs={appliedJobs} onRefresh={fetchAppliedJobs} />;
       case 'profile': return <StudentProfile isPortal={true} />;
       case 'interviews': return <Interviews />;
-      case 'assessments': return <Assessments />;
       case 'events': return <Events />;
       case 'competitions': return <Competitions />;
       case 'announcements': return <Announcements role="student" />;

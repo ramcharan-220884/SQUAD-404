@@ -77,3 +77,25 @@ export const registerCompany = async (data) => {
     });
     return res.json();
 };
+// Applications Rounds Management
+export const getCompanyApplicationRounds = async (applicationId) => {
+  const res = await authFetch(`/companies/applications/${applicationId}/rounds`);
+  return handleResponse(res);
+};
+
+export const createCompanyApplicationRound = async (applicationId, data) => {
+  const res = await authFetch(`/companies/applications/${applicationId}/rounds`, {
+    method: "POST",
+    body: JSON.stringify(data)
+  });
+  return handleResponse(res);
+};
+
+export const updateCompanyApplicationRoundStatus = async (roundId, status) => {
+  const res = await authFetch(`/companies/rounds/${roundId}/status`, {
+    method: "PUT",
+    body: JSON.stringify({ status })
+  });
+  return handleResponse(res);
+};
+

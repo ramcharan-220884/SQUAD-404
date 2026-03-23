@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { useNotification } from "../context/NotificationContext";
-import { getPostedJobs, getCompanyStats, postJob, updateApplicationStatus, getApplicants, getProfile, updateProfile } from "../services/companyService";
+import { getPostedJobs, getCompanyStats, postJob, updateApplicationStatus, getApplicants, getProfile, updateProfile, getCompanyApplicationRounds, createCompanyApplicationRound, updateCompanyApplicationRoundStatus } from "../services/companyService";
 import socketService from "../services/socketService";
 import { 
   LayoutDashboard, 
@@ -23,7 +23,6 @@ import {
 import Announcements from "../components/dashboard/Announcements";
 import Competitions from "../components/dashboard/Competitions";
 import Events from "../components/dashboard/Events";
-import Assessments from "../components/dashboard/Assessments";
 import ThemeToggle from "../components/dashboard/ThemeToggle";
 import CompanySidebar from "../components/dashboard/CompanySidebar";
 import { 
@@ -63,6 +62,13 @@ export default function CompanyDashboard() {
     experience: "",
     min_cgpa: ""
   });
+
+  // Rounds Management State
+  const [showRoundsModal, setShowRoundsModal] = useState(false);
+  const [selectedAppForRounds, setSelectedAppForRounds] = useState(null);
+  const [appRounds, setAppRounds] = useState([]);
+  const [loadingRounds, setLoadingRounds] = useState(false);
+  const [newRoundForm, setNewRoundForm] = useState({ round_name: '', date: '', time: '', location: '' });
 
   // New Dashboard Stats and Table State
   const [dashboardStats, setDashboardStats] = useState({
@@ -390,6 +396,52 @@ export default function CompanyDashboard() {
       showNotification("Error updating application status", "error", "company");
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const openRoundsModal = async (app) => {
+    setSelectedAppForRounds(app);
+    setShowRoundsModal(true);
+    setLoadingRounds(true);
+    try {
+      const rounds = await getCompanyApplicationRounds(app.application_id);
+      setAppRounds(rounds || []);
+    } catch (err) {
+      showNotification("Failed to load rounds", "error", "company");
+    } finally {
+      setLoadingRounds(false);
+    }
+  };
+
+  const handleCreateRound = async (e) => {
+    e.preventDefault();
+    if (!newRoundForm.round_name || !newRoundForm.date || !newRoundForm.time) {
+      showNotification("Please fill all required fields", "warning", "company");
+      return;
+    }
+    try {
+      setIsSubmitting(true);
+      await createCompanyApplicationRound(selectedAppForRounds.application_id, newRoundForm);
+      showNotification("Round created successfully", "success", "company");
+      setNewRoundForm({ round_name: '', date: '', time: '', location: '' });
+      // Refresh rounds
+      const rounds = await getCompanyApplicationRounds(selectedAppForRounds.application_id);
+      setAppRounds(rounds || []);
+    } catch (err) {
+      showNotification("Error creating round", "error", "company");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleRoundStatusUpdate = async (roundId, status) => {
+    try {
+      await updateCompanyApplicationRoundStatus(roundId, status);
+      showNotification("Round status updated", "success", "company");
+      const rounds = await getCompanyApplicationRounds(selectedAppForRounds.application_id);
+      setAppRounds(rounds || []);
+    } catch (err) {
+      showNotification("Error updating round", "error", "company");
     }
   };
 
@@ -834,13 +886,19 @@ export default function CompanyDashboard() {
                           </span>
                         </td>
 
-                        {/* Update dropdown */}
-                        <td className="px-8 py-5 text-right">
+                        {/* Update dropdown & Actions */}
+                        <td className="px-8 py-5 text-right flex items-center justify-end gap-3 flex-wrap">
+                          <button
+                            onClick={() => openRoundsModal(app)}
+                            className="bg-blue-50 text-blue-600 px-4 py-2.5 rounded-xl text-xs font-bold hover:bg-blue-100 transition-colors border border-blue-100 uppercase tracking-widest whitespace-nowrap active:scale-95 shadow-sm"
+                          >
+                            Rounds
+                          </button>
                           <select
                             value={app.status || "Applied"}
                             onChange={e => handleStatusUpdate(app.application_id, e.target.value)}
                             disabled={isSubmitting}
-                            className="border-2 border-gray-100 rounded-xl py-2.5 pl-4 pr-9 text-xs font-bold bg-white focus:border-blue-500/50 outline-none shadow-sm cursor-pointer transition-all hover:border-blue-200 hover:bg-blue-50/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="border-2 border-gray-100 rounded-xl py-2 pl-4 pr-9 text-xs font-bold bg-white focus:border-blue-500/50 outline-none shadow-sm cursor-pointer transition-all hover:border-blue-200 hover:bg-blue-50/30 disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wider h-[38px]"
                           >
                             <option value="Applied">Applied</option>
                             <option value="Shortlisted">Shortlisted</option>
@@ -1168,14 +1226,6 @@ export default function CompanyDashboard() {
       return (
         <div className="animate-in fade-in duration-300">
            <Events role="company" />
-        </div>
-      );
-    }
-
-    if (activeTab === "Assessments") {
-      return (
-        <div className="animate-in fade-in duration-300">
-           <Assessments role="company" />
         </div>
       );
     }
@@ -1729,6 +1779,107 @@ export default function CompanyDashboard() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Rounds Manager Modal */}
+      {showRoundsModal && selectedAppForRounds && (
+        <div className="fixed inset-0 z-[1200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col relative animate-in zoom-in-95 duration-300">
+            {/* Header */}
+            <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+              <div>
+                <h2 className="text-xl font-bold text-gray-900 leading-tight">
+                  Manage Interview Rounds
+                </h2>
+                <p className="text-sm font-medium text-gray-500 mt-1">
+                  {selectedAppForRounds.student_name} • {selectedAppForRounds.jobTitle}
+                </p>
+              </div>
+              <button 
+                onClick={() => { setShowRoundsModal(false); setSelectedAppForRounds(null); }}
+                className="p-2 rounded-xl hover:bg-gray-200/50 text-gray-400 hover:text-gray-900 transition-all font-bold"
+              >
+                Close
+              </button>
+            </div>
+
+            {/* Scrollable Content */}
+            <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-8 bg-gray-50">
+              {/* Existing Rounds */}
+              <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm">
+                <h3 className="text-sm font-extrabold text-[#052c42] uppercase tracking-[0.1em] mb-4">Application History</h3>
+                {loadingRounds ? (
+                  <p className="text-sm text-gray-500 italic">Loading rounds...</p>
+                ) : appRounds.length === 0 ? (
+                  <p className="text-sm text-gray-400 font-medium p-4 bg-gray-50 rounded-2xl text-center border border-dashed border-gray-300">No rounds created yet.</p>
+                ) : (
+                  <div className="space-y-4">
+                    {appRounds.map((round, idx) => (
+                      <div key={idx} className="flex flex-col md:flex-row md:items-center justify-between p-4 border border-gray-100 rounded-2xl bg-gray-50 gap-4">
+                        <div>
+                          <h4 className="font-bold text-gray-900">{round.round_name}</h4>
+                          <p className="text-xs text-gray-500 font-medium flex gap-3 mt-1">
+                            <span>{new Date(round.date).toLocaleDateString()} at {round.time}</span>
+                            <span>|</span>
+                            <span>{round.location}</span>
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-3 shrink-0">
+                          <span className={`text-[10px] uppercase font-black tracking-wider px-2 py-1 rounded-md ${
+                            round.status === 'Scheduled' ? 'bg-yellow-100 text-yellow-700' :
+                            round.status === 'Passed' ? 'bg-green-100 text-green-700' :
+                            round.status === 'Failed' ? 'bg-red-100 text-red-700' :
+                            'bg-blue-100 text-blue-700'
+                          }`}>
+                            {round.status}
+                          </span>
+                          <select
+                            value={round.status}
+                            onChange={(e) => handleRoundStatusUpdate(round.id, e.target.value)}
+                            className="border-2 border-gray-200 rounded-xl py-1.5 px-3 text-xs font-bold bg-white outline-none focus:border-blue-500 transition-colors cursor-pointer"
+                          >
+                            <option value="Scheduled">Scheduled</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Passed">Passed</option>
+                            <option value="Failed">Failed</option>
+                          </select>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Create Round Form */}
+              <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm">
+                <h3 className="text-sm font-extrabold text-[#052c42] uppercase tracking-[0.1em] mb-4">+ Schedule New Round</h3>
+                <form onSubmit={handleCreateRound} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="md:col-span-2">
+                    <label className="block text-xs font-bold text-gray-700 mb-1 uppercase tracking-wider">Round Name / Title *</label>
+                    <input type="text" value={newRoundForm.round_name} onChange={e => setNewRoundForm({...newRoundForm, round_name: e.target.value})} required className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-100 rounded-xl outline-none focus:border-blue-500 transition-all font-medium text-sm" placeholder="e.g. Technical Interview L1" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 mb-1 uppercase tracking-wider">Date *</label>
+                    <input type="date" value={newRoundForm.date} onChange={e => setNewRoundForm({...newRoundForm, date: e.target.value})} required className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-100 rounded-xl outline-none focus:border-blue-500 transition-all font-medium text-sm" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 mb-1 uppercase tracking-wider">Time *</label>
+                    <input type="time" value={newRoundForm.time} onChange={e => setNewRoundForm({...newRoundForm, time: e.target.value})} required className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-100 rounded-xl outline-none focus:border-blue-500 transition-all font-medium text-sm" />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-xs font-bold text-gray-700 mb-1 uppercase tracking-wider">Interview Link / Location</label>
+                    <input type="text" value={newRoundForm.location} onChange={e => setNewRoundForm({...newRoundForm, location: e.target.value})} className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-100 rounded-xl outline-none focus:border-blue-500 transition-all font-medium text-sm" placeholder="Zoom Link, Google Meet, or Office Address" />
+                  </div>
+                  <div className="md:col-span-2 pt-2">
+                    <button type="submit" disabled={isSubmitting} className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-black text-sm uppercase tracking-widest rounded-xl transition-all shadow-md active:scale-95 disabled:opacity-50 flex items-center justify-center">
+                      {isSubmitting ? 'Creating...' : '+ Create Round'}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
         </div>
       )}
