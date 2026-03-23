@@ -1,19 +1,37 @@
 import { pool } from "../config/db.js";
 
-export const fetchAllStudents = async ({ page = 1, limit = 1000 }) => {
+export const fetchAllStudents = async ({ page = 1, limit = 1000, applicationStatus = null, companyName = null }) => {
   const offset = (page - 1) * limit;
-  const [students] = await pool.query(`
+  let query = `
     SELECT 
       s.id, s.name, s.email, s.branch, s.cgpa, s.placed_status, s.created_at, s.status,
-      COUNT(a.id) as applicationsCount,
-      SUM(CASE WHEN a.status = 'Selected' THEN 1 ELSE 0 END) as selectedCount
+      COALESCE(a.status, 'None') as application_status
     FROM students s
     LEFT JOIN applications a ON s.id = a.student_id
+    LEFT JOIN jobs j ON a.job_id = j.id
+    LEFT JOIN companies c ON j.company_id = c.id
     WHERE s.status != 'Rejected'
-    GROUP BY s.id
-    ORDER BY s.created_at DESC
+  `;
+  const params = [];
+
+  if (applicationStatus && applicationStatus !== 'All') {
+    query += " AND a.status = ?";
+    params.push(applicationStatus);
+  }
+
+  if (companyName) {
+    query += " AND c.name = ?";
+    params.push(companyName);
+  }
+
+  query += `
+    GROUP BY s.id 
+    ORDER BY s.created_at DESC 
     LIMIT ? OFFSET ?
-  `, [Number(limit), Number(offset)]);
+  `;
+  params.push(Number(limit), Number(offset));
+
+  const [students] = await pool.query(query, params);
   const [[{ total }]] = await pool.query("SELECT COUNT(*) as total FROM students");
   return { students, total };
 };

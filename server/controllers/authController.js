@@ -51,7 +51,7 @@ export const googleLogin = async (req, res, next) => {
         if (!user) {
             // Auto-Register Student as Pending
             const [insertResult] = await pool.query(
-                `INSERT INTO students (name, email, password, status, approved, profile_completed, auth_provider, oauth_id, profile_photo_url) VALUES (?, ?, ?, 'Pending', 0, 0, 'google', ?, ?)`,
+                `INSERT INTO students (name, email, password, status, approved, profile_completed, auth_provider, oauth_id, profile_photo_url) VALUES (?, ?, ?, 'Active', 1, 0, 'google', ?, ?)`,
                 [name, email, '!OAUTH_PROTECTED_PASSWORD!', sub, picture]
             );
             const [newRows] = await pool.query("SELECT * FROM students WHERE id = ?", [insertResult.insertId]);
@@ -66,9 +66,7 @@ export const googleLogin = async (req, res, next) => {
         if (user.status === 'Rejected') {
             return res.status(403).json({ success: false, message: "Account access revoked. Please contact support." });
         }
-        if (user.status === 'Pending' || !user.approved) {
-            return res.status(403).json({ success: false, message: "Your account is pending admin approval" });
-        }
+
     } else if (role === 'company') {
         let [rows] = await pool.query("SELECT * FROM companies WHERE oauth_id = ?", [sub]);
         user = rows[0];
@@ -100,6 +98,7 @@ export const googleLogin = async (req, res, next) => {
         if (user.status === 'Pending' || user.approved === 0 || user.approved === false) {
             return res.status(403).json({ success: false, message: "Your account is pending admin approval" });
         }
+
     } else {
         return res.status(400).json({ success: false, message: "Invalid role specified." });
     }
@@ -188,9 +187,12 @@ export const login = async (req, res, next) => {
       if (user.status === "Rejected") {
         return res.status(403).json({ success: false, message: "Account rejected. Please contact support." });
       }
-      if (user.status === "Pending" || !user.approved) {
-        return res.status(403).json({ success: false, message: "Account pending admin approval" });
+      if (role === "company") {
+        if (user.status === "Pending" || !user.approved) {
+          return res.status(403).json({ success: false, message: "Account pending admin approval" });
+        }
       }
+
     }
 
     const accessToken = jwt.sign(
@@ -311,7 +313,7 @@ export const register = async (req, res, next) => {
       const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
       
       await pool.query(
-        "INSERT INTO students (name, first_name, last_name, email, password, branch, cgpa, status, approved, profile_completed) VALUES (?, ?, ?, ?, ?, ?, ?, 'Pending', 0, 0)",
+        "INSERT INTO students (name, first_name, last_name, email, password, branch, cgpa, status, approved, profile_completed) VALUES (?, ?, ?, ?, ?, ?, ?, 'Active', 1, 0)",
         [name, firstName, lastName, email, hashedPassword, otherData.branch || null, otherData.cgpa || null]
       );
     } else {
@@ -323,7 +325,9 @@ export const register = async (req, res, next) => {
 
     res.status(201).json({
       success: true,
-      message: `${role.charAt(0).toUpperCase() + role.slice(1)} registered successfully. Pending approval.`
+      message: role === 'student' 
+        ? "Student registered successfully." 
+        : "Company registered successfully. Pending approval."
     });
 
   } catch (err) {
