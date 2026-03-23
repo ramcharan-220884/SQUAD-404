@@ -11,8 +11,8 @@ const AuthModal = ({ isOpen, onClose, role, onLogin, onRegister }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm transition-opacity">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all animate-in fade-in zoom-in duration-300">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm transition-opacity overflow-y-auto">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md my-auto transform transition-all animate-in fade-in zoom-in duration-300 max-h-[90vh] overflow-y-auto">
         <div className="p-8">
           <div className="flex justify-between items-center mb-6">
             <div className="flex items-center gap-3">

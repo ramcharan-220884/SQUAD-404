@@ -35,8 +35,8 @@ body {
 
 .db-root {
   display: flex;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
+  overflow-y: auto;
   font-family: 'Inter', sans-serif;
   background: var(--bg);
 }
@@ -312,8 +312,9 @@ body {
   display: flex;
   flex-direction: column;
   flex: 1;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
+  height: auto;
+  overflow: visible;
 }
 
 /* ── HEADER ────────────────────────────────────── */
@@ -455,7 +456,7 @@ body {
 .db-body {
   display: flex;
   flex: 1;
-  overflow: hidden;
+  overflow: visible;
 }
 
 /* ── CENTER CONTENT ────────────────────────────── */

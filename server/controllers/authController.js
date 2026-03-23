@@ -145,12 +145,9 @@ export const googleLogin = async (req, res, next) => {
         role: role
       }
     });
-
   } catch (err) {
-    console.error("Google verify error — name:", err.name);
-    console.error("Google verify error — message:", err.message);
-    console.error("GOOGLE_CLIENT_ID loaded as:", process.env.GOOGLE_CLIENT_ID);
-    res.status(401).json({ success: false, message: "Invalid Google authorization token. Please try again." });
+    console.error("GOOGLE LOGIN CRASH:", err);
+    res.status(500).json({ success: false, message: "Google Login failed internally." });
   }
 };
 
@@ -170,14 +167,24 @@ export const login = async (req, res, next) => {
     else if (role === "admin") tableName = "admins";
     else return res.status(400).json({ success: false, message: "Invalid role specified" });
 
+    console.log(`Login attempt for role: ${role}, email: ${email}`);
     [users] = await pool.query(`SELECT * FROM ${tableName} WHERE email = ?`, [email]);
 
     if (users.length === 0) {
+      console.log(`User not found in table: ${tableName}`);
       return res.status(401).json({ success: false, message: "Invalid email or password" });
     }
 
     const user = users[0];
+    console.log(`User found: ${user.id}. Comparing passwords...`);
+    
+    if (!user.password) {
+      console.error(`User ${user.id} has NO password in database!`);
+      return res.status(500).json({ success: false, message: "Server configuration error: No password found for user." });
+    }
+
     const isMatch = await bcrypt.compare(password, user.password);
+    console.log(`Password match: ${isMatch}`);
 
     if (!isMatch) {
       return res.status(401).json({ success: false, message: "Invalid email or password" });

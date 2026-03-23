@@ -1,11 +1,6 @@
 import mysql from "mysql2";
-import dotenv from "dotenv";
 import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-dotenv.config({ path: path.resolve(__dirname, "../.env") });
+import "./env.js";
 
 // SSL Configuration for Aiven Cloud MySQL
 // Enforces encrypted connections. Validates the certificate chain ONLY if a custom CA is provided.

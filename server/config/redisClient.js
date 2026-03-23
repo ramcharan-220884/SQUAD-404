@@ -1,11 +1,9 @@
 import Redis from "ioredis";
-import dotenv from "dotenv";
-
-dotenv.config();
+import "./env.js";
 
 // If no REDIS_URL is configured, skip Redis entirely.
 // The app runs fine without it — token blacklist will just be disabled.
-if (!process.env.REDIS_URL) {
+if (!process.env.REDIS_URL && process.env.NODE_ENV === "production") {
   console.warn("REDIS_URL not set — Redis disabled. Token blacklist will not be active.");
 }
 

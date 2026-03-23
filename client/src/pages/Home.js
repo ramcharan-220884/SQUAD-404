@@ -14,26 +14,23 @@ import CompanyRegisterModal from "../components/CompanyRegisterModal";
 import AdminLoginModal from "../components/AdminLoginModal";
 
 const Home = () => {
-  const [modalData, setModalData] = useState({ isOpen: false, role: "Student" });
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [initialLoginRole] = useState("student");
-  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
-  const [isCompanyLoginOpen, setIsCompanyLoginOpen] = useState(false);
-  const [isCompanyRegisterOpen, setIsCompanyRegisterOpen] = useState(false);
-  const [isAdminLoginOpen, setIsAdminLoginOpen] = useState(false);
+  const [activeModal, setActiveModal] = useState(null); // 'auth', 'studentLogin', 'studentRegister', 'companyLogin', 'companyRegister', 'adminLogin'
+  const [modalData, setModalData] = useState({ role: "Student" });
+  const [initialRole] = useState("student");
 
   const openAuthModal = (role) => {
-    setModalData({ isOpen: true, role });
+    setActiveModal('auth');
+    setModalData(prev => ({ ...prev, role }));
   };
 
   const closeAuthModal = () => {
-    setModalData({ ...modalData, isOpen: false });
+    setActiveModal(null);
   };
 
   // Wire up global observers for the nested sections
   React.useEffect(() => {
-    window.onStudentRegister = () => setIsRegisterModalOpen(true);
-    window.onCompanyRegister = () => setIsCompanyRegisterOpen(true);
+    window.onStudentRegister = () => setActiveModal('studentRegister');
+    window.onCompanyRegister = () => setActiveModal('companyRegister');
     return () => {
       delete window.onStudentRegister;
       delete window.onCompanyRegister;
@@ -42,93 +39,61 @@ const Home = () => {
 
   return (
     <div className="scroll-smooth">
-      <Navbar onLoginClick={() => {
-        setIsLoginModalOpen(true);
-      }} />
+      <Navbar onLoginClick={() => setActiveModal('studentLogin')} />
       <main>
         <HeroSection onGetStarted={() => openAuthModal("Student")} />
         <StakeholderSection
-          onRegisterClick={() => setIsRegisterModalOpen(true)}
-          onCompanyLoginClick={() => {
-            setIsCompanyLoginOpen(true);
-          }}
-          onAdminLoginClick={() => {
-            setIsAdminLoginOpen(true);
-          }}
+          onRegisterClick={() => setActiveModal('studentRegister')}
+          onCompanyLoginClick={() => setActiveModal('companyLogin')}
+          onAdminLoginClick={() => setActiveModal('adminLogin')}
         />
-        <StudentSection onLoginClick={() => {
-          setIsLoginModalOpen(true);
-        }} />
-        <CompanySection onLoginClick={() => {
-          setIsCompanyLoginOpen(true);
-        }} />
-        <AdminSection onLoginClick={() => {
-          setIsAdminLoginOpen(true);
-        }} />
+        <StudentSection onLoginClick={() => setActiveModal('studentLogin')} />
+        <CompanySection onLoginClick={() => setActiveModal('companyLogin')} />
+        <AdminSection onLoginClick={() => setActiveModal('adminLogin')} />
       </main>
       <Footer />
 
       <AuthModal 
-        isOpen={modalData.isOpen} 
+        isOpen={activeModal === 'auth'} 
         onClose={closeAuthModal} 
-        role={modalData.role} 
+        role={modalData?.role || "Student"} 
         onLogin={(role) => {
-          if (role === 'company') {
-            setIsCompanyLoginOpen(true);
-          } else if (role === 'admin') {
-            setIsAdminLoginOpen(true);
-          } else {
-            setIsLoginModalOpen(true);
-          }
+          if (role === 'company') setActiveModal('companyLogin');
+          else if (role === 'admin') setActiveModal('adminLogin');
+          else setActiveModal('studentLogin');
         }}
         onRegister={(role) => {
-          if (role === 'company') {
-            setIsCompanyRegisterOpen(true);
-          } else {
-            setIsRegisterModalOpen(true);
-          }
+          if (role === 'company') setActiveModal('companyRegister');
+          else setActiveModal('studentRegister');
         }}
       />
       <LoginModal 
-        isOpen={isLoginModalOpen} 
-        initialRole={initialLoginRole}
-        onClose={() => setIsLoginModalOpen(false)}
+        isOpen={activeModal === 'studentLogin'} 
+        initialRole={initialRole}
+        onClose={() => setActiveModal(null)}
         onSwitchToRegister={(role) => {
-            setIsLoginModalOpen(false);
-            if (role === 'company') {
-                setIsCompanyRegisterOpen(true);
-            } else {
-                setIsRegisterModalOpen(true);
-            }
+            if (role === 'company') setActiveModal('companyRegister');
+            else setActiveModal('studentRegister');
         }}
       />
       <RegisterModal
-        isOpen={isRegisterModalOpen}
-        onClose={() => setIsRegisterModalOpen(false)}
-        onSwitchToLogin={() => {
-            setIsRegisterModalOpen(false);
-            setIsLoginModalOpen(true);
-        }}
+        isOpen={activeModal === 'studentRegister'}
+        onClose={() => setActiveModal(null)}
+        onSwitchToLogin={() => setActiveModal('studentLogin')}
       />
       <CompanyLoginModal
-        isOpen={isCompanyLoginOpen}
-        onClose={() => setIsCompanyLoginOpen(false)}
-        onSwitchToRegister={() => {
-            setIsCompanyLoginOpen(false);
-            setIsCompanyRegisterOpen(true);
-        }}
+        isOpen={activeModal === 'companyLogin'}
+        onClose={() => setActiveModal(null)}
+        onSwitchToRegister={() => setActiveModal('companyRegister')}
       />
       <CompanyRegisterModal
-        isOpen={isCompanyRegisterOpen}
-        onClose={() => setIsCompanyRegisterOpen(false)}
-        onSwitchToLogin={() => {
-            setIsCompanyRegisterOpen(false);
-            setIsCompanyLoginOpen(true);
-        }}
+        isOpen={activeModal === 'companyRegister'}
+        onClose={() => setActiveModal(null)}
+        onSwitchToLogin={() => setActiveModal('companyLogin')}
       />
       <AdminLoginModal
-        isOpen={isAdminLoginOpen}
-        onClose={() => setIsAdminLoginOpen(false)}
+        isOpen={activeModal === 'adminLogin'}
+        onClose={() => setActiveModal(null)}
       />
     </div>
   );

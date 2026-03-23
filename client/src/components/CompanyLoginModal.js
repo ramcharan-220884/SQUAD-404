@@ -77,8 +77,8 @@ const CompanyLoginModal = ({ isOpen, onClose, onSwitchToRegister }) => {
 
   return (
     <>
-    <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md overflow-hidden">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden relative border border-white/20 animate-in fade-in zoom-in duration-300">
+    <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md overflow-y-auto">
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md my-auto relative border border-white/20 animate-in fade-in zoom-in duration-300 max-h-[90vh] overflow-y-auto">
 
         {/* Close Button */}
         <button

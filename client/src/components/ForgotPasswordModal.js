@@ -25,8 +25,8 @@ export default function ForgotPasswordModal({ isOpen, onClose, role = 'student' 
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[120] flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl w-full max-w-md p-8 relative shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[120] flex items-center justify-center p-4 overflow-y-auto">
+      <div className="bg-white rounded-3xl w-full max-w-md p-8 my-auto relative shadow-2xl animate-in fade-in zoom-in duration-300 max-h-[90vh] overflow-y-auto">
         <button onClick={onClose} className="absolute top-5 right-5 p-2 rounded-full bg-gray-100/50 hover:bg-gray-100 text-gray-400 font-bold text-xl transition-all">
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />

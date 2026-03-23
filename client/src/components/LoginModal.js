@@ -51,8 +51,8 @@ const LoginModal = ({ isOpen, onClose, onSwitchToRegister, initialRole = "studen
 
   return (
     <>
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md transition-all duration-300 overflow-hidden">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all animate-in fade-in zoom-in duration-300 relative border border-white/20 flex flex-col h-auto">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md transition-all duration-300 overflow-y-auto">
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md transform transition-all animate-in fade-in zoom-in duration-300 relative border border-white/20 flex flex-col h-auto my-auto max-h-[90vh] overflow-y-auto">
 
         {/* Close Button */}
         <button

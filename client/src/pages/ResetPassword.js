@@ -50,7 +50,7 @@ export default function ResetPassword() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 flex items-center justify-center p-4 font-['Poppins']">
-      <div className="w-full max-w-md bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-white/40">
+      <div className="w-full max-w-md bg-white rounded-[2rem] shadow-2xl border border-white/40 my-8">
         
         {/* Branding Header */}
         <div className="bg-gradient-to-tr from-[#346b41] to-[#4caf50] p-10 text-center text-white relative overflow-hidden">

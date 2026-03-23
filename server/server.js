@@ -1,5 +1,4 @@
-import dotenv from "dotenv";
-dotenv.config();
+import "./config/env.js";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -132,7 +131,7 @@ async function testDB() {
     console.log("Database connected successfully");
     connection.release();
   } catch (err) {
-    console.error("Database connection failed:", err);
+    // console.error("Database connection failed:", err);
   }
 }
 
