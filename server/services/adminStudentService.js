@@ -5,7 +5,7 @@ export const fetchAllStudents = async ({ page = 1, limit = 1000, applicationStat
   let query = `
     SELECT 
       s.id, s.name, s.email, s.branch, s.cgpa, s.placed_status, s.created_at, s.status,
-      COALESCE(a.status, 'None') as application_status
+      MAX(COALESCE(a.status, 'None')) as application_status
     FROM students s
     LEFT JOIN applications a ON s.id = a.student_id
     LEFT JOIN jobs j ON a.job_id = j.id
