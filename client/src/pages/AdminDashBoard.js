@@ -29,6 +29,7 @@ import HelpSupport from "../components/dashboard/HelpSupport";
 import ThemeToggle from "../components/dashboard/ThemeToggle";
 import Competitions from "../components/dashboard/Competitions";
 import Events from "../components/dashboard/Events";
+import Assessments from "../components/dashboard/Assessments";
 import Interviews from "../components/dashboard/Interviews";
 import CandidateCommunication from "../components/dashboard/CandidateCommunication";
 
@@ -180,7 +181,23 @@ export default function AdminDashboard() {
       {/* Main */}
       <main className="flex-1 overflow-y-auto p-6">
 
-        {location.pathname === "/admin-dashboard/interviews" ? (
+        {location.pathname === "/admin-dashboard/students" ? (
+          <StudentManagement />
+        ) : location.pathname === "/admin-dashboard/companies" ? (
+          <CompanyManagement />
+        ) : location.pathname === "/admin-dashboard/announcements" ? (
+          <Announcements />
+        ) : location.pathname === "/admin-dashboard/competitions" ? (
+          <Competitions role="admin" />
+        ) : location.pathname === "/admin-dashboard/events" ? (
+          <Events role="admin" />
+        ) : location.pathname === "/admin-dashboard/assessments" ? (
+          <Assessments role="admin" />
+        ) : location.pathname === "/admin-dashboard/settings" ? (
+          <Settings />
+        ) : location.pathname === "/admin-dashboard/help" ? (
+          <HelpSupport role="admin" />
+        ) : location.pathname === "/admin-dashboard/interviews" ? (
           <Interviews role="admin" />
         ) : location.pathname === "/admin-dashboard/applications" ? (
           <CandidateCommunication />
