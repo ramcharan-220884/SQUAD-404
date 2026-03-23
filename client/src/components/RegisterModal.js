@@ -71,7 +71,7 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
         password: formData.password,
         role: 'student',
       });
-      showNotification("Registration successful! Your account is pending admin approval.", "success", "student");
+      showNotification("Registration successful!", "success", "student");
       onClose();
     } catch (err) {
       const msg = err.message?.includes('Validation failed') 
