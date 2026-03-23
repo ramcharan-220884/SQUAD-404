@@ -15,7 +15,6 @@ import {
   XCircle,
   Megaphone,
   Trophy,
-  Mic,
   LogOut
 } from "lucide-react";
 import { useNotification } from "../context/NotificationContext";
@@ -28,7 +27,6 @@ import HelpSupport from "../components/dashboard/HelpSupport";
 import ThemeToggle from "../components/dashboard/ThemeToggle";
 import Competitions from "../components/dashboard/Competitions";
 import Events from "../components/dashboard/Events";
-import Assessments from "../components/dashboard/Assessments";
 import Interviews from "../components/dashboard/Interviews";
 
 import {
@@ -252,14 +250,6 @@ export default function AdminDashboard() {
             <Calendar size={18}/> Events
           </Link>
 
-          <Link to="/admin-dashboard/assessments" className="flex items-center gap-2">
-            <FileCheck size={18}/> Assessments
-          </Link>
-
-          <Link to="/admin-dashboard/interviews" className="flex items-center gap-2">
-            <Mic size={18}/> Interviews
-          </Link>
-
           <Link to="/admin-dashboard/settings" className="flex items-center gap-2">
             <SettingsIcon size={18}/> Settings
           </Link>
@@ -291,8 +281,6 @@ export default function AdminDashboard() {
           <Competitions role="admin" />
         ) : location.pathname === "/admin-dashboard/events" ? (
           <Events role="admin" />
-        ) : location.pathname === "/admin-dashboard/assessments" ? (
-          <Assessments role="admin" />
         ) : location.pathname === "/admin-dashboard/interviews" ? (
           <Interviews role="admin" />
         ) : location.pathname === "/admin-dashboard/settings" ? (
