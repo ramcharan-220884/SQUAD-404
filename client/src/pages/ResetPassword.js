@@ -49,41 +49,40 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 flex items-center justify-center p-4 font-['Poppins']">
-      <div className="w-full max-w-md bg-white rounded-[2rem] shadow-2xl border border-white/40 my-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 flex flex-col items-center justify-center p-2 font-['Poppins'] overflow-hidden">
+      <div className="w-full max-w-sm bg-white rounded-3xl shadow-xl border border-white/40 my-2">
         
         {/* Branding Header */}
-        <div className="bg-gradient-to-tr from-[#346b41] to-[#4caf50] p-10 text-center text-white relative overflow-hidden">
-          <div className="absolute -top-24 -right-24 w-48 h-48 bg-white/10 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-black/10 rounded-full blur-3xl"></div>
-          <h1 className="text-3xl font-black tracking-tight relative z-10">EDUVATE</h1>
-          <p className="opacity-80 font-bold mt-1 uppercase tracking-[0.3em] text-[10px] relative z-10">Secure Recovery</p>
+        <div className="bg-gradient-to-tr from-[#346b41] to-[#4caf50] p-5 text-center text-white relative overflow-hidden">
+          <div className="absolute -top-12 -right-12 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
+          <h1 className="text-xl font-black tracking-tight relative z-10">EDUVATE</h1>
+          <p className="opacity-80 font-bold mt-0.5 uppercase tracking-widest text-[9px] relative z-10">Secure Recovery</p>
         </div>
 
         {/* Reset Form */}
-        <div className="p-8 lg:p-10">
-          <h2 className="text-xl font-black text-[#052c42] mb-6 text-center">Create New Password</h2>
-          <form onSubmit={handleResetSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <label className="block text-[11px] font-extrabold text-[#052c42] uppercase tracking-[0.2em] ml-1">New Password</label>
+        <div className="p-5">
+          <h2 className="text-lg font-black text-[#052c42] mb-3 text-center leading-tight">Create New Password</h2>
+          <form onSubmit={handleResetSubmit} className="space-y-3">
+            <div className="space-y-1">
+              <label className="block text-[10px] font-extrabold text-[#052c42] uppercase tracking-wider ml-1">New Password</label>
               <input 
                 type="password" 
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3.5 bg-gray-50/50 border-2 border-gray-100/80 rounded-2xl focus:bg-white focus:ring-[6px] focus:ring-[#346b41]/10 focus:border-[#346b41] outline-none transition-all duration-300 text-sm font-medium"
-                placeholder="Min 8 chars, with a number & special character"
+                className="w-full px-4 py-2 bg-gray-50/50 border-2 border-gray-100/80 rounded-xl focus:bg-white focus:ring-[4px] focus:ring-[#346b41]/10 focus:border-[#346b41] outline-none transition-all duration-300 text-sm font-medium"
+                placeholder="Min 8 chars, with a number & special char"
               />
-              <p className="text-[10px] text-gray-400 font-medium ml-1 mt-1">Min 8 characters, include a number and a special character (e.g. !@#$)</p>
+              <p className="text-[8px] text-gray-400 font-medium ml-1">Min 8 chars, include a number & special char</p>
             </div>
-            <div className="space-y-2">
-              <label className="block text-[11px] font-extrabold text-[#052c42] uppercase tracking-[0.2em] ml-1">Confirm Password</label>
+            <div className="space-y-1">
+              <label className="block text-[10px] font-extrabold text-[#052c42] uppercase tracking-wider ml-1">Confirm Password</label>
               <input 
                 type="password" 
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full px-4 py-3.5 bg-gray-50/50 border-2 border-gray-100/80 rounded-2xl focus:bg-white focus:ring-[6px] focus:ring-[#346b41]/10 focus:border-[#346b41] outline-none transition-all duration-300 text-sm font-medium"
+                className="w-full px-4 py-2 bg-gray-50/50 border-2 border-gray-100/80 rounded-xl focus:bg-white focus:ring-[4px] focus:ring-[#346b41]/10 focus:border-[#346b41] outline-none transition-all duration-300 text-sm font-medium"
                 placeholder="Confirm your password"
               />
             </div>
@@ -91,7 +90,7 @@ export default function ResetPassword() {
             <button 
               type="submit" 
               disabled={loading}
-              className={`w-full rounded-2xl text-white text-sm font-extrabold uppercase tracking-[0.15em] shadow-xl transition-all active:scale-[0.98] py-4 mt-2 ${
+              className={`w-full rounded-xl text-white text-xs font-extrabold uppercase tracking-wider shadow-lg transition-all active:scale-[0.98] py-2.5 mt-1 ${
                 loading ? 'bg-gray-300 cursor-not-allowed' : 'bg-gradient-to-r from-[#346b41] to-[#4caf50] hover:shadow-2xl hover:shadow-[#346b41]/30 hover:-translate-y-0.5'
               }`}
             >

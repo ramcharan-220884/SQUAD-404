@@ -305,54 +305,54 @@ export default function StudentProfile({ isPortal = false }) {
 
           {viewMode === "wizard" && (
             <div className="flex flex-col items-center">
-              <div className="w-full max-w-4xl bg-white dark:bg-slate-800 shadow-sm rounded-2xl p-6 md:p-10 border border-gray-100 dark:border-slate-700 animate-fade-in mb-10">
-                <div className="flex justify-between items-center mb-6">
-                  <h1 className="text-3xl font-extrabold text-[#800000] dark:text-gray-100">My Profile</h1>
+              <div className="w-full max-w-4xl bg-white dark:bg-slate-800 shadow-sm rounded-2xl p-4 md:p-6 border border-gray-100 dark:border-slate-700 animate-fade-in mb-4">
+                <div className="flex justify-between items-center mb-4">
+                  <h1 className="text-xl font-extrabold text-[#800000] dark:text-gray-100">My Profile</h1>
                   {profileData?.profile_completed === 1 && (
                     <button onClick={() => {
                         setCurrentStep(5);
                         setViewMode("card");
-                    }} className="text-[#800000] font-bold hover:underline">View Card</button>
+                    }} className="text-[#800000] text-xs font-bold hover:underline">View Card</button>
                   )}
                 </div>
                 
                 <ProfileStepper steps={steps} currentStep={currentStep} />
 
-                <div className="mt-8">
+                <div className="mt-4">
                   {/* Step 1 */}
                   {currentStep === 0 && (
-                    <div className="space-y-6 animate-fade-in">
-                      <h2 className="text-xl font-bold text-[#800000] dark:text-gray-200">1. Let's get you started</h2>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div className="space-y-4 animate-fade-in">
+                      <h2 className="text-lg font-bold text-[#800000] dark:text-gray-200">1. Let's get you started</h2>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div>
-                          <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">First Name</label>
-                          <input type="text" name="firstName" value={basicInfo.firstName} onChange={handleBasicChange} className="w-full p-3 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-[#800000] focus:border-transparent outline-none dark:bg-slate-900" placeholder="First Name" />
-                          {basicErrors.firstName && <p className="text-red-500 text-xs mt-1">{basicErrors.firstName}</p>}
+                          <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-0.5">First Name</label>
+                          <input type="text" name="firstName" value={basicInfo.firstName} onChange={handleBasicChange} className="w-full p-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-[#800000] focus:border-transparent outline-none dark:bg-slate-900 text-sm" placeholder="First Name" />
+                          {basicErrors.firstName && <p className="text-red-500 text-[10px] mt-0.5">{basicErrors.firstName}</p>}
                         </div>
                         <div>
-                          <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Last Name</label>
-                          <input type="text" name="lastName" value={basicInfo.lastName} onChange={handleBasicChange} className="w-full p-3 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-[#800000] focus:border-transparent outline-none dark:bg-slate-900" placeholder="Last Name" />
-                          {basicErrors.lastName && <p className="text-red-500 text-xs mt-1">{basicErrors.lastName}</p>}
+                          <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-0.5">Last Name</label>
+                          <input type="text" name="lastName" value={basicInfo.lastName} onChange={handleBasicChange} className="w-full p-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-[#800000] focus:border-transparent outline-none dark:bg-slate-900 text-sm" placeholder="Last Name" />
+                          {basicErrors.lastName && <p className="text-red-500 text-[10px] mt-0.5">{basicErrors.lastName}</p>}
                         </div>
                         <div>
-                          <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Date of Birth</label>
-                          <input type="date" name="dob" value={basicInfo.dob} onChange={handleBasicChange} className="w-full p-3 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-[#800000] focus:border-transparent outline-none dark:bg-slate-900" />
-                          {basicErrors.dob && <p className="text-red-500 text-xs mt-1">{basicErrors.dob}</p>}
+                          <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-0.5">Date of Birth</label>
+                          <input type="date" name="dob" value={basicInfo.dob} onChange={handleBasicChange} className="w-full p-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-[#800000] focus:border-transparent outline-none dark:bg-slate-900 text-sm" />
+                          {basicErrors.dob && <p className="text-red-500 text-[10px] mt-0.5">{basicErrors.dob}</p>}
                         </div>
                         <div>
-                          <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Gender</label>
-                          <select name="gender" value={basicInfo.gender} onChange={handleBasicChange} className="w-full p-3 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-[#800000] focus:border-transparent outline-none dark:bg-slate-900">
+                          <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-0.5">Gender</label>
+                          <select name="gender" value={basicInfo.gender} onChange={handleBasicChange} className="w-full p-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-[#800000] focus:border-transparent outline-none dark:bg-slate-900 text-sm">
                             <option value="">Select Gender</option>
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
                             <option value="Other">Other</option>
                           </select>
-                          {basicErrors.gender && <p className="text-red-500 text-xs mt-1">{basicErrors.gender}</p>}
+                          {basicErrors.gender && <p className="text-red-500 text-[10px] mt-0.5">{basicErrors.gender}</p>}
                         </div>
                         <div className="md:col-span-2">
-                          <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">College</label>
-                          <input type="text" name="college" value={basicInfo.college} onChange={handleBasicChange} className="w-full p-3 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-[#800000] focus:border-transparent outline-none dark:bg-slate-900" placeholder="College Name" />
-                          {basicErrors.college && <p className="text-red-500 text-xs mt-1">{basicErrors.college}</p>}
+                          <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-0.5">College</label>
+                          <input type="text" name="college" value={basicInfo.college} onChange={handleBasicChange} className="w-full p-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-[#800000] focus:border-transparent outline-none dark:bg-slate-900 text-sm" placeholder="College Name" />
+                          {basicErrors.college && <p className="text-red-500 text-[10px] mt-0.5">{basicErrors.college}</p>}
                         </div>
                       </div>
                       <div className="space-y-2 mt-4">
@@ -368,8 +368,8 @@ export default function StudentProfile({ isPortal = false }) {
                         </label>
                         {basicErrors.notRobot && <p className="text-red-500 text-xs">{basicErrors.notRobot}</p>}
                       </div>
-                      <div className="flex justify-end pt-4">
-                        <button onClick={nextStep} className="bg-[#800000] text-white px-8 py-3 rounded-lg font-bold hover:bg-[#4a0000] transition-colors">Continue</button>
+                      <div className="flex justify-end pt-2">
+                        <button onClick={nextStep} className="bg-[#800000] text-white px-6 py-2.5 rounded-lg font-bold hover:bg-[#4a0000] transition-colors text-sm">Continue</button>
                       </div>
                     </div>
                   )}
@@ -428,9 +428,9 @@ export default function StudentProfile({ isPortal = false }) {
                           <p className="text-xs text-gray-500 mt-1">Include project name and a brief description, separated by a semicolon (;)</p>
                         </div>
                       </div>
-                      <div className="flex justify-between pt-4">
-                        <button onClick={prevStep} className="px-8 py-3 rounded-lg font-bold text-[#800000] bg-[#800000]/10 hover:bg-[#800000]/20 transition-colors">Previous</button>
-                        <button onClick={nextStep} className="bg-[#800000] text-white px-8 py-3 rounded-lg font-bold hover:bg-[#4a0000] transition-colors">Continue</button>
+                      <div className="flex justify-between pt-2">
+                        <button onClick={prevStep} className="px-6 py-2.5 rounded-lg font-bold text-[#800000] bg-[#800000]/10 hover:bg-[#800000]/20 transition-colors text-sm">Previous</button>
+                        <button onClick={nextStep} className="bg-[#800000] text-white px-6 py-2.5 rounded-lg font-bold hover:bg-[#4a0000] transition-colors text-sm">Continue</button>
                       </div>
                     </div>
                   )}

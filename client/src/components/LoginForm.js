@@ -75,7 +75,7 @@ const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student", onR
   return (
     <div className="w-full font-['Poppins']">
       {/* Role Tabs */}
-      <div className="flex bg-gray-100/80 p-1.25 rounded-xl mb-6 w-full backdrop-blur-sm border border-gray-200/50">
+      <div className="flex bg-gray-100/80 p-1 rounded-xl mb-3 w-full backdrop-blur-sm border border-gray-200/50">
         {["student", "admin", "company"].map((r) => (
           <button
             key={r}
@@ -92,7 +92,7 @@ const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student", onR
       </div>
 
       {error && (
-        <div className="bg-red-50 border-2 border-red-100 text-red-600 px-4 py-2.5 rounded-2xl shadow-sm mb-5 text-xs font-semibold flex items-center gap-3 animate-in fade-in slide-in-from-top-4">
+        <div className="bg-red-50 border-2 border-red-100 text-red-600 px-4 py-1.5 rounded-xl shadow-sm mb-3 text-xs font-semibold flex items-center gap-3 animate-in fade-in slide-in-from-top-4">
           <svg className="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -100,9 +100,9 @@ const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student", onR
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-2">
-          <label className="block text-[11px] font-extrabold text-[#052c42] uppercase tracking-[0.2em] ml-1">
+      <form onSubmit={handleSubmit} className="space-y-3">
+        <div className="space-y-1">
+          <label className="block text-[10px] font-extrabold text-[#052c42] uppercase tracking-wider ml-1">
             {role === "admin" ? "Admin Email or Username" : "Email Address"}
           </label>
           <div className="relative group">
@@ -117,14 +117,14 @@ const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student", onR
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className={`pl-11 w-full px-4 py-3 bg-gray-50/50 border-2 border-gray-100/80 rounded-xl focus:bg-white focus:ring-[4px] outline-none transition-all duration-300 text-sm font-medium placeholder:text-gray-300 ${theme.inputFocus}`}
+              className={`pl-11 w-full px-4 py-2 bg-gray-50/50 border-2 border-gray-100/80 rounded-xl focus:bg-white focus:ring-[4px] outline-none transition-all duration-300 text-sm font-medium placeholder:text-gray-300 ${theme.inputFocus}`}
               placeholder={role === "admin" ? "e.g. admin@pms.com" : "e.g. name@example.com"}
             />
           </div>
         </div>
 
-        <div className="space-y-2">
-          <label className="block text-[11px] font-extrabold text-[#052c42] uppercase tracking-[0.2em] ml-1">Password</label>
+        <div className="space-y-1">
+          <label className="block text-[10px] font-extrabold text-[#052c42] uppercase tracking-wider ml-1">Password</label>
           <div className="relative group">
             <div className={`absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-300 transition-colors duration-300 ${theme.iconFocus}`}>
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -137,12 +137,12 @@ const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student", onR
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className={`pl-11 w-full px-4 py-3 bg-gray-50/50 border-2 border-gray-100/80 rounded-xl focus:bg-white focus:ring-[4px] outline-none transition-all duration-300 text-sm font-medium placeholder:text-gray-300 ${theme.inputFocus}`}
+              className={`pl-11 w-full px-4 py-2 bg-gray-50/50 border-2 border-gray-100/80 rounded-xl focus:bg-white focus:ring-[4px] outline-none transition-all duration-300 text-sm font-medium placeholder:text-gray-300 ${theme.inputFocus}`}
               placeholder="••••••••"
             />
           </div>
-          <div className="flex justify-end mt-2">
-            <button type="button" onClick={onForgotPassword} className={`text-[11px] font-bold transition-colors uppercase tracking-wider ${theme.linkColor}`}>
+          <div className="flex justify-end mt-1">
+            <button type="button" onClick={onForgotPassword} className={`text-[10px] font-bold transition-colors uppercase tracking-wider ${theme.linkColor}`}>
               Forgot Password?
             </button>
           </div>
@@ -151,7 +151,7 @@ const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student", onR
         <button
           type="submit"
           disabled={loading}
-          className={`w-full px-5 py-3.5 rounded-xl text-white text-sm font-extrabold uppercase tracking-[0.2em] transition-all active:scale-[0.98] ${
+          className={`w-full px-5 py-2.5 rounded-xl text-white text-xs font-extrabold uppercase tracking-wider transition-all active:scale-[0.98] ${
             loading
               ? "bg-gray-300 cursor-not-allowed"
               : `${theme.buttonBg} ${theme.buttonShadow}`
@@ -161,7 +161,7 @@ const LoginForm = ({ onSuccess, onSwitchToRegister, initialRole = "student", onR
         </button>
 
         {role !== "admin" && (
-          <p className="mt-4 text-center text-[11px] text-gray-400 font-medium">
+          <p className="mt-2 text-center text-[10px] text-gray-400 font-medium">
             Don't have an account?{" "}
             <button
               type="button"

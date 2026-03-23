@@ -401,22 +401,22 @@ export default function Settings() {
             <button onClick={() => setShowPasswordModal(false)} className="absolute top-4 right-4 p-2 bg-gray-100 hover:bg-gray-200 rounded-full text-gray-500 transition-colors">
               <X className="w-4 h-4" />
             </button>
-            <div className="p-8">
-              <h3 className="text-xl font-black text-gray-900 mb-6 flex items-center gap-2"><Key className="w-5 h-5 text-red-500"/> Change Password</h3>
-              <form onSubmit={handlePasswordSubmit} className="space-y-4">
-                <div className="space-y-1">
+            <div className="p-5">
+              <h3 className="text-lg font-black text-gray-900 mb-3 flex items-center gap-2 leading-tight"><Key className="w-5 h-5 text-red-500"/> Change Password</h3>
+              <form onSubmit={handlePasswordSubmit} className="space-y-2.5">
+                <div className="space-y-0.5">
                   <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest">Current Password</label>
-                  <input required type="password" value={passwordForm.currentPassword} onChange={(e) => setPasswordForm({...passwordForm, currentPassword: e.target.value})} className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-100 rounded-xl focus:bg-white focus:border-red-500 outline-none transition-all text-sm font-bold text-gray-700" placeholder="••••••••" />
+                  <input required type="password" value={passwordForm.currentPassword} onChange={(e) => setPasswordForm({...passwordForm, currentPassword: e.target.value})} className="w-full px-4 py-1.5 bg-gray-50 border-2 border-gray-100 rounded-xl focus:bg-white focus:border-red-500 outline-none transition-all text-sm font-bold text-gray-700" placeholder="••••••••" />
                 </div>
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest">New Password</label>
-                  <input required type="password" value={passwordForm.newPassword} onChange={(e) => setPasswordForm({...passwordForm, newPassword: e.target.value})} className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-100 rounded-xl focus:bg-white focus:border-red-500 outline-none transition-all text-sm font-bold text-gray-700" placeholder="••••••••" />
+                  <input required type="password" value={passwordForm.newPassword} onChange={(e) => setPasswordForm({...passwordForm, newPassword: e.target.value})} className="w-full px-4 py-1.5 bg-gray-50 border-2 border-gray-100 rounded-xl focus:bg-white focus:border-red-500 outline-none transition-all text-sm font-bold text-gray-700" placeholder="••••••••" />
                 </div>
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   <label className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest">Confirm Password</label>
-                  <input required type="password" value={passwordForm.confirmPassword} onChange={(e) => setPasswordForm({...passwordForm, confirmPassword: e.target.value})} className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-100 rounded-xl focus:bg-white focus:border-red-500 outline-none transition-all text-sm font-bold text-gray-700" placeholder="••••••••" />
+                  <input required type="password" value={passwordForm.confirmPassword} onChange={(e) => setPasswordForm({...passwordForm, confirmPassword: e.target.value})} className="w-full px-4 py-1.5 bg-gray-50 border-2 border-gray-100 rounded-xl focus:bg-white focus:border-red-500 outline-none transition-all text-sm font-bold text-gray-700" placeholder="••••••••" />
                 </div>
-                <button type="submit" disabled={passwordSaving} className={`w-full mt-6 py-3 rounded-xl text-white font-bold uppercase tracking-widest transition-all ${passwordSaving ? 'bg-red-400 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700 shadow-lg shadow-red-600/20 active:scale-95'}`}>
+                <button type="submit" disabled={passwordSaving} className={`w-full mt-4 py-2 rounded-xl text-white text-xs font-bold uppercase tracking-widest transition-all ${passwordSaving ? 'bg-red-400 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700 shadow-lg shadow-red-600/20 active:scale-95'}`}>
                   {passwordSaving ? 'Updating...' : 'Update Password'}
                 </button>
               </form>

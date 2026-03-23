@@ -306,51 +306,51 @@ export default function Announcements({ role = "admin" }) {
       {showDetailModal && selectedAnnouncement && (
         <div className="fixed inset-0 bg-black/60 z-[200] flex justify-center items-center p-4">
           <div className="bg-white rounded-[2.5rem] w-full max-w-2xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300">
-            <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-8 text-white relative">
+            <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-5 text-white relative">
               <button 
                 onClick={() => setShowDetailModal(false)}
-                className="absolute top-6 right-6 p-2 bg-white/10 rounded-full hover:bg-white/20 transition-all"
+                className="absolute top-4 right-4 p-1.5 bg-white/10 rounded-full hover:bg-white/20 transition-all"
               >
-                <Plus className="w-6 h-6 rotate-45" />
+                <Plus className="w-5 h-5 rotate-45" />
               </button>
-              <div className="flex items-center gap-3 mb-4">
-                <span className="px-3 py-1 bg-white/20 rounded-lg text-[10px] font-black uppercase tracking-wider backdrop-blur-md">
+              <div className="flex items-center gap-3 mb-2">
+                <span className="px-2 py-0.5 bg-white/20 rounded-lg text-[9px] font-black uppercase tracking-wider backdrop-blur-md">
                   {selectedAnnouncement.category}
                 </span>
-                <span className="px-3 py-1 bg-white/20 rounded-lg text-[10px] font-black uppercase tracking-wider backdrop-blur-md">
+                <span className="px-2 py-0.5 bg-white/20 rounded-lg text-[9px] font-black uppercase tracking-wider backdrop-blur-md">
                   {selectedAnnouncement.audience}
                 </span>
               </div>
-              <h3 className="text-3xl font-black tracking-tight leading-tight uppercase">
+              <h3 className="text-xl font-black tracking-tight leading-tight uppercase">
                 {selectedAnnouncement.title}
               </h3>
             </div>
             
-            <div className="p-8 max-h-[60vh] overflow-y-auto custom-scrollbar">
-              <div className="flex items-center gap-6 mb-8 py-4 border-y border-gray-50">
+            <div className="p-5 max-h-[50vh] overflow-y-auto custom-scrollbar">
+              <div className="flex items-center gap-6 mb-4 py-2 border-y border-gray-50">
                 <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-blue-500" />
-                  <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Posted: {new Date(selectedAnnouncement.start_date).toLocaleDateString()}</span>
+                  <Calendar className="w-3.5 h-3.5 text-blue-500" />
+                  <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Posted: {new Date(selectedAnnouncement.start_date).toLocaleDateString()}</span>
                 </div>
                 {selectedAnnouncement.expiry_date && (
                   <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-orange-500" />
-                    <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Expires: {new Date(selectedAnnouncement.expiry_date).toLocaleDateString()}</span>
+                    <Clock className="w-3.5 h-3.5 text-orange-500" />
+                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Expires: {new Date(selectedAnnouncement.expiry_date).toLocaleDateString()}</span>
                   </div>
                 )}
               </div>
               
-              <div className="prose prose-blue max-w-none">
-                <p className="text-gray-700 leading-relaxed font-medium whitespace-pre-wrap">
+              <div className="prose prose-blue prose-sm max-w-none">
+                <p className="text-gray-700 leading-relaxed font-medium whitespace-pre-wrap text-sm">
                   {selectedAnnouncement.content}
                 </p>
               </div>
             </div>
             
-            <div className="p-8 bg-gray-50 border-t border-gray-100 flex justify-end">
+            <div className="p-5 bg-gray-50 border-t border-gray-100 flex justify-end">
               <button 
                 onClick={() => setShowDetailModal(false)}
-                className="px-8 py-3 bg-white border-2 border-gray-200 text-gray-700 font-black rounded-2xl hover:bg-gray-100 transition-all active:scale-95"
+                className="px-6 py-2 bg-white border-2 border-gray-200 text-gray-700 font-black rounded-2xl hover:bg-gray-100 transition-all active:scale-95 text-xs"
               >
                 Close Notice
               </button>
@@ -361,25 +361,25 @@ export default function Announcements({ role = "admin" }) {
 
       {/* Admin Create/Edit Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/60 z-[200] flex justify-center items-center">
-          <div className="bg-white p-6 rounded-2xl w-full max-w-lg shadow-2xl">
-            <h3 className="text-xl font-bold mb-4">{isEditing ? 'Edit Announcement' : 'Create Announcement'}</h3>
-            <form onSubmit={handleSave} className="space-y-4">
-              <div><label className="text-sm font-bold">Title</label><input required value={formData.title} onChange={e=>setFormData({...formData, title: e.target.value})} className="w-full border p-2 rounded" /></div>
-              <div><label className="text-sm font-bold">Content</label><textarea required value={formData.content} onChange={e=>setFormData({...formData, content: e.target.value})} className="w-full border p-2 rounded h-32"></textarea></div>
-              <div className="flex gap-4">
-                <div className="w-1/2"><label className="text-sm font-bold">Category</label><select value={formData.category} onChange={e=>setFormData({...formData, category: e.target.value})} className="w-full border p-2 rounded"><option>Notice</option><option>Placement</option><option>Event</option></select></div>
-                <div className="w-1/2"><label className="text-sm font-bold">Audience</label><select value={formData.audience} onChange={e=>setFormData({...formData, audience: e.target.value})} className="w-full border p-2 rounded"><option>All Students</option><option>Final Year</option><option>Recruiters</option></select></div>
+        <div className="fixed inset-0 bg-black/60 z-[200] flex justify-center items-center p-4">
+          <div className="bg-white p-5 rounded-2xl w-full max-w-lg shadow-2xl">
+            <h3 className="text-lg font-bold mb-3">{isEditing ? 'Edit Announcement' : 'Create Announcement'}</h3>
+            <form onSubmit={handleSave} className="space-y-3">
+              <div><label className="text-xs font-bold">Title</label><input required value={formData.title} onChange={e=>setFormData({...formData, title: e.target.value})} className="w-full border p-1.5 rounded text-sm" /></div>
+              <div><label className="text-xs font-bold">Content</label><textarea required value={formData.content} onChange={e=>setFormData({...formData, content: e.target.value})} className="w-full border p-1.5 rounded h-24 text-sm"></textarea></div>
+              <div className="flex gap-3">
+                <div className="w-1/2"><label className="text-xs font-bold">Category</label><select value={formData.category} onChange={e=>setFormData({...formData, category: e.target.value})} className="w-full border p-1.5 rounded text-sm"><option>Notice</option><option>Placement</option><option>Event</option></select></div>
+                <div className="w-1/2"><label className="text-xs font-bold">Audience</label><select value={formData.audience} onChange={e=>setFormData({...formData, audience: e.target.value})} className="w-full border p-1.5 rounded text-sm"><option>All Students</option><option>Final Year</option><option>Recruiters</option></select></div>
               </div>
-              <div className="flex gap-4">
-                <div className="w-1/2"><label className="text-sm font-bold">Start Date</label><input required type="date" value={formData.start_date} onChange={e=>setFormData({...formData, start_date: e.target.value})} className="w-full border p-2 rounded" /></div>
-                <div className="w-1/2"><label className="text-sm font-bold">Expiry Date</label><input required type="date" value={formData.expiry_date} onChange={e=>setFormData({...formData, expiry_date: e.target.value})} className="w-full border p-2 rounded" /></div>
+              <div className="flex gap-3">
+                <div className="w-1/2"><label className="text-xs font-bold">Start Date</label><input required type="date" value={formData.start_date} onChange={e=>setFormData({...formData, start_date: e.target.value})} className="w-full border p-1.5 rounded text-sm" /></div>
+                <div className="w-1/2"><label className="text-xs font-bold">Expiry Date</label><input required type="date" value={formData.expiry_date} onChange={e=>setFormData({...formData, expiry_date: e.target.value})} className="w-full border p-1.5 rounded text-sm" /></div>
               </div>
-              <div><label className="flex items-center gap-2"><input type="checkbox" checked={formData.is_pinned} onChange={e=>setFormData({...formData, is_pinned: e.target.checked})} /> Pin this announcement</label></div>
-              <div className="flex justify-end gap-3 mt-6">
-                <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 border rounded font-bold">Cancel</button>
-                <button disabled={actionLoading} type="submit" className="px-4 py-2 bg-green-600 text-white rounded font-bold hover:bg-green-700 flex items-center gap-2 disabled:opacity-50">
-                  {actionLoading ? <Loader2 className="w-4 h-4 animate-spin"/> : null} {isEditing ? 'Save Changes' : 'Create'}
+              <div><label className="flex items-center gap-2 text-xs font-bold"><input type="checkbox" checked={formData.is_pinned} onChange={e=>setFormData({...formData, is_pinned: e.target.checked})} /> Pin this announcement</label></div>
+              <div className="flex justify-end gap-3 mt-4">
+                <button type="button" onClick={() => setShowModal(false)} className="px-4 py-1.5 border rounded font-bold text-xs font-bold">Cancel</button>
+                <button disabled={actionLoading} type="submit" className="px-4 py-1.5 bg-green-600 text-white rounded font-bold hover:bg-green-700 flex items-center gap-2 disabled:opacity-50 text-xs font-bold">
+                  {actionLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin"/> : null} {isEditing ? 'Save' : 'Create'}
                 </button>
               </div>
             </form>

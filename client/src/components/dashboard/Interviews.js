@@ -185,24 +185,24 @@ export default function Interviews({ role = "student" }) {
 
       {showModal && (
         <div className="fixed inset-0 bg-black/60 z-[200] flex justify-center items-center p-4">
-          <div className="bg-white dark:bg-slate-900 p-8 rounded-[2rem] w-full max-w-lg shadow-2xl border border-gray-100 dark:border-slate-800 animate-in zoom-in-95 duration-200">
-            <h3 className="text-2xl font-black text-gray-900 dark:text-white mb-6 uppercase tracking-tight">
+          <div className="bg-white dark:bg-slate-900 p-5 rounded-[2rem] w-full max-w-lg shadow-2xl border border-gray-100 dark:border-slate-800 animate-in zoom-in-95 duration-200">
+            <h3 className="text-xl font-black text-gray-900 dark:text-white mb-3 uppercase tracking-tight">
                 {isEditing ? "Edit Interview" : "Schedule Interview"}
             </h3>
-            <form onSubmit={handleSave} className="space-y-5">
-              <div className="flex gap-4">
+            <form onSubmit={handleSave} className="space-y-3">
+              <div className="flex gap-3">
                 <div className="w-1/2">
-                    <label className="text-xs font-black uppercase tracking-widest text-gray-400 mb-2 block">Company Name</label>
-                    <input required value={formData.company} onChange={e=>setFormData({...formData, company: e.target.value})} className="w-full bg-gray-50 dark:bg-slate-800 border-2 border-transparent focus:border-emerald-500 p-3.5 rounded-2xl outline-none font-bold text-gray-900 dark:text-gray-100 transition-all" placeholder="E.g. Google" />
+                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1 block">Company Name</label>
+                    <input required value={formData.company} onChange={e=>setFormData({...formData, company: e.target.value})} className="w-full bg-gray-50 dark:bg-slate-800 border-2 border-transparent focus:border-emerald-500 p-2 rounded-2xl outline-none font-bold text-gray-900 dark:text-gray-100 transition-all text-sm" placeholder="E.g. Google" />
                 </div>
                 <div className="w-1/2">
-                    <label className="text-xs font-black uppercase tracking-widest text-gray-400 mb-2 block">Job Role</label>
-                    <input required value={formData.role} onChange={e=>setFormData({...formData, role: e.target.value})} className="w-full bg-gray-50 dark:bg-slate-800 border-2 border-transparent focus:border-emerald-500 p-3.5 rounded-2xl outline-none font-bold text-gray-900 dark:text-gray-100 transition-all" placeholder="E.g. SDE-1" />
+                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1 block">Job Role</label>
+                    <input required value={formData.role} onChange={e=>setFormData({...formData, role: e.target.value})} className="w-full bg-gray-50 dark:bg-slate-800 border-2 border-transparent focus:border-emerald-500 p-2 rounded-2xl outline-none font-bold text-gray-900 dark:text-gray-100 transition-all text-sm" placeholder="E.g. SDE-1" />
                 </div>
               </div>
               <div>
-                <label className="text-xs font-black uppercase tracking-widest text-gray-400 mb-2 block">Interview Round</label>
-                <select value={formData.round} onChange={e=>setFormData({...formData, round: e.target.value})} className="w-full bg-gray-50 dark:bg-slate-800 border-2 border-transparent focus:border-emerald-500 p-3.5 rounded-2xl outline-none font-bold text-gray-900 dark:text-gray-100 transition-all">
+                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1 block">Interview Round</label>
+                <select value={formData.round} onChange={e=>setFormData({...formData, round: e.target.value})} className="w-full bg-gray-50 dark:bg-slate-800 border-2 border-transparent focus:border-emerald-500 p-2 rounded-2xl outline-none font-bold text-gray-900 dark:text-gray-100 transition-all text-sm">
                     <option value="Aptitude Test">Aptitude Test</option>
                     <option value="Technical Round">Technical Round</option>
                     <option value="HR Round">HR Round</option>
@@ -210,13 +210,13 @@ export default function Interviews({ role = "student" }) {
                 </select>
               </div>
               <div>
-                <label className="text-xs font-black uppercase tracking-widest text-gray-400 mb-2 block">Date & Time</label>
-                <input required type="datetime-local" value={formData.date} onChange={e=>setFormData({...formData, date: e.target.value})} className="w-full bg-gray-50 dark:bg-slate-800 border-2 border-transparent focus:border-emerald-500 p-3.5 rounded-2xl outline-none font-bold text-gray-900 dark:text-gray-100 transition-all" />
+                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1 block">Date & Time</label>
+                <input required type="datetime-local" value={formData.date} onChange={e=>setFormData({...formData, date: e.target.value})} className="w-full bg-gray-50 dark:bg-slate-800 border-2 border-transparent focus:border-emerald-500 p-2 rounded-2xl outline-none font-bold text-gray-900 dark:text-gray-100 transition-all text-sm" />
               </div>
-              <div className="flex justify-end gap-3 mt-8 pt-4">
-                <button type="button" onClick={() => setShowModal(false)} className="px-6 py-3 border-2 border-gray-100 dark:border-slate-800 rounded-2xl font-bold text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-800 transition-all">Cancel</button>
-                <button disabled={actionLoading} type="submit" className="px-8 py-3 bg-emerald-600 text-white rounded-2xl font-bold hover:bg-emerald-700 shadow-lg shadow-emerald-500/20 flex items-center gap-2 disabled:opacity-50 active:scale-95 transition-all uppercase tracking-widest text-xs">
-                  {actionLoading ? <Loader2 className="w-4 h-4 animate-spin"/> : null} {isEditing ? "Save Changes" : "Schedule"}
+              <div className="flex justify-end gap-3 mt-4 pt-2">
+                <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 border-2 border-gray-100 dark:border-slate-800 rounded-2xl font-bold text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-800 transition-all text-xs">Cancel</button>
+                <button disabled={actionLoading} type="submit" className="px-6 py-2 bg-emerald-600 text-white rounded-2xl font-bold hover:bg-emerald-700 shadow-lg shadow-emerald-500/20 flex items-center gap-2 disabled:opacity-50 active:scale-95 transition-all uppercase tracking-widest text-[10px]">
+                  {actionLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin"/> : null} {isEditing ? "Save" : "Schedule"}
                 </button>
               </div>
             </form>
@@ -228,30 +228,30 @@ export default function Interviews({ role = "student" }) {
       {showDetailModal && selectedInterview && (
         <div className="fixed inset-0 bg-black/60 z-[200] flex justify-center items-center p-4">
           <div className="bg-white rounded-[2rem] w-full max-w-lg overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300">
-            <div className="bg-gradient-to-br from-emerald-600 to-teal-700 p-8 text-white relative">
-                <h3 className="text-2xl font-black tracking-tight uppercase">
+            <div className="bg-gradient-to-br from-emerald-600 to-teal-700 p-5 text-white relative">
+                <h3 className="text-xl font-black tracking-tight uppercase">
                     {selectedInterview.company}
                 </h3>
-                <p className="text-emerald-100 font-bold mt-1 text-sm">{selectedInterview.role}</p>
+                <p className="text-emerald-100 font-bold mt-0.5 text-xs">{selectedInterview.role}</p>
             </div>
-            <div className="p-8 space-y-6">
-                <div className="flex items-center gap-4 p-4 bg-emerald-50 rounded-2xl border border-emerald-100">
-                    <Clock className="w-6 h-6 text-emerald-600" />
+            <div className="p-5 space-y-4">
+                <div className="flex items-center gap-3 p-3 bg-emerald-50 rounded-2xl border border-emerald-100">
+                    <Clock className="w-5 h-5 text-emerald-600" />
                     <div>
-                        <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Date & Time</p>
-                        <p className="font-bold text-gray-900">{new Date(selectedInterview.date).toLocaleString()}</p>
+                        <p className="text-[9px] font-black text-emerald-600 uppercase tracking-widest">Date & Time</p>
+                        <p className="font-bold text-gray-900 text-sm">{new Date(selectedInterview.date).toLocaleString()}</p>
                     </div>
                 </div>
-                <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                    <AlertCircle className="w-6 h-6 text-gray-400" />
+                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-2xl border border-gray-100">
+                    <AlertCircle className="w-5 h-5 text-gray-400" />
                     <div>
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Interview Round</p>
-                        <p className="font-bold text-gray-900">{selectedInterview.round}</p>
+                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Interview Round</p>
+                        <p className="font-bold text-gray-900 text-sm">{selectedInterview.round}</p>
                     </div>
                 </div>
             </div>
-            <div className="p-6 bg-gray-50 border-t border-gray-100 flex justify-end">
-              <button onClick={() => setShowDetailModal(false)} className="px-6 py-2.5 bg-white border-2 border-gray-200 text-gray-700 font-black rounded-xl hover:bg-gray-100 transition-all active:scale-95 text-sm">
+            <div className="p-4 bg-gray-50 border-t border-gray-100 flex justify-end">
+              <button onClick={() => setShowDetailModal(false)} className="px-5 py-2 bg-white border-2 border-gray-200 text-gray-700 font-black rounded-xl hover:bg-gray-100 transition-all active:scale-95 text-xs">
                 Close
               </button>
             </div>

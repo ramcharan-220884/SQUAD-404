@@ -455,30 +455,35 @@ export default function AdminDashboard() {
       </main>
 
       {showLogoutConfirm && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/50">
-          <div className="bg-white p-6 rounded-xl">
-            <p className="mb-4">Are you sure you want to logout?</p>
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-[300] p-4">
+          <div className="bg-white p-6 rounded-2xl shadow-2xl border dark:bg-slate-900 dark:border-slate-800 max-w-sm w-full">
+            <div className="flex flex-col items-center text-center">
+                <div className="w-12 h-12 bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-4">
+                    <LogOut className="w-6 h-6" />
+                </div>
+                <h3 className="text-xl font-black text-gray-900 dark:text-white mb-2 uppercase tracking-tight">Logout?</h3>
+                <p className="text-gray-500 font-bold text-xs mb-6 px-4">Are you sure you want to end your session? You will need to login again to access the dashboard.</p>
 
-            <div className="flex gap-4">
-              <button
-                onClick={()=>setShowLogoutConfirm(false)}
-                className="px-4 py-2 bg-gray-200 rounded"
-              >
-                Cancel
-              </button>
+                <div className="flex gap-3 w-full">
+                    <button
+                        onClick={()=>setShowLogoutConfirm(false)}
+                        className="flex-1 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-bold transition-all text-xs"
+                    >
+                        Cancel
+                    </button>
 
-              <Link
-                to="/"
-                onClick={()=>{
-                  localStorage.removeItem("adminToken");
-                  sessionStorage.clear();
-                }}
-                className="px-4 py-2 bg-red-600 text-white rounded"
-              >
-                Logout
-              </Link>
+                    <Link
+                        to="/"
+                        onClick={()=>{
+                        localStorage.removeItem("adminToken");
+                        sessionStorage.clear();
+                        }}
+                        className="flex-1 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold transition-all shadow-lg shadow-red-500/20 text-xs text-center"
+                    >
+                        Logout
+                    </Link>
+                </div>
             </div>
-
           </div>
         </div>
       )}

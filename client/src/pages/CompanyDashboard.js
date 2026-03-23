@@ -1453,27 +1453,27 @@ export default function CompanyDashboard() {
 
       {/* Student Details Modal */}
       {showStudentModal && selectedStudent && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
-          <div className="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-4xl overflow-hidden animate-in slide-in-from-bottom-8 duration-500 border border-white/20">
-            <div className="bg-gradient-to-br from-[#0f172a] to-[#1e293b] px-10 py-12 text-white relative overflow-hidden">
-               <div className="absolute top-0 right-0 p-32 bg-blue-500/10 rounded-full blur-3xl -mr-20 -mt-20"></div>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-white rounded-[2rem] shadow-2xl w-full max-w-3xl overflow-hidden border border-white/20">
+            <div className="bg-gradient-to-br from-[#0f172a] to-[#1e293b] px-8 py-8 text-white relative overflow-hidden">
+               <div className="absolute top-0 right-0 p-24 bg-blue-500/10 rounded-full blur-3xl -mr-16 -mt-16"></div>
                <div className="flex justify-between items-start relative z-10">
-                 <div className="flex items-center gap-6">
-                   <div className="w-24 h-24 rounded-3xl bg-white/10 backdrop-blur-md flex items-center justify-center text-4xl font-black border border-white/20 shadow-inner">
+                 <div className="flex items-center gap-5">
+                   <div className="w-20 h-20 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center text-3xl font-black border border-white/20 shadow-inner">
                      {selectedStudent.studentName.split(' ').map(n => n[0]).join('')}
                    </div>
                    <div>
-                     <h3 className="text-4xl font-black tracking-tight">{selectedStudent.studentName}</h3>
-                     <p className="text-blue-400 text-sm font-black uppercase tracking-widest mt-2">{selectedStudent.course} • {selectedStudent.branch}</p>
-                     <div className="flex gap-3 mt-4">
-                        <span className={`px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider backdrop-blur-md border ${
+                     <h3 className="text-3xl font-black tracking-tight">{selectedStudent.studentName}</h3>
+                     <p className="text-blue-400 text-[10px] font-black uppercase tracking-widest mt-1.5">{selectedStudent.course} • {selectedStudent.branch}</p>
+                     <div className="flex gap-2.5 mt-3">
+                        <span className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider backdrop-blur-md border ${
                           selectedStudent.status === 'Accepted' ? 'bg-green-500/10 text-green-400 border-green-500/20' :
                           selectedStudent.status === 'Rejected' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
                           'bg-blue-500/10 text-blue-400 border-blue-500/20'
                         }`}>
                           {selectedStudent.status}
                         </span>
-                        <span className="px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider bg-white/5 text-white/60 border border-white/10 backdrop-blur-sm">
+                        <span className="px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider bg-white/5 text-white/60 border border-white/10 backdrop-blur-sm">
                           Applied: {selectedStudent.date}
                         </span>
                      </div>
@@ -1481,46 +1481,46 @@ export default function CompanyDashboard() {
                  </div>
                  <button 
                   onClick={() => setShowStudentModal(false)}
-                  className="p-3 hover:bg-white/10 rounded-2xl transition-all active:scale-90"
+                  className="p-2 hover:bg-white/10 rounded-xl transition-all active:scale-90"
                  >
-                  <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                  </button>
                </div>
             </div>
             
-            <div className="p-10 grid grid-cols-1 lg:grid-cols-3 gap-10 max-h-[60vh] overflow-y-auto">
-              <div className="lg:col-span-1 space-y-8">
+            <div className="p-7 grid grid-cols-1 lg:grid-cols-3 gap-8 max-h-[70vh] overflow-y-auto">
+              <div className="lg:col-span-1 space-y-5">
                 <section>
-                  <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Contact Information</h4>
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-4 group">
-                      <div className="p-3 bg-blue-50 text-blue-600 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-all">
-                        <Mail className="w-5 h-5" />
+                  <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Contact Information</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3.5 group">
+                      <div className="p-2.5 bg-blue-50 text-blue-600 rounded-lg group-hover:bg-blue-600 group-hover:text-white transition-all">
+                        <Mail className="w-4 h-4" />
                       </div>
                       <div>
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-tight">Email</p>
-                        <p className="text-gray-900 font-bold text-sm">{selectedStudent.email}</p>
+                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-tight">Email</p>
+                        <p className="text-gray-900 font-bold text-xs">{selectedStudent.email}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-4 group">
-                      <div className="p-3 bg-indigo-50 text-indigo-600 rounded-xl group-hover:bg-indigo-600 group-hover:text-white transition-all">
-                        <Phone className="w-5 h-5" />
+                    <div className="flex items-center gap-3.5 group">
+                      <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-lg group-hover:bg-indigo-600 group-hover:text-white transition-all">
+                        <Phone className="w-4 h-4" />
                       </div>
                       <div>
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-tight">Phone</p>
-                        <p className="text-gray-900 font-bold text-sm">{selectedStudent.phone}</p>
+                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-tight">Phone</p>
+                        <p className="text-gray-900 font-bold text-xs">{selectedStudent.phone}</p>
                       </div>
                     </div>
                   </div>
                 </section>
 
                 <section>
-                  <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Skills</h4>
-                  <div className="flex flex-wrap gap-2">
+                  <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Skills</h4>
+                  <div className="flex flex-wrap gap-1.5">
                     {selectedStudent.skills?.map((skill, i) => (
-                      <span key={i} className="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-xl text-xs font-bold border border-gray-200">
+                      <span key={i} className="px-2.5 py-1 bg-gray-100 text-gray-700 rounded-lg text-[10px] font-bold border border-gray-200">
                         {skill}
                       </span>
                     ))}
@@ -1528,36 +1528,36 @@ export default function CompanyDashboard() {
                 </section>
               </div>
 
-              <div className="lg:col-span-2 space-y-8">
+              <div className="lg:col-span-2 space-y-6">
                 <section>
-                  <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Candidate Overview</h4>
-                  <div className="p-6 bg-blue-50/50 rounded-3xl border border-blue-100/50">
-                    <p className="text-gray-700 font-medium leading-relaxed italic">
+                  <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Candidate Overview</h4>
+                  <div className="p-5 bg-blue-50/50 rounded-2xl border border-blue-100/50">
+                    <p className="text-gray-700 font-medium leading-relaxed italic text-xs">
                       "{selectedStudent.description}"
                     </p>
                   </div>
                 </section>
 
                 <section>
-                   <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Application Details</h4>
-                   <div className="grid grid-cols-2 gap-4">
-                      <div className="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm">
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Position Applied</p>
-                        <p className="text-gray-900 font-black text-lg mt-1">{selectedStudent.jobTitle}</p>
+                   <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Application Details</h4>
+                   <div className="grid grid-cols-2 gap-3.5">
+                      <div className="p-4 bg-white border border-gray-100 rounded-xl shadow-sm">
+                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Position Applied</p>
+                        <p className="text-gray-900 font-black text-base mt-0.5">{selectedStudent.jobTitle}</p>
                       </div>
-                      <div className="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm">
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Candidate ID</p>
-                        <p className="text-gray-900 font-black text-lg mt-1">#STU-{1000 + selectedStudent.id}</p>
+                      <div className="p-4 bg-white border border-gray-100 rounded-xl shadow-sm">
+                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Candidate ID</p>
+                        <p className="text-gray-900 font-black text-base mt-0.5">#STU-{1000 + selectedStudent.id}</p>
                       </div>
                    </div>
                 </section>
 
-                <div className="flex gap-4 pt-4">
-                  <button className="flex-1 bg-[#3b82f6] text-white py-4 rounded-2xl font-black shadow-xl shadow-blue-500/20 hover:bg-[#2563eb] hover:shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-3">
-                    <FileText className="w-5 h-5" />
+                <div className="flex gap-3.5 pt-2">
+                  <button className="flex-1 bg-[#3b82f6] text-white py-3 rounded-xl font-black shadow-lg shadow-blue-500/20 hover:bg-[#2563eb] hover:shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2.5 text-sm">
+                    <FileText className="w-4 h-4" />
                     Download Resume
                   </button>
-                  <button className="px-8 py-4 bg-gray-100 text-gray-700 rounded-2xl font-black hover:bg-gray-200 transition-all active:scale-95">
+                  <button className="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-black hover:bg-gray-200 transition-all active:scale-95 text-sm">
                     Contact HR
                   </button>
                 </div>
@@ -1568,29 +1568,29 @@ export default function CompanyDashboard() {
       )}
       {/* Job Posting Modal */}
       {showPostJobModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
-          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden animate-in slide-in-from-bottom-8 duration-500 border border-white/20">
-            <div className="bg-gradient-to-r from-[#0f172a] to-[#1e293b] px-8 py-8 text-white flex justify-between items-center relative overflow-hidden">
-               <div className="absolute top-0 right-0 p-20 bg-blue-500/10 rounded-full blur-3xl -mr-20 -mt-20"></div>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-xl overflow-hidden border border-white/20">
+            <div className="bg-gradient-to-r from-[#0f172a] to-[#1e293b] px-6 py-6 text-white flex justify-between items-center relative overflow-hidden">
+               <div className="absolute top-0 right-0 p-16 bg-blue-500/10 rounded-full blur-3xl -mr-16 -mt-16"></div>
               <div className="relative z-10">
-                <h3 className="text-3xl font-black tracking-tight">{isEditing ? "Edit Job Posting" : "Post New Job"}</h3>
-                <p className="text-blue-400 text-xs font-black uppercase tracking-widest mt-2">{isEditing ? "Modify existing opportunity" : "Create a new opportunity"}</p>
+                <h3 className="text-2xl font-black tracking-tight">{isEditing ? "Edit Job Posting" : "Post New Job"}</h3>
+                <p className="text-blue-400 text-[10px] font-black uppercase tracking-widest mt-1.5">{isEditing ? "Modify existing opportunity" : "Create a new opportunity"}</p>
               </div>
               <button 
                 onClick={closePostJobModal}
-                className="p-2 hover:bg-white/10 rounded-full transition-colors"
+                className="p-1.5 hover:bg-white/10 rounded-full transition-colors"
               >
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
             
-            <form onSubmit={handlePostJob} className="p-8 max-h-[75vh] overflow-y-auto">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <form onSubmit={handlePostJob} className="p-6 max-h-[80vh] overflow-y-auto">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
                 {/* Job Title */}
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Job Title *</label>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-widest">Job Title *</label>
                   <input
                     type="text"
                     name="title"
@@ -1598,13 +1598,13 @@ export default function CompanyDashboard() {
                     value={postJobFormData.title}
                     onChange={handlePostJobChange}
                     placeholder="e.g. Senior Frontend Engineer"
-                    className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#3b82f6] focus:bg-white outline-none transition-all font-medium"
+                    className="w-full px-4 py-2 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#3b82f6] focus:bg-white outline-none transition-all font-bold text-sm"
                   />
                 </div>
 
                 {/* Department */}
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Department *</label>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-widest">Department *</label>
                   <input
                     type="text"
                     name="department"
@@ -1612,31 +1612,31 @@ export default function CompanyDashboard() {
                     value={postJobFormData.department}
                     onChange={handlePostJobChange}
                     placeholder="e.g. Engineering"
-                    className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#3b82f6] focus:bg-white outline-none transition-all font-medium"
+                    className="w-full px-4 py-2 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#3b82f6] focus:bg-white outline-none transition-all font-bold text-sm"
                   />
                 </div>
 
                 {/* Job Location */}
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Job Location</label>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-widest">Job Location</label>
                   <input
                     type="text"
                     name="location"
                     value={postJobFormData.location}
                     onChange={handlePostJobChange}
-                    placeholder="e.g. Remote / New York, NY"
-                    className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#3b82f6] focus:bg-white outline-none transition-all font-medium"
+                    placeholder="e.g. Remote"
+                    className="w-full px-4 py-2 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#3b82f6] focus:bg-white outline-none transition-all font-bold text-sm"
                   />
                 </div>
 
                 {/* Job Type */}
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Job Type</label>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-widest">Job Type</label>
                   <select
                     name="type"
                     value={postJobFormData.type}
                     onChange={handlePostJobChange}
-                    className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#346b41] focus:bg-white outline-none transition-all font-medium appearance-none"
+                    className="w-full px-4 py-2 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#3b82f6] focus:bg-white outline-none transition-all font-bold text-sm appearance-none"
                   >
                     <option value="Full-time">Full-time</option>
                     <option value="Part-time">Part-time</option>
@@ -1646,96 +1646,96 @@ export default function CompanyDashboard() {
 
                 {/* Salary Range */}
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Salary Range</label>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-widest">Salary Range</label>
                   <input
                     type="text"
                     name="salary"
                     value={postJobFormData.salary}
                     onChange={handlePostJobChange}
                     placeholder="e.g. $80k - $120k"
-                    className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#346b41] focus:bg-white outline-none transition-all font-medium"
+                    className="w-full px-4 py-2 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#3b82f6] focus:bg-white outline-none transition-all font-bold text-sm"
                   />
                 </div>
 
                 {/* Deadline */}
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Application Deadline *</label>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-widest">Deadline *</label>
                   <input
                     type="date"
                     name="deadline"
                     required
                     value={postJobFormData.deadline}
                     onChange={handlePostJobChange}
-                    className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#346b41] focus:bg-white outline-none transition-all font-medium"
+                    className="w-full px-4 py-2 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#3b82f6] focus:bg-white outline-none transition-all font-bold text-sm"
                   />
                 </div>
 
                 {/* Experience Required */}
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Experience Required</label>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-widest">Experience</label>
                   <input
                     type="text"
                     name="experience"
                     value={postJobFormData.experience}
                     onChange={handlePostJobChange}
                     placeholder="e.g. 3+ years"
-                    className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#346b41] focus:bg-white outline-none transition-all font-medium"
+                    className="w-full px-4 py-2 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#3b82f6] focus:bg-white outline-none transition-all font-bold text-sm"
                   />
                 </div>
 
                 {/* Minimum CGPA Required */}
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Minimum CGPA Required</label>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-widest">Min CGPA</label>
                   <input
                     type="text"
                     name="min_cgpa"
                     value={postJobFormData.min_cgpa}
                     onChange={handlePostJobChange}
                     placeholder="e.g. 7.5"
-                    className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#3b82f6] focus:bg-white outline-none transition-all font-medium"
+                    className="w-full px-4 py-2 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#3b82f6] focus:bg-white outline-none transition-all font-bold text-sm"
                   />
                 </div>
 
                 {/* Job Description */}
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Job Description</label>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-widest">Description</label>
                   <textarea
                     name="description"
-                    rows="4"
+                    rows="2"
                     value={postJobFormData.description}
                     onChange={handlePostJobChange}
-                    placeholder="Describe the role and responsibilities..."
-                    className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#346b41] focus:bg-white outline-none transition-all font-medium resize-none"
+                    placeholder="Describe the role..."
+                    className="w-full px-4 py-2 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#3b82f6] focus:bg-white outline-none transition-all font-bold text-sm resize-none"
                   ></textarea>
                 </div>
 
                 {/* Required Skills */}
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Required Skills</label>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-widest">Sklills</label>
                   <input
                     type="text"
                     name="skills"
                     value={postJobFormData.skills}
                     onChange={handlePostJobChange}
-                    placeholder="e.g. React, Tailwind, Node.js"
-                    className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#346b41] focus:bg-white outline-none transition-all font-medium"
+                    placeholder="e.g. React, Node.js"
+                    className="w-full px-4 py-2 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#3b82f6] focus:bg-white outline-none transition-all font-bold text-sm"
                   />
                 </div>
               </div>
 
-              <div className="flex flex-row gap-4 mt-10">
+              <div className="flex flex-row gap-3.5 mt-6">
                 <button
                   type="button"
                   onClick={closePostJobModal}
-                  className="flex-1 py-4 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-2xl font-black text-lg transition-all active:scale-95"
+                  className="flex-1 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-black text-base transition-all active:scale-95"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-4 bg-[#3b82f6] hover:bg-[#2563eb] text-white rounded-2xl font-black text-lg shadow-lg shadow-blue-500/20 transition-all active:scale-95"
+                  className="flex-1 py-3 bg-[#3b82f6] hover:bg-[#2563eb] text-white rounded-xl font-black text-base shadow-lg shadow-blue-500/20 transition-all active:scale-95"
                 >
-                  {isEditing ? "Update Job" : "Post Job"}
+                  {isEditing ? "Update" : "Post"} Opportunity
                 </button>
               </div>
             </form>

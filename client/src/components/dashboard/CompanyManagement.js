@@ -249,64 +249,66 @@ export default function CompanyManagement() {
 
       {/* View/Edit Modal */}
       {selectedCompany && (
-        <div className="fixed inset-0 bg-black/50 z-[200] flex justify-center items-center">
-          <div className="bg-white p-6 rounded-2xl w-full max-w-lg shadow-2xl">
-            <h3 className="text-xl font-bold mb-4">{isEditMode ? "Edit Company" : "Company Details"}</h3>
-            <div className="space-y-4 text-sm">
+        <div className="fixed inset-0 bg-black/50 z-[200] flex justify-center items-center p-4">
+          <div className="bg-white p-5 rounded-2xl w-full max-w-md shadow-2xl border dark:bg-slate-900 dark:border-slate-800">
+            <h3 className="text-xl font-black mb-3 uppercase tracking-tight text-gray-900 dark:text-white">{isEditMode ? "Edit Company" : "Company Details"}</h3>
+            <div className="space-y-2.5 text-xs">
               <div>
-                <label className="font-bold text-gray-500 block">Name</label>
+                <label className="font-black text-[10px] text-gray-400 uppercase tracking-widest block mb-1">Company Name</label>
                 {isEditMode ? (
                   <input 
-                    className="w-full border p-2 rounded" 
+                    className="w-full border-2 border-gray-100 dark:border-slate-800 p-1.5 rounded-xl outline-none focus:border-emerald-500 transition-all dark:bg-slate-800 dark:text-white font-bold" 
                     value={editForm.name} 
                     onChange={e => setEditForm({...editForm, name: e.target.value})} 
                   />
                 ) : (
-                  <p className="font-semibold text-lg">{selectedCompany.name}</p>
+                  <p className="font-bold text-gray-900 dark:text-gray-100">{selectedCompany.name}</p>
                 )}
               </div>
               <div>
-                <label className="font-bold text-gray-500 block">Email</label>
+                <label className="font-black text-[10px] text-gray-400 uppercase tracking-widest block mb-1">Email Address</label>
                 {isEditMode ? (
                   <input 
-                    className="w-full border p-2 rounded" 
+                    className="w-full border-2 border-gray-100 dark:border-slate-800 p-1.5 rounded-xl outline-none focus:border-emerald-500 transition-all dark:bg-slate-800 dark:text-white font-bold" 
                     value={editForm.email} 
                     onChange={e => setEditForm({...editForm, email: e.target.value})} 
                   />
                 ) : (
-                  <p>{selectedCompany.email}</p>
+                  <p className="font-bold text-gray-900 dark:text-gray-100">{selectedCompany.email}</p>
                 )}
               </div>
-              <div>
-                <label className="font-bold text-gray-500 block">Package</label>
-                {isEditMode ? (
-                  <input 
-                    className="w-full border p-2 rounded" 
-                    value={editForm.package} 
-                    onChange={e => setEditForm({...editForm, package: e.target.value})} 
-                  />
-                ) : (
-                  <p>{selectedCompany.package || "N/A"}</p>
-                )}
+              <div className="flex gap-3">
+                <div className="w-1/2">
+                    <label className="font-black text-[10px] text-gray-400 uppercase tracking-widest block mb-1">Package</label>
+                    {isEditMode ? (
+                    <input 
+                        className="w-full border-2 border-gray-100 dark:border-slate-800 p-1.5 rounded-xl outline-none focus:border-emerald-500 transition-all dark:bg-slate-800 dark:text-white font-bold" 
+                        value={editForm.package} 
+                        onChange={e => setEditForm({...editForm, package: e.target.value})} 
+                    />
+                    ) : (
+                    <p className="font-bold text-gray-900 dark:text-gray-100">{selectedCompany.package || "N/A"}</p>
+                    )}
+                </div>
+                <div className="w-1/2">
+                    <label className="font-black text-[10px] text-gray-400 uppercase tracking-widest block mb-1">Deadline</label>
+                    {isEditMode ? (
+                    <input 
+                        type="date"
+                        className="w-full border-2 border-gray-100 dark:border-slate-800 p-1.5 rounded-xl outline-none focus:border-emerald-500 transition-all dark:bg-slate-800 dark:text-white font-bold" 
+                        value={editForm.deadline} 
+                        onChange={e => setEditForm({...editForm, deadline: e.target.value})} 
+                    />
+                    ) : (
+                    <p className="font-bold text-gray-900 dark:text-gray-100">{selectedCompany.deadline ? new Date(selectedCompany.deadline).toLocaleDateString() : "N/A"}</p>
+                    )}
+                </div>
               </div>
               <div>
-                <label className="font-bold text-gray-500 block">Deadline</label>
-                {isEditMode ? (
-                  <input 
-                    type="date"
-                    className="w-full border p-2 rounded" 
-                    value={editForm.deadline} 
-                    onChange={e => setEditForm({...editForm, deadline: e.target.value})} 
-                  />
-                ) : (
-                  <p>{selectedCompany.deadline || "N/A"}</p>
-                )}
-              </div>
-              <div>
-                <label className="font-bold text-gray-500 block">Status</label>
+                <label className="font-black text-[10px] text-gray-400 uppercase tracking-widest block mb-1">Status</label>
                 {isEditMode ? (
                   <select 
-                    className="w-full border p-2 rounded" 
+                    className="w-full border-2 border-gray-100 dark:border-slate-800 p-1.5 rounded-xl outline-none focus:border-emerald-500 transition-all dark:bg-slate-800 dark:text-white font-bold" 
                     value={editForm.status} 
                     onChange={e => setEditForm({...editForm, status: e.target.value})}
                   >
@@ -315,12 +317,12 @@ export default function CompanyManagement() {
                     <option value="Rejected">Rejected</option>
                   </select>
                 ) : (
-                  <p>{selectedCompany.status || "N/A"}</p>
+                  <p className={`font-bold ${selectedCompany.status === 'Active' ? 'text-emerald-600' : 'text-orange-600'}`}>{selectedCompany.status || "Pending"}</p>
                 )}
               </div>
             </div>
-            <div className="mt-6 flex justify-end gap-3">
-              <button onClick={() => setSelectedCompany(null)} className="px-4 py-2 border rounded-lg font-bold">Close</button>
+            <div className="mt-4 flex justify-end gap-2.5">
+              <button onClick={() => setSelectedCompany(null)} className="px-4 py-2 border rounded-xl font-bold text-gray-500 hover:bg-gray-50 transition-all text-xs">Close</button>
               {isEditMode && (
                 <button 
                   disabled={actionLoading === selectedCompany.id}
@@ -337,9 +339,9 @@ export default function CompanyManagement() {
                       setActionLoading(null);
                     }
                   }} 
-                  className="px-4 py-2 bg-emerald-600 text-white rounded-lg font-bold flex items-center gap-2"
+                  className="px-5 py-2 bg-emerald-600 text-white rounded-xl font-bold flex items-center gap-2 hover:bg-emerald-700 transition-all shadow-lg text-xs"
                 >
-                  {actionLoading === selectedCompany.id && <Loader2 className="w-4 h-4 animate-spin"/>}
+                  {actionLoading === selectedCompany.id && <Loader2 className="w-3.5 h-3.5 animate-spin"/>}
                   Save Changes
                 </button>
               )}

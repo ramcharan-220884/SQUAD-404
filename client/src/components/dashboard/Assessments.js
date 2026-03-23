@@ -203,31 +203,31 @@ export default function Assessments({ role = "student" }) {
       {showDetailModal && selectedTest && (
         <div className="fixed inset-0 bg-black/60 z-[200] flex justify-center items-center p-4">
           <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] w-full max-w-2xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300 border dark:border-slate-800">
-            <div className="bg-gradient-to-br from-indigo-500 to-purple-600 p-8 text-white relative">
-              <button onClick={() => setShowDetailModal(false)} className="absolute top-6 right-6 p-2 bg-white/10 rounded-full hover:bg-white/20 transition-all">
-                <Plus className="w-6 h-6 rotate-45" />
+            <div className="bg-gradient-to-br from-indigo-500 to-purple-600 p-5 text-white relative">
+              <button onClick={() => setShowDetailModal(false)} className="absolute top-4 right-4 p-1.5 bg-white/10 rounded-full hover:bg-white/20 transition-all">
+                <Plus className="w-5 h-5 rotate-45" />
               </button>
-              <h3 className="text-3xl font-black tracking-tight leading-tight uppercase mb-4">{selectedTest.title}</h3>
-              <div className="flex flex-wrap gap-3">
-                <span className="px-3 py-1 bg-white/20 rounded-lg text-[10px] font-black uppercase tracking-wider backdrop-blur-md">Duration: {selectedTest.duration}m</span>
-                <span className="px-3 py-1 bg-white/20 rounded-lg text-[10px] font-black uppercase tracking-wider backdrop-blur-md">Ends: {new Date(selectedTest.deadline).toLocaleDateString()}</span>
+              <h3 className="text-xl font-black tracking-tight leading-tight uppercase mb-2">{selectedTest.title}</h3>
+              <div className="flex flex-wrap gap-2">
+                <span className="px-2 py-0.5 bg-white/20 rounded-lg text-[9px] font-black uppercase tracking-wider backdrop-blur-md">Duration: {selectedTest.duration}m</span>
+                <span className="px-2 py-0.5 bg-white/20 rounded-lg text-[9px] font-black uppercase tracking-wider backdrop-blur-md">Ends: {new Date(selectedTest.deadline).toLocaleDateString()}</span>
               </div>
             </div>
-            <div className="p-8 max-h-[60vh] overflow-y-auto custom-scrollbar">
-              <div className="prose dark:prose-invert max-w-none">
-                <h4 className="text-xs font-black uppercase tracking-[0.2em] text-indigo-500 mb-4">Assessment Brief</h4>
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed font-medium whitespace-pre-wrap">{selectedTest.description || "Comprehensive evaluation centered on the specified topic. Please ensure a stable connection before starting."}</p>
+            <div className="p-5 max-h-[50vh] overflow-y-auto custom-scrollbar">
+              <div className="prose dark:prose-invert prose-sm max-w-none">
+                <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-500 mb-2">Assessment Brief</h4>
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed font-medium whitespace-pre-wrap text-sm">{selectedTest.description || "Comprehensive evaluation centered on the specified topic."}</p>
                 
-                <div className="mt-8 p-4 bg-amber-50 dark:bg-amber-950/20 rounded-2xl border border-amber-100 dark:border-amber-900/30">
-                  <p className="text-xs font-bold text-amber-700 dark:text-amber-400">Important: Once started, the timer cannot be paused. Make sure you are ready to complete the test in one sitting.</p>
+                <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-950/20 rounded-2xl border border-amber-100 dark:border-amber-900/30">
+                  <p className="text-[10px] font-bold text-amber-700 dark:text-amber-400">Important: Once started, the timer cannot be paused. Make sure you are ready to complete the test in one sitting.</p>
                 </div>
               </div>
             </div>
-            <div className="p-8 bg-gray-50 dark:bg-slate-800/50 border-t dark:border-slate-800 flex justify-between items-center">
-               <button onClick={() => setShowDetailModal(false)} className="px-6 py-3 border-2 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-gray-400 font-bold rounded-2xl hover:bg-white dark:hover:bg-slate-800 transition-all">Close</button>
+            <div className="p-5 bg-gray-50 dark:bg-slate-800/50 border-t dark:border-slate-800 flex justify-between items-center">
+               <button onClick={() => setShowDetailModal(false)} className="px-5 py-2 border-2 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-gray-400 font-bold rounded-2xl hover:bg-white dark:hover:bg-slate-800 transition-all text-xs">Close</button>
                {role === 'student' && selectedTest.status !== 'Completed' && (
-                 <button onClick={() => { handleStart(selectedTest.id); setShowDetailModal(false); }} className="px-10 py-3 bg-indigo-600 text-white font-black rounded-2xl hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-500/20 active:scale-95">
-                   {selectedTest.status === 'In Progress' ? 'Resume Test' : 'Start Test Now'}
+                 <button onClick={() => { handleStart(selectedTest.id); setShowDetailModal(false); }} className="px-8 py-2 bg-indigo-600 text-white font-black rounded-2xl hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-500/20 active:scale-95 text-xs">
+                   {selectedTest.status === 'In Progress' ? 'Resume' : 'Start Now'}
                  </button>
                )}
             </div>
@@ -237,31 +237,31 @@ export default function Assessments({ role = "student" }) {
 
       {showModal && (
         <div className="fixed inset-0 bg-black/60 z-[200] flex justify-center items-center p-4">
-          <div className="bg-white dark:bg-slate-900 p-8 rounded-[2rem] w-full max-w-lg shadow-2xl border border-gray-100 dark:border-slate-800">
-            <h3 className="text-2xl font-black text-gray-900 dark:text-white mb-6 uppercase tracking-tight">{isEditing ? 'Edit Assessment' : 'Post New Assessment'}</h3>
-            <form onSubmit={handleSave} className="space-y-5">
+          <div className="bg-white dark:bg-slate-900 p-5 rounded-[2rem] w-full max-w-lg shadow-2xl border border-gray-100 dark:border-slate-800 animate-in zoom-in-95 duration-200">
+            <h3 className="text-xl font-black text-gray-900 dark:text-white mb-3 uppercase tracking-tight">{isEditing ? 'Edit Assessment' : 'Post New Assessment'}</h3>
+            <form onSubmit={handleSave} className="space-y-3">
               <div>
-                <label className="text-xs font-black uppercase tracking-widest text-gray-400 mb-2 block">Test Title</label>
-                <input required value={formData.title} onChange={e=>setFormData({...formData, title: e.target.value})} className="w-full bg-gray-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 p-3.5 rounded-2xl outline-none font-bold text-gray-900 dark:text-gray-100 transition-all" />
+                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1 block">Test Title</label>
+                <input required value={formData.title} onChange={e=>setFormData({...formData, title: e.target.value})} className="w-full bg-gray-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 p-2 rounded-2xl outline-none font-bold text-gray-900 dark:text-gray-100 transition-all text-sm" />
               </div>
-              <div className="flex gap-4">
+              <div className="flex gap-3">
                 <div className="w-1/2">
-                    <label className="text-xs font-black uppercase tracking-widest text-gray-400 mb-2 block">Duration (Mins)</label>
-                    <input required type="number" value={formData.duration} onChange={e=>setFormData({...formData, duration: e.target.value})} className="w-full bg-gray-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 p-3.5 rounded-2xl outline-none font-bold text-gray-900 dark:text-gray-100 transition-all" />
+                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1 block">Duration (Mins)</label>
+                    <input required type="number" value={formData.duration} onChange={e=>setFormData({...formData, duration: e.target.value})} className="w-full bg-gray-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 p-2 rounded-2xl outline-none font-bold text-gray-900 dark:text-gray-100 transition-all text-sm" />
                 </div>
                 <div className="w-1/2">
-                    <label className="text-xs font-black uppercase tracking-widest text-gray-400 mb-2 block">Deadline</label>
-                    <input required type="date" value={formData.deadline} onChange={e=>setFormData({...formData, deadline: e.target.value})} className="w-full bg-gray-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 p-3.5 rounded-2xl outline-none font-bold text-gray-900 dark:text-gray-100 transition-all" />
+                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1 block">Deadline</label>
+                    <input required type="date" value={formData.deadline} onChange={e=>setFormData({...formData, deadline: e.target.value})} className="w-full bg-gray-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 p-2 rounded-2xl outline-none font-bold text-gray-900 dark:text-gray-100 transition-all text-sm" />
                 </div>
               </div>
               <div>
-                <label className="text-xs font-black uppercase tracking-widest text-gray-400 mb-2 block">Description</label>
-                <textarea value={formData.description} onChange={e=>setFormData({...formData, description: e.target.value})} className="w-full bg-gray-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 p-3.5 rounded-2xl outline-none font-bold text-gray-900 dark:text-gray-100 transition-all h-32"></textarea>
+                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1 block">Description</label>
+                <textarea value={formData.description} onChange={e=>setFormData({...formData, description: e.target.value})} className="w-full bg-gray-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 p-2 rounded-2xl outline-none font-bold text-gray-900 dark:text-gray-100 transition-all h-24 text-sm"></textarea>
               </div>
-              <div className="flex justify-end gap-3 mt-8">
-                <button type="button" onClick={() => setShowModal(false)} className="px-6 py-3 border rounded-2xl font-bold">Cancel</button>
-                <button disabled={actionLoading} type="submit" className="px-8 py-3 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 flex items-center gap-2">
-                  {actionLoading ? <Loader2 className="w-4 h-4 animate-spin"/> : null} {isEditing ? 'Save Changes' : 'Publish'}
+              <div className="flex justify-end gap-3 mt-4">
+                <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 border rounded-2xl font-bold text-xs">Cancel</button>
+                <button disabled={actionLoading} type="submit" className="px-6 py-2 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 flex items-center gap-2 text-xs text-xs">
+                  {actionLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin"/> : null} {isEditing ? 'Save' : 'Publish'}
                 </button>
               </div>
             </form>

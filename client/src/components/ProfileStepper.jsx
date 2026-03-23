@@ -2,7 +2,7 @@ import React from 'react';
 
 const ProfileStepper = ({ steps, currentStep }) => {
   return (
-    <div className="w-full py-4 mb-8">
+    <div className="w-full py-2 mb-4">
       <div className="flex items-center justify-between relative px-2">
         {/* Progress Line */}
         <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-200 -translate-y-1/2 z-0 rounded-full overflow-hidden">
@@ -16,7 +16,7 @@ const ProfileStepper = ({ steps, currentStep }) => {
         {steps.map((label, index) => (
           <div key={index} className="relative z-10 flex flex-col items-center group">
             <div 
-              className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 border-2 ${
+              className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-300 border-2 ${
                 index <= currentStep 
                   ? 'bg-[#800000] border-[#800000] text-white scale-110 shadow-lg' 
                   : 'bg-white border-gray-300 text-gray-400 group-hover:border-gray-400'
@@ -31,7 +31,7 @@ const ProfileStepper = ({ steps, currentStep }) => {
               )}
             </div>
             <span 
-              className={`absolute top-12 text-[10px] md:text-xs font-bold whitespace-nowrap transition-all duration-300 ${
+              className={`absolute top-10 text-[9px] md:text-[10px] font-bold whitespace-nowrap transition-all duration-300 ${
                 index <= currentStep ? 'text-[#800000] opacity-100' : 'text-gray-400 opacity-60'
               }`}
             >

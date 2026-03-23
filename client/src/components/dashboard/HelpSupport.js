@@ -235,57 +235,57 @@ export default function HelpSupport({ role }) {
         </div>
 
         {/* Report Issue Form */}
-        <div className="bg-white rounded-[2.5rem] p-10 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="p-3 bg-orange-50 text-orange-600 rounded-2xl">
-              <AlertTriangle className="w-6 h-6" />
+        <div className="bg-white rounded-[2.5rem] p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="p-2.5 bg-orange-50 text-orange-600 rounded-2xl">
+              <AlertTriangle className="w-5 h-5" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900">Report an Issue</h3>
+            <h3 className="text-xl font-bold text-gray-900">Report an Issue</h3>
           </div>
 
-          <form className="space-y-6" onSubmit={handleReportSubmit}>
-            <div className="space-y-2">
-              <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">Issue Title</label>
+          <form className="space-y-3.5" onSubmit={handleReportSubmit}>
+            <div className="space-y-1">
+              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Issue Title</label>
               <input 
                 required
                 type="text" 
                 placeholder="E.g., CSV upload not working"
                 value={reportForm.title}
                 onChange={e => setReportForm({...reportForm, title: e.target.value})}
-                className="w-full px-5 py-3 bg-gray-50 border-2 border-gray-100 rounded-2xl outline-none focus:bg-white focus:border-orange-500 transition-all font-bold text-gray-700" 
+                className="w-full px-5 py-2 bg-gray-50 border-2 border-gray-100 rounded-2xl outline-none focus:bg-white focus:border-orange-500 transition-all font-bold text-gray-700 text-sm" 
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">Issue Category</label>
+            <div className="space-y-1">
+              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Issue Category</label>
               <div className="relative">
                 <select 
                   value={reportForm.category}
                   onChange={e => setReportForm({...reportForm, category: e.target.value})}
-                  className="w-full px-5 py-3 bg-gray-50 border-2 border-gray-100 rounded-2xl outline-none focus:bg-white focus:border-orange-500 appearance-none font-bold text-gray-700 cursor-pointer">
+                  className="w-full px-5 py-2 bg-gray-50 border-2 border-gray-100 rounded-2xl outline-none focus:bg-white focus:border-orange-500 appearance-none font-bold text-gray-700 cursor-pointer text-sm">
                   <option>Bug</option>
                   <option>Login Issue</option>
                   <option>Data Issue</option>
                   <option>Other</option>
                 </select>
-                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">Description</label>
+            <div className="space-y-1">
+              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Description</label>
               <textarea 
                 required
-                rows="4"
+                rows="3"
                 placeholder="Please describe the issue in detail..."
                 value={reportForm.description}
                 onChange={e => setReportForm({...reportForm, description: e.target.value})}
-                className="w-full px-5 py-3 bg-gray-50 border-2 border-gray-100 rounded-2xl outline-none focus:bg-white focus:border-orange-500 transition-all font-bold text-gray-700 resize-none"
+                className="w-full px-5 py-2 bg-gray-50 border-2 border-gray-100 rounded-2xl outline-none focus:bg-white focus:border-orange-500 transition-all font-bold text-gray-700 resize-none text-sm"
               ></textarea>
             </div>
 
-            <button disabled={submitState.loading} type="submit" className="w-full py-4 bg-orange-600 text-white font-black rounded-2xl flex items-center justify-center gap-3 hover:bg-orange-700 transition-all shadow-xl shadow-orange-600/20 active:scale-95 disabled:opacity-50">
-              <Send className="w-5 h-5" /> {submitState.loading ? "Submitting..." : "Submit Report"}
+            <button disabled={submitState.loading} type="submit" className="w-full py-2.5 bg-orange-600 text-white font-black rounded-2xl flex items-center justify-center gap-3 hover:bg-orange-700 transition-all shadow-xl shadow-orange-600/20 active:scale-95 disabled:opacity-50 text-sm">
+              <Send className="w-4 h-4" /> {submitState.loading ? "Submitting..." : "Submit Report"}
             </button>
             
             {submitState.success && <p className="text-green-600 text-center font-bold text-sm">Issue reported successfully!</p>}

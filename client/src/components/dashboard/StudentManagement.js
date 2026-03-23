@@ -276,72 +276,74 @@ export default function StudentManagement() {
 
       {/* View/Edit Modal */}
       {selectedStudent && (
-        <div className="fixed inset-0 bg-black/50 z-[200] flex justify-center items-center">
-          <div className="bg-white p-6 rounded-2xl w-full max-w-lg shadow-2xl">
-            <h3 className="text-xl font-bold mb-4">{isEditMode ? "Edit Student" : "Student Details"}</h3>
-            <div className="space-y-4 text-sm">
+        <div className="fixed inset-0 bg-black/50 z-[200] flex justify-center items-center p-4">
+          <div className="bg-white p-5 rounded-2xl w-full max-w-md shadow-2xl border dark:bg-slate-900 dark:border-slate-800">
+            <h3 className="text-xl font-black mb-3 uppercase tracking-tight text-gray-900 dark:text-white">{isEditMode ? "Update Student" : "Student Profile"}</h3>
+            <div className="space-y-2.5 text-xs">
               <div>
-                <label className="font-bold text-gray-500 block">Name</label>
+                <label className="font-black text-[10px] text-gray-400 uppercase tracking-widest block mb-1">Full Name</label>
                 {isEditMode ? (
                   <input 
-                    className="w-full border p-2 rounded" 
+                    className="w-full border-2 border-gray-100 dark:border-slate-800 p-1.5 rounded-xl outline-none focus:border-green-500 transition-all dark:bg-slate-800 dark:text-white font-bold" 
                     value={editForm.name} 
                     onChange={e => setEditForm({...editForm, name: e.target.value})} 
                   />
                 ) : (
-                  <p className="font-semibold text-lg">{selectedStudent.name}</p>
+                  <p className="font-bold text-gray-900 dark:text-gray-100">{selectedStudent.name}</p>
                 )}
               </div>
               <div>
-                <label className="font-bold text-gray-500 block">Email</label>
+                <label className="font-black text-[10px] text-gray-400 uppercase tracking-widest block mb-1">Email Address</label>
                 {isEditMode ? (
                   <input 
-                    className="w-full border p-2 rounded" 
+                    className="w-full border-2 border-gray-100 dark:border-slate-800 p-1.5 rounded-xl outline-none focus:border-green-500 transition-all dark:bg-slate-800 dark:text-white font-bold" 
                     value={editForm.email} 
                     onChange={e => setEditForm({...editForm, email: e.target.value})} 
                   />
                 ) : (
-                  <p>{selectedStudent.email}</p>
+                  <p className="font-bold text-gray-900 dark:text-gray-100">{selectedStudent.email}</p>
                 )}
               </div>
-              <div>
-                <label className="font-bold text-gray-500 block">Branch</label>
-                {isEditMode ? (
-                  <select 
-                    className="w-full border p-2 rounded" 
-                    value={editForm.branch} 
-                    onChange={e => setEditForm({...editForm, branch: e.target.value})}
-                  >
-                    <option value="CSE">CSE</option>
-                    <option value="ECE">ECE</option>
-                    <option value="EEE">EEE</option>
-                    <option value="IT">IT</option>
-                    <option value="MECH">MECH</option>
-                  </select>
-                ) : (
-                  <p>{selectedStudent.branch || "N/A"}</p>
-                )}
-              </div>
-              <div>
-                <label className="font-bold text-gray-500 block">CGPA</label>
-                {isEditMode ? (
-                  <input 
-                    type="number" 
-                    step="0.01" 
-                    className="w-full border p-2 rounded" 
-                    value={editForm.cgpa} 
-                    onChange={e => setEditForm({...editForm, cgpa: e.target.value})} 
-                  />
-                ) : (
-                  <p>{selectedStudent.cgpa || "N/A"}</p>
-                )}
+              <div className="flex gap-3">
+                <div className="w-1/2">
+                    <label className="font-black text-[10px] text-gray-400 uppercase tracking-widest block mb-1">Branch</label>
+                    {isEditMode ? (
+                    <select 
+                        className="w-full border-2 border-gray-100 dark:border-slate-800 p-1.5 rounded-xl outline-none focus:border-green-500 transition-all dark:bg-slate-800 dark:text-white font-bold" 
+                        value={editForm.branch} 
+                        onChange={e => setEditForm({...editForm, branch: e.target.value})}
+                    >
+                        <option value="CSE">CSE</option>
+                        <option value="ECE">ECE</option>
+                        <option value="EEE">EEE</option>
+                        <option value="IT">IT</option>
+                        <option value="MECH">MECH</option>
+                    </select>
+                    ) : (
+                    <p className="font-bold text-gray-900 dark:text-gray-100">{selectedStudent.branch || "N/A"}</p>
+                    )}
+                </div>
+                <div className="w-1/2">
+                    <label className="font-black text-[10px] text-gray-400 uppercase tracking-widest block mb-1">CGPA</label>
+                    {isEditMode ? (
+                    <input 
+                        type="number" 
+                        step="0.01" 
+                        className="w-full border-2 border-gray-100 dark:border-slate-800 p-1.5 rounded-xl outline-none focus:border-green-500 transition-all dark:bg-slate-800 dark:text-white font-bold" 
+                        value={editForm.cgpa} 
+                        onChange={e => setEditForm({...editForm, cgpa: e.target.value})} 
+                    />
+                    ) : (
+                    <p className="font-bold text-gray-900 dark:text-gray-100">{selectedStudent.cgpa || "N/A"}</p>
+                    )}
+                </div>
               </div>
               {isEditMode && (
-                <>
-                  <div>
-                    <label className="font-bold text-gray-500 block">Status</label>
+                <div className="flex gap-3">
+                  <div className="w-1/2">
+                    <label className="font-black text-[10px] text-gray-400 uppercase tracking-widest block mb-1">Status</label>
                     <select 
-                      className="w-full border p-2 rounded" 
+                      className="w-full border-2 border-gray-100 dark:border-slate-800 p-1.5 rounded-xl outline-none focus:border-green-500 transition-all dark:bg-slate-800 dark:text-white font-bold" 
                       value={editForm.status} 
                       onChange={e => setEditForm({...editForm, status: e.target.value})}
                     >
@@ -350,10 +352,10 @@ export default function StudentManagement() {
                       <option value="Rejected">Rejected</option>
                     </select>
                   </div>
-                  <div>
-                    <label className="font-bold text-gray-500 block">Placement Status</label>
+                  <div className="w-1/2">
+                    <label className="font-black text-[10px] text-gray-400 uppercase tracking-widest block mb-1">Placement Status</label>
                     <select 
-                      className="w-full border p-2 rounded" 
+                      className="w-full border-2 border-gray-100 dark:border-slate-800 p-1.5 rounded-xl outline-none focus:border-green-500 transition-all dark:bg-slate-800 dark:text-white font-bold" 
                       value={editForm.placed_status} 
                       onChange={e => setEditForm({...editForm, placed_status: e.target.value})}
                     >
@@ -361,13 +363,13 @@ export default function StudentManagement() {
                       <option value="Placed">Placed</option>
                     </select>
                   </div>
-                </>
+                </div>
               )}
             </div>
-            <div className="mt-6 flex justify-end gap-3">
+            <div className="mt-4 flex justify-end gap-2.5">
               <button 
                 onClick={() => setSelectedStudent(null)} 
-                className="px-4 py-2 border rounded-lg font-bold"
+                className="px-4 py-2 border rounded-xl font-bold text-gray-500 hover:bg-gray-50 transition-all text-xs"
               >
                 Close
               </button>
@@ -387,9 +389,9 @@ export default function StudentManagement() {
                       setActionLoading(null);
                     }
                   }} 
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg font-bold flex items-center gap-2"
+                  className="px-5 py-2 bg-green-600 text-white rounded-xl font-bold flex items-center gap-2 hover:bg-green-700 transition-all shadow-lg text-xs"
                 >
-                  {actionLoading === selectedStudent.id && <Loader2 className="w-4 h-4 animate-spin"/>}
+                  {actionLoading === selectedStudent.id && <Loader2 className="w-3.5 h-3.5 animate-spin"/>}
                   Save Changes
                 </button>
               )}

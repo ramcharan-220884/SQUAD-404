@@ -63,13 +63,13 @@ export default function AccountSettingsView({ profile, onBack, onUpdate, isDark,
         <h2 className="text-2xl font-bold text-[#800000] dark:text-gray-100">Account Settings</h2>
       </div>
 
-      <div className="bg-white dark:bg-slate-800 shadow-sm border border-gray-100 dark:border-slate-700 rounded-2xl p-8 space-y-8">
+      <div className="bg-white dark:bg-slate-800 shadow-sm border border-gray-100 dark:border-slate-700 rounded-2xl p-5 space-y-4">
         
         {/* Dark Mode Toggle */}
-        <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-slate-900/50 rounded-xl">
+        <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-900/50 rounded-xl">
           <div>
-            <h4 className="font-bold text-gray-900 dark:text-white">Dark Mode</h4>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Switch between light and dark themes</p>
+            <h4 className="font-bold text-sm text-gray-900 dark:text-white">Dark Mode</h4>
+            <p className="text-xs text-gray-500 dark:text-gray-400">Switch between light and dark themes</p>
           </div>
           <button 
             onClick={handleToggleDarkMode}
@@ -79,25 +79,25 @@ export default function AccountSettingsView({ profile, onBack, onUpdate, isDark,
           </button>
         </div>
 
-        <form onSubmit={handleSave} className="space-y-6">
+        <form onSubmit={handleSave} className="space-y-4">
           <div>
-            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Email Address</label>
+            <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
             <input 
               type="email" 
               value={email} 
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-3 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-[#800000] focus:border-transparent outline-none dark:bg-slate-900 dark:text-white"
+              className="w-full p-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-[#800000] focus:border-transparent outline-none dark:bg-slate-900 dark:text-white text-sm"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">New Password (leave blank to keep current)</label>
+            <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">New Password (leave blank to keep current)</label>
             <input 
               type="password" 
               value={password} 
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full p-3 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-[#800000] focus:border-transparent outline-none dark:bg-slate-900 dark:text-white"
+              className="w-full p-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-[#800000] focus:border-transparent outline-none dark:bg-slate-900 dark:text-white text-sm"
             />
           </div>
 
@@ -111,16 +111,16 @@ export default function AccountSettingsView({ profile, onBack, onUpdate, isDark,
             <button 
               type="button" 
               onClick={onBack}
-              className="px-6 py-2.5 rounded-xl font-bold text-gray-600 hover:bg-gray-50 transition-colors"
+              className="px-5 py-2 rounded-xl font-bold text-gray-600 hover:bg-gray-50 transition-colors text-xs"
             >
               Cancel
             </button>
             <button 
               type="submit" 
               disabled={isSaving}
-              className="bg-[#800000] text-white px-8 py-2.5 rounded-xl font-bold hover:bg-[#4a0000] transition-all shadow-lg disabled:opacity-50"
+              className="bg-[#800000] text-white px-6 py-2 rounded-xl font-bold hover:bg-[#4a0000] transition-all shadow-lg disabled:opacity-50 text-xs"
             >
-              {isSaving ? 'Saving...' : 'Save Changes'}
+              {isSaving ? 'Saving...' : 'Save'}
             </button>
           </div>
         </form>
