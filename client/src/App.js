@@ -10,7 +10,7 @@ import JobBoard from "./pages/JobBoard";
 import Profile from "./pages/Profile";
 import StudentProfile from "./pages/StudentProfile";
 import ResetPassword from "./pages/ResetPassword";
-import PendingApproval from "./pages/PendingApproval";
+
 import ProtectedRoute from "./components/ProtectedRoute";
 
 import { NotificationProvider } from "./context/NotificationContext";
@@ -34,7 +34,7 @@ function App() {
 
         <Route path="/register" element={<Navigate to="/" replace />} />
 
-        <Route path="/pending-approval" element={<PendingApproval />} />
+
 
         <Route path="/student-dashboard" element={<ProtectedRoute role="student"><StudentDashboard /></ProtectedRoute>} />
 

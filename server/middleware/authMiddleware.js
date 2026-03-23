@@ -40,7 +40,7 @@ export const verifyToken = async (req, res, next) => {
       const dbUser = users[0];
       if (decoded.role !== "admin") {
         if (dbUser.status === "Rejected") return res.status(403).json({ success: false, message: "Account rejected. Please contact support." });
-        if (dbUser.status === "Pending" || dbUser.approved === 0 || dbUser.approved === false) {
+        if (decoded.role === "company" && (dbUser.status === "Pending" || dbUser.approved === 0 || dbUser.approved === false)) {
           return res.status(403).json({ success: false, message: "Your account is pending admin approval" });
         }
       }

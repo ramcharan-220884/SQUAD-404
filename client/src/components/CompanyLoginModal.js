@@ -60,14 +60,14 @@ const CompanyLoginModal = ({ isOpen, onClose, onSwitchToRegister }) => {
         localStorage.setItem('userName', response.user.name);
         localStorage.setItem('userEmail', response.user.email);
         if (response.user.approved === 1) {
-            onClose();
-            navigate('/company-dashboard');
-          } else {
-            showNotification("Your account is awaiting approval.", "warning");
-            setAccessToken(null); // Clear token if not approved
-            localStorage.clear(); // Clear user data
-            setError("Your account is awaiting approval. Please try again later.");
-          }
+          onClose();
+          navigate('/company-dashboard');
+        } else {
+          showNotification("Your account is awaiting approval.", "warning");
+          setAccessToken(null); // Clear token if not approved
+          localStorage.clear(); // Clear user data
+          setError("Your account is awaiting approval. Please try again later.");
+        }
       }
     } catch (err) {
       setError(err.message || 'Login failed. Please check your credentials.');

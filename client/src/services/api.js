@@ -90,21 +90,7 @@ export const authFetch = async (endpoint, options = {}) => {
       }
     }
 
-    // Handle forbidden — detect pending approval and redirect gracefully
-    if (response.status === 403) {
-      let body = {};
-      try { body = await response.clone().json(); } catch (_) {}
-      const msg = (body.message || '').toLowerCase();
-      if (msg.includes('pending') || msg.includes('approval')) {
-        if (window.location.pathname !== "/pending-approval") {
-          window.location.href = "/pending-approval";
-        }
-        return new Response(JSON.stringify({ success: false, message: "Account pending approval." }), {
-          status: 403,
-          headers: { "Content-Type": "application/json" }
-        });
-      }
-    }
+
 
     return response;
   } catch (error) {
