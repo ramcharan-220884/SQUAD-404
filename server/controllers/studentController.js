@@ -6,7 +6,7 @@ export const getProfile = async (req, res, next) => {
     const id = req.user.id;
     const [rows] = await pool.query(
       `SELECT 
-        id, name, email, first_name, last_name, dob, gender, college, degree, 
+        id, name, email, first_name, last_name, dob, gender, college, degree, phone, country_code,
         skills, projects, internships, profile_photo_url, profile_completed,
         branch, cgpa, resume_url, placed_status, dark_mode, created_at 
        FROM students WHERE id = ?`,
@@ -28,7 +28,7 @@ export const updateProfile = async (req, res, next) => {
   try {
     const id = req.user.id;
     const { 
-      name, first_name, last_name, dob, gender, college, degree, 
+      name, first_name, last_name, dob, gender, college, degree, phone, country_code,
       skills, projects, internships, profile_photo_url, profile_completed,
       branch, cgpa, resume_url, dark_mode 
     } = req.body;
@@ -44,6 +44,8 @@ export const updateProfile = async (req, res, next) => {
     if (gender !== undefined) { fields.push("gender = ?"); values.push(gender); }
     if (college !== undefined) { fields.push("college = ?"); values.push(college); }
     if (degree !== undefined) { fields.push("degree = ?"); values.push(degree); }
+    if (phone !== undefined) { fields.push("phone = ?"); values.push(phone); }
+    if (country_code !== undefined) { fields.push("country_code = ?"); values.push(country_code); }
     if (skills !== undefined) { 
         fields.push("skills = ?"); 
         values.push(typeof skills === 'object' ? JSON.stringify(skills) : skills); 
@@ -283,3 +285,20 @@ export const getPublicSettings = async (req, res, next) => {
     next(err);
   }
 };
+// Get Application Rounds for Student Timeline
+export const getMyApplicationRounds = async (req, res, next) => {
+  try {
+    const student_id = req.user.id;
+    const { id } = req.params; // application_id
+
+    // Verify application belongs to student
+    const [[app]] = await pool.query("SELECT id FROM applications WHERE id = ? AND student_id = ?", [id, student_id]);
+    if (!app) return res.status(403).json({ success: false, message: "Unauthorized or not found" });
+
+    const [rounds] = await pool.query("SELECT * FROM application_rounds WHERE application_id = ? ORDER BY date ASC, time ASC", [id]);
+    res.json({ success: true, data: rounds });
+  } catch (err) {
+    next(err);
+  }
+};
+

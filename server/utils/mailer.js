@@ -1,5 +1,7 @@
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
+import { generateEmailTemplate } from './templates.js';
+
 dotenv.config();
 
 // Initialize Transporter
@@ -97,4 +99,20 @@ export const sendOTPEmail = async (email, otp) => {
   `;
 
   return sendEmail({ to: email, subject: "EDUVATE - Email Verification Code", html });
+};
+
+/**
+ * Sends a structured Interview Invitation email
+ */
+export const sendInterviewEmail = async (email, details) => {
+  const html = generateEmailTemplate('interview', details);
+  return sendEmail({ to: email, subject: "Interview Invitation - EDUVATE", html });
+};
+
+/**
+ * Sends a structured Orientation Program email
+ */
+export const sendOrientationEmail = async (email, details) => {
+  const html = generateEmailTemplate('orientation', details);
+  return sendEmail({ to: email, subject: "Orientation Program Details - EDUVATE", html });
 };

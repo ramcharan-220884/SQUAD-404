@@ -127,3 +127,8 @@ export const registerStudent = async (data) => {
     });
     return res.json();
 };
+export const getStudentApplicationRounds = async (applicationId) => {
+  const res = await authFetch(`/students/applications/${applicationId}/rounds`);
+  return handleResponse(res);
+};
+

@@ -6,7 +6,8 @@ import {
   getPublicSettings,
   getCompetitions, registerForCompetition,
   getEvents, registerForEvent,
-  getAssessments, updateAssessmentStatus
+  getAssessments, updateAssessmentStatus,
+  getMyApplicationRounds
 } from "../controllers/studentController.js";
 import { verifyToken, requireRole } from "../middleware/authMiddleware.js";
 import validate from "../middleware/validate.js";
@@ -21,6 +22,7 @@ router.put("/profile", validate(updateProfileSchema), updateProfile);
 router.get("/jobs", getAvailableJobs);
 router.post("/tickets", validate(submitTicketSchema), submitTicket);
 router.delete("/applications/:id", withdrawApplication);
+router.get("/applications/:id/rounds", getMyApplicationRounds);
 router.get("/settings", getPublicSettings);
 
 router.get("/announcements", getAnnouncements);

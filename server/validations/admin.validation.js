@@ -107,3 +107,11 @@ export const createInterviewSchema = {
     company_id: Joi.number().integer().positive().optional()
   }).unknown(true)
 };
+
+export const notifyCandidatesSchema = {
+  body: Joi.object({
+    candidateIds: Joi.array().items(Joi.number().integer().positive()).min(1).required(),
+    type: Joi.string().valid('orientation', 'interview').required(),
+    details: Joi.object().required()
+  })
+};

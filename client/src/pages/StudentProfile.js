@@ -49,6 +49,8 @@ export default function StudentProfile({ isPortal = false }) {
           lastName: data.last_name || (data.name ? data.name.split(' ').slice(1).join(' ') : ''),
           dob: data.dob ? data.dob.split('T')[0] : '',
           gender: data.gender || '',
+          phone: data.phone || '',
+          countryCode: data.country_code || '+91',
           college: data.college || '',
           agreed: true,
           notRobot: true
@@ -101,6 +103,8 @@ export default function StudentProfile({ isPortal = false }) {
     lastName: '',
     dob: '',
     gender: '',
+    phone: '',
+    countryCode: '+91',
     college: '',
     agreed: false,
     notRobot: false
@@ -145,6 +149,11 @@ export default function StudentProfile({ isPortal = false }) {
     if (!basicInfo.lastName) errs.lastName = "Required";
     if (!basicInfo.dob) errs.dob = "Required";
     if (!basicInfo.gender) errs.gender = "Required";
+    if (!basicInfo.phone) {
+      errs.phone = "Required";
+    } else if (!/^[0-9]{10}$/.test(basicInfo.phone)) {
+      errs.phone = "Enter valid 10-digit phone number";
+    }
     if (!basicInfo.college) errs.college = "Required";
     if (!basicInfo.agreed) errs.agreed = "You must agree to T&C";
     if (!basicInfo.notRobot) errs.notRobot = "Please confirm you are not a robot";
@@ -221,6 +230,8 @@ export default function StudentProfile({ isPortal = false }) {
         last_name: basicInfo.lastName,
         dob: basicInfo.dob,
         gender: basicInfo.gender,
+        phone: basicInfo.phone,
+        country_code: basicInfo.countryCode,
         college: basicInfo.college || education.college,
         degree: education.degree,
         cgpa: education.cgpa,
@@ -321,6 +332,17 @@ export default function StudentProfile({ isPortal = false }) {
                           <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Date of Birth</label>
                           <input type="date" name="dob" value={basicInfo.dob} onChange={handleBasicChange} className="w-full p-3 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-[#800000] focus:border-transparent outline-none dark:bg-slate-900" />
                           {basicErrors.dob && <p className="text-red-500 text-xs mt-1">{basicErrors.dob}</p>}
+                        </div>
+                        <div>
+                          <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Phone Number</label>
+                          <div className="flex gap-2">
+                            <select name="countryCode" value={basicInfo.countryCode || "+91"} onChange={handleBasicChange} className="w-1/3 p-3 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-[#800000] focus:border-transparent outline-none dark:bg-slate-900">
+                              <option value="+91">+91 (IN)</option>
+                              <option value="+1">+1 (US)</option>
+                            </select>
+                            <input type="tel" name="phone" value={basicInfo.phone || ""} onChange={handleBasicChange} maxLength="10" placeholder="10-digit number" className="w-2/3 p-3 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-[#800000] focus:border-transparent outline-none dark:bg-slate-900" />
+                          </div>
+                          {basicErrors.phone && <p className="text-red-500 text-xs mt-1">{basicErrors.phone}</p>}
                         </div>
                         <div>
                           <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Gender</label>
@@ -524,6 +546,10 @@ export default function StudentProfile({ isPortal = false }) {
                           <div className="flex p-3 bg-white dark:bg-slate-900 rounded-lg shadow-sm border border-gray-100 dark:border-slate-800">
                             <span className="font-bold text-gray-500 w-28 shrink-0">Name</span> 
                             <span className="font-bold text-gray-900 dark:text-white">{basicInfo.firstName} {basicInfo.lastName}</span>
+                          </div>
+                          <div className="flex p-3 bg-white dark:bg-slate-900 rounded-lg shadow-sm border border-gray-100 dark:border-slate-800">
+                            <span className="font-bold text-gray-500 w-28 shrink-0">Phone</span> 
+                            <span className="font-bold text-gray-900 dark:text-white">{basicInfo.countryCode} {basicInfo.phone}</span>
                           </div>
                           <div className="flex p-3 bg-white dark:bg-slate-900 rounded-lg shadow-sm border border-gray-100 dark:border-slate-800">
                             <span className="font-bold text-gray-500 w-28 shrink-0">Education</span> 
