@@ -725,48 +725,46 @@ export default function StudentProfile({ isPortal = false }) {
                            Download PDF
                         </button>
                       </div>
-                      <div id="resume-preview-content" className="bg-white text-black p-8 md:p-12 w-full max-w-[8.5in] mx-auto overflow-hidden shadow-none border-0" style={{ fontFamily: '"Times New Roman", Times, serif', minHeight: '11in', color: '#000000', backgroundColor: '#ffffff' }}>
+                      <div id="resume-preview-content" className="bg-white text-black p-6 md:p-8 w-full max-w-[8.26in] mx-auto overflow-hidden shadow-none border-0" style={{ fontFamily: '"Times New Roman", Times, serif', minHeight: '11.69in', color: '#000000', backgroundColor: '#ffffff', lineHeight: '1.4' }}>
                         {/* Header Section */}
-                        <div className="text-center mb-6">
-                          <h1 className="text-2xl font-bold uppercase tracking-tight mb-2" style={{ fontSize: '24pt' }}>{basicInfo.firstName} {basicInfo.lastName}</h1>
-                          <div className="text-sm space-x-2 flex justify-center items-center flex-wrap" style={{ fontSize: '10pt' }}>
+                        <div className="text-center mb-4">
+                          <h1 className="font-bold uppercase tracking-tight mb-1" style={{ fontSize: '22pt' }}>{basicInfo.firstName} {basicInfo.lastName}</h1>
+                          <div className="flex justify-center items-center flex-wrap gap-x-2" style={{ fontSize: '10pt' }}>
                             <span>{basicInfo.email}</span>
                             <span>|</span>
                             <span>{basicInfo.countryCode} {basicInfo.phone}</span>
                             <span>|</span>
                             <span>{basicInfo.location}</span>
                           </div>
-                          <hr className="border-t border-black mt-4 mb-2" />
+                          <hr className="border-t border-black mt-2 mb-1" />
                         </div>
 
                         {/* Professional Summary */}
                         {summary && (
-                          <div className="mb-6">
-                            <h3 className="text-sm font-bold uppercase border-b border-black mb-2 pb-0.5" style={{ fontSize: '11pt' }}>Professional Summary</h3>
-                            <p className="text-sm leading-relaxed text-justify" style={{ fontSize: '10pt' }}>{summary}</p>
+                          <div className="mb-4">
+                            <h3 className="font-bold uppercase border-b border-black mb-1 pb-0.5" style={{ fontSize: '11pt' }}>Professional Summary</h3>
+                            <p className="text-justify" style={{ fontSize: '10pt' }}>{summary}</p>
                           </div>
                         )}
 
                         {/* Education */}
-                        <div className="mb-6">
-                          <h3 className="text-sm font-bold uppercase border-b border-black mb-2 pb-0.5" style={{ fontSize: '11pt' }}>Education</h3>
-                          <div className="mb-2">
+                        <div className="mb-4">
+                          <h3 className="font-bold uppercase border-b border-black mb-1 pb-0.5" style={{ fontSize: '11pt' }}>Education</h3>
+                          <div className="mb-1">
                             <div className="flex justify-between items-baseline font-bold" style={{ fontSize: '10pt' }}>
                               <span>{education.college}</span>
-                              <span className="text-xs">{education.startYear} – {education.endYear}</span>
+                              <span>({education.startYear} – {education.endYear})</span>
                             </div>
-                            <div className="flex justify-between items-baseline italic" style={{ fontSize: '10pt' }}>
-                              <span>{education.degree} in {education.specialization}</span>
-                              <span className="text-xs font-bold not-italic">CGPA: {education.cgpa}</span>
-                            </div>
+                            <div style={{ fontSize: '10pt' }}>{education.degree} + {education.specialization}</div>
+                            <div style={{ fontSize: '10pt' }}>CGPA: {education.cgpa}</div>
                           </div>
                         </div>
 
                         {/* Technical Skills */}
                         {(skills || tools) && (
-                          <div className="mb-6">
-                            <h3 className="text-sm font-bold uppercase border-b border-black mb-2 pb-0.5" style={{ fontSize: '11pt' }}>Technical Skills</h3>
-                            <div className="text-sm space-y-1" style={{ fontSize: '10pt' }}>
+                          <div className="mb-4">
+                            <h3 className="font-bold uppercase border-b border-black mb-1 pb-0.5" style={{ fontSize: '11pt' }}>Technical Skills</h3>
+                            <div className="space-y-0.5" style={{ fontSize: '10pt' }}>
                               {skills && <p><span className="font-bold">Languages/Frameworks:</span> {skills}</p>}
                               {tools && <p><span className="font-bold">Tools & Technologies:</span> {tools}</p>}
                             </div>
@@ -775,13 +773,12 @@ export default function StudentProfile({ isPortal = false }) {
 
                         {/* Projects */}
                         {projectList.length > 0 && (
-                          <div className="mb-6">
-                            <h3 className="text-sm font-bold uppercase border-b border-black mb-2 pb-0.5" style={{ fontSize: '11pt' }}>Projects</h3>
+                          <div className="mb-4">
+                            <h3 className="font-bold uppercase border-b border-black mb-1 pb-0.5" style={{ fontSize: '11pt' }}>Projects</h3>
                             {projectList.map((p, i) => (
-                              <div key={i} className="mb-3">
-                                <div className="font-bold text-sm" style={{ fontSize: '10pt' }}>{p.title}</div>
-                                {p.technologies && <p className="text-xs italic mb-1" style={{ fontSize: '9pt' }}>Tech used: {p.technologies}</p>}
-                                <p className="text-sm leading-snug" style={{ fontSize: '10pt' }}>• {p.description}</p>
+                              <div key={i} className="mb-2">
+                                <div className="font-bold" style={{ fontSize: '10pt' }}>{p.title}</div>
+                                <p className="leading-snug" style={{ fontSize: '10pt' }}>• {p.description} {p.technologies && <span className="italic">({p.technologies})</span>}</p>
                               </div>
                             ))}
                           </div>
@@ -789,15 +786,15 @@ export default function StudentProfile({ isPortal = false }) {
 
                         {/* Experience */}
                         {experiences.length > 0 && (
-                          <div className="mb-6">
-                            <h3 className="text-sm font-bold uppercase border-b border-black mb-2 pb-0.5" style={{ fontSize: '11pt' }}>Professional Experience</h3>
+                          <div className="mb-4">
+                            <h3 className="font-bold uppercase border-b border-black mb-1 pb-0.5" style={{ fontSize: '11pt' }}>Professional Experience</h3>
                             {experiences.map((exp, i) => (
-                              <div key={i} className="mb-3">
+                              <div key={i} className="mb-2">
                                 <div className="flex justify-between items-baseline font-bold" style={{ fontSize: '10pt' }}>
                                   <span>{exp.company} — {exp.role}</span>
-                                  <span className="text-xs">{exp.startDate} – {exp.endDate}</span>
+                                  <span>({exp.startDate} – {exp.endDate})</span>
                                 </div>
-                                <p className="text-sm mt-1 leading-snug" style={{ fontSize: '10pt' }}>• {exp.description}</p>
+                                <p className="mt-0.5 leading-snug" style={{ fontSize: '10pt' }}>• {exp.description}</p>
                               </div>
                             ))}
                           </div>
@@ -805,13 +802,13 @@ export default function StudentProfile({ isPortal = false }) {
 
                         {/* Certifications */}
                         {certifications && (
-                          <div className="mb-6">
-                            <h3 className="text-sm font-bold uppercase border-b border-black mb-2 pb-0.5" style={{ fontSize: '11pt' }}>Certifications</h3>
-                            <p className="text-sm whitespace-pre-wrap leading-snug" style={{ fontSize: '10pt' }}>
+                          <div className="mb-4">
+                            <h3 className="font-bold uppercase border-b border-black mb-1 pb-0.5" style={{ fontSize: '11pt' }}>Certifications</h3>
+                            <div className="whitespace-pre-wrap leading-snug" style={{ fontSize: '10pt' }}>
                               {certifications.split('\n').filter(Boolean).map((cert, idx) => (
                                 <span key={idx} className="block">• {cert}</span>
                               ))}
-                            </p>
+                            </div>
                           </div>
                         )}
                       </div>
