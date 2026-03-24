@@ -54,7 +54,8 @@ import {
   getPendingUsers,
   approveUser,
   rejectUser,
-  getPlacementAnalytics
+  getPlacementAnalytics,
+  getAllStudents
 } from "../services/adminService";
 
 const PIE_COLORS = ["#16a34a", "#facc15", "#dc2626"];
@@ -101,6 +102,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [pendingResources, setPendingResources] = useState(getAdminResPending());
+  const [studentStats, setStudentStats] = useState({ placed: 0, unplaced: 0 });
 
   // ✅ ADMIN1 LOGOUT (FINAL)
   const handleConfirmLogout = () => {
@@ -121,14 +123,30 @@ export default function AdminDashboard() {
   const fetchData = React.useCallback(async () => {
     setLoading(true);
     try {
-      const [statsData, pendingData, analyticsData] = await Promise.all([
+      const [statsData, pendingData, analyticsData, studentsData] = await Promise.all([
         getStats(),
         getPendingUsers(),
-        getPlacementAnalytics().catch(() => [])
+        getPlacementAnalytics().catch(() => []),
+        getAllStudents(1, 10000).catch(() => ({ data: [] }))
       ]);
 
       setStats(statsData);
       setPlacementAnalytics(analyticsData);
+
+      // Process real student data for Pie Chart
+      const studentsList = studentsData.data || studentsData;
+      if (Array.isArray(studentsList)) {
+        let placed = 0;
+        let unplaced = 0;
+        studentsList.forEach(s => {
+          if (s.status === 'Selected' || s.placed_status === 'Placed') {
+            placed++;
+          } else {
+            unplaced++;
+          }
+        });
+        setStudentStats({ placed, unplaced });
+      }
 
       setPendingStudents(
         pendingData.filter((u) => u.type === "student")
@@ -280,9 +298,8 @@ export default function AdminDashboard() {
     ];
 
     const pieData = [
-      { name: "Placed", value: stats?.placedStudents ?? 0 },
-      { name: "In Progress", value: stats?.inProgressStudents ?? 0 },
-      { name: "Unplaced", value: stats?.unplacedStudents ?? 0 },
+      { name: "Placed", value: studentStats.placed },
+      { name: "Unplaced", value: studentStats.unplaced }
     ];
 
     return (
@@ -343,54 +360,8 @@ export default function AdminDashboard() {
         </div>
 
         {/* Pending Approvals */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Pending Students */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-50 flex items-center justify-between">
-              <h3 className="font-bold text-gray-800 flex items-center gap-2">
-                <UserPlus className="w-5 h-5 text-green-600" />
-                Pending Students ({pendingStudents.length})
-              </h3>
-            </div>
-            <div className="divide-y divide-gray-50">
-              {pendingStudents.length === 0 ? (
-                <p className="text-center text-gray-400 font-medium py-8">No pending students</p>
-              ) : (
-                pendingStudents.slice(0, 5).map((u) => (
-                  <div key={u.id} className="px-6 py-4 flex items-center justify-between">
-                    <div>
-                      <p className="font-bold text-gray-800 text-sm">{u.name}</p>
-                      <p className="text-xs text-gray-400">{u.email}</p>
-                    </div>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => handleApproveUser(u.id, "student")}
-                        className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
-                      >
-                        <CheckCircle className="w-5 h-5" />
-                      </button>
-                      <button
-                        onClick={() => handleRejectUser(u.id, "student")}
-                        className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                      >
-                        <XCircle className="w-5 h-5" />
-                      </button>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-            {pendingStudents.length > 5 && (
-              <div className="px-6 py-3 border-t border-gray-50">
-                <button
-                  onClick={() => setActiveSection("students")}
-                  className="text-sm text-green-600 font-bold hover:underline flex items-center gap-1"
-                >
-                  View all {pendingStudents.length} pending students <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-            )}
-          </div>
+        <div className="grid grid-cols-1 gap-6">
+
 
           {/* Pending Recruiters */}
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
@@ -480,27 +451,7 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* Quick Nav Cards */}
-        <div>
-          <h3 className="text-lg font-bold text-gray-800 mb-4">Quick Access</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-            {NAV_SECTIONS.filter(s => s.id !== "home").map((section) => {
-              const Icon = section.icon;
-              return (
-                <button
-                  key={section.id}
-                  onClick={() => setActiveSection(section.id)}
-                  className="flex flex-col items-center gap-2 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-green-200 hover:-translate-y-1 transition-all group"
-                >
-                  <div className="p-2 bg-green-50 text-green-700 rounded-xl group-hover:bg-green-100 transition-colors">
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <span className="text-xs font-bold text-gray-600 text-center leading-tight">{section.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
+
       </div>
     );
   };
