@@ -6,7 +6,7 @@ import { getAdminInterviews, createInterview, updateInterview, deleteInterview }
 import { postAnnouncement, updateAnnouncement, deleteAnnouncement } from "../controllers/adminAnnouncementController.js";
 
 // ── Phase 2 Domain Controllers ─────────────────────────────────────────────
-import { getAdminCompetitions, createCompetition, updateCompetition, deleteCompetition } from "../controllers/adminCompetitionController.js";
+import { getAdminCompetitions, createCompetition, updateCompetition, deleteCompetition, updateCompetitionStatus } from "../controllers/adminCompetitionController.js";
 import { getAdminEvents, createEvent, updateEvent, deleteEvent } from "../controllers/adminEventController.js";
 import { getAdminAssessments, getAssessmentAttempts, createAssessment, updateAssessment, deleteAssessment } from "../controllers/adminAssessmentController.js";
 import { getSettings, updateSettings, getAdminProfile, updateAdminProfile, changeAdminPassword } from "../controllers/adminSettingsController.js";
@@ -68,6 +68,7 @@ router.get("/competitions", getAdminCompetitions);
 router.post("/competitions", validate(createCompetitionSchema), createCompetition);
 router.patch("/competitions/:id", validate(createCompetitionSchema), updateCompetition);
 router.delete("/competitions/:id", deleteCompetition);
+router.patch("/competitions/:id/status", updateCompetitionStatus);
 
 // ── Events ─────────────────────────────────────────────────────────────────
 router.get("/events", getAdminEvents);

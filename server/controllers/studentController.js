@@ -1,4 +1,5 @@
 import { pool } from "../config/db.js";
+import * as competitionService from "../services/competitionService.js";
 
 // Get student profile
 export const getProfile = async (req, res, next) => {
@@ -164,21 +165,28 @@ export const getAnnouncements = async (req, res, next) => {
   }
 };
 
-// Get competitions for student
+// Get competitions for student (only approved and upcoming)
 export const getCompetitions = async (req, res, next) => {
   try {
     const student_id = req.user.id;
-    const [rows] = await pool.query(`
-      SELECT c.*, 
-             CASE WHEN cr.id IS NOT NULL THEN 1 ELSE 0 END as registered
-      FROM competitions c
-      LEFT JOIN competition_registrations cr ON cr.competition_id = c.id AND cr.student_id = ?
-      WHERE c.deadline >= CURDATE()
-      ORDER BY c.deadline ASC
-    `, [student_id]);
-    
-    const formatted = rows.map(r => ({ ...r, registered: r.registered === 1 }));
-    res.json({ success: true, data: formatted });
+    const data = await competitionService.fetchApprovedCompetitions(student_id);
+    res.json({ success: true, data });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Submit a new competition (student)
+export const submitCompetition = async (req, res, next) => {
+  try {
+    const student_id = req.user.id;
+    const competitionData = {
+      ...req.body,
+      createdBy: student_id,
+      status: 'pending'
+    };
+    const data = await competitionService.createCompetitionRecord(competitionData);
+    res.status(201).json({ success: true, message: "Competition submitted for approval", data });
   } catch (err) {
     next(err);
   }

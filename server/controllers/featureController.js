@@ -12,7 +12,7 @@ export const getEvents = async (req, res, next) => {
 
 export const getCompetitions = async (req, res, next) => {
     try {
-        const [rows] = await pool.query("SELECT * FROM competitions ORDER BY deadline ASC");
+        const [rows] = await pool.query("SELECT * FROM competitions ORDER BY date ASC");
         res.json({ success: true, data: rows });
     } catch (err) {
         next(err);

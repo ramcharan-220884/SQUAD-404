@@ -86,6 +86,14 @@ export const registerForCompetition = async (competition_id) => {
   return handleResponse(res);
 };
 
+export const submitCompetition = async (data) => {
+  const res = await authFetch(`/students/competitions`, {
+    method: "POST",
+    body: JSON.stringify(data)
+  });
+  return handleResponse(res);
+};
+
 // Assessments
 export const getAssessments = async () => {
   const res = await authFetch(`/students/assessments`);

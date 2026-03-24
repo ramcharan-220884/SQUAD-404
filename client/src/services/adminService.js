@@ -286,6 +286,14 @@ export const updateCompetition = async (id, data) => {
   return handleResponse(res);
 };
 
+export const updateCompetitionStatus = async (id, status) => {
+  const res = await authFetch(`/admin/competitions/${id}/status`, {
+    method: "PATCH",
+    body: JSON.stringify({ status })
+  });
+  return handleResponse(res);
+};
+
 export const updateEvent = async (id, data) => {
   const res = await authFetch(`/admin/events/${id}`, {
     method: "PATCH",

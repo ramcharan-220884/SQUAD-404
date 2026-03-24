@@ -4,14 +4,14 @@ import {
   submitTicket,
   getAnnouncements, withdrawApplication,
   getPublicSettings,
-  getCompetitions, registerForCompetition,
+  getCompetitions, registerForCompetition, submitCompetition,
   getEvents, registerForEvent,
   getAssessments, updateAssessmentStatus,
   getMyApplicationRounds
 } from "../controllers/studentController.js";
 import { verifyToken, requireRole } from "../middleware/authMiddleware.js";
 import validate from "../middleware/validate.js";
-import { updateProfileSchema, submitTicketSchema, registerCompetitionEventSchema, updateAssessmentStatusSchema } from "../validations/student.validation.js";
+import { updateProfileSchema, submitTicketSchema, registerCompetitionEventSchema, updateAssessmentStatusSchema, createCompetitionSchema } from "../validations/student.validation.js";
 const router = express.Router();
 
 router.use(verifyToken);
@@ -27,6 +27,7 @@ router.get("/settings", getPublicSettings);
 
 router.get("/announcements", getAnnouncements);
 router.get("/competitions", getCompetitions);
+router.post("/competitions", validate(createCompetitionSchema), submitCompetition);
 router.post("/competitions/register", validate(registerCompetitionEventSchema), registerForCompetition);
 router.get("/events", getEvents);
 router.post("/events/register", validate(registerCompetitionEventSchema), registerForEvent);

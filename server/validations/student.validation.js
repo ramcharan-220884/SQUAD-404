@@ -50,3 +50,13 @@ export const updateAssessmentStatusSchema = {
     score: Joi.number().min(0).max(100).optional()
   })
 };
+
+export const createCompetitionSchema = {
+  body: Joi.object({
+    title: Joi.string().min(3).max(150).required(),
+    description: Joi.string().optional().allow(''),
+    date: Joi.date().iso().required(),
+    category: Joi.string().optional().allow(''),
+    registrationLink: Joi.string().uri().optional().allow('')
+  }).unknown(true)
+};
