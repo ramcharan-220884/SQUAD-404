@@ -26,7 +26,7 @@ import CompanyManagement from "../components/dashboard/CompanyManagement";
 import Announcements from "../components/dashboard/Announcements";
 import Settings from "../components/dashboard/Settings";
 import HelpSupport from "../components/dashboard/HelpSupport";
-import ThemeToggle from "../components/dashboard/ThemeToggle";
+
 import Competitions from "../components/dashboard/Competitions";
 import Events from "../components/dashboard/Events";
 import Assessments from "../components/dashboard/Assessments";
@@ -237,9 +237,8 @@ export default function AdminDashboard() {
           <CandidateCommunication />
         ) : (
           <>
-            <div className="flex justify-between mb-6">
+            <div className="flex justify-between items-center mb-6">
               <h2 className="text-3xl font-bold">Overview Dashboard</h2>
-              <ThemeToggle role="admin" />
             </div>
 
             <div className="grid grid-cols-3 gap-6 mb-10">
@@ -315,6 +314,36 @@ export default function AdminDashboard() {
         )}
 
       </main>
+
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50">
+          <div className="bg-white p-6 rounded-xl">
+            <p className="mb-4">Are you sure you want to logout?</p>
+
+            <div className="flex gap-4">
+              <button
+                onClick={()=>setShowLogoutConfirm(false)}
+                className="px-4 py-2 bg-gray-200 rounded"
+              >
+                Cancel
+              </button>
+
+              <Link
+                to="/"
+                onClick={()=>{
+                  localStorage.removeItem("adminToken");
+                  sessionStorage.clear();
+                }}
+                className="px-4 py-2 bg-red-600 text-white rounded"
+              >
+                Logout
+              </Link>
+            </div>
+
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
