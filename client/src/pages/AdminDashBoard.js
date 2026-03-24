@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import socketService from "../services/socketService";
 import {
   LayoutDashboard,
@@ -76,7 +76,23 @@ export default function AdminDashboard() {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [pendingResources, setPendingResources] = useState(getAdminResPending);
 
-  const location = useLocation();
+   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleConfirmLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("userId");
+    sessionStorage.clear();
+    socketService.disconnect();
+    navigate("/");
+  };
+
+  const handleCancelLogout = () => {
+    setShowLogoutConfirm(false);
+  };
 
   const fetchData = React.useCallback(async () => {
     setLoading(true);
@@ -315,6 +331,23 @@ export default function AdminDashboard() {
         )}
 
       </main>
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutConfirm && (
+        <div className="db-logout-modal-overlay">
+          <div className="db-logout-modal">
+            <div className="db-logout-modal-icon">
+              <LogOut size={28} />
+            </div>
+            <h3>Log Out</h3>
+            <p>Are you sure you want to log out?</p>
+            <div className="db-logout-modal-actions">
+              <button className="db-btn-cancel" onClick={handleCancelLogout}>Cancel</button>
+              <button className="db-btn-confirm" onClick={handleConfirmLogout}>Log Out</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
