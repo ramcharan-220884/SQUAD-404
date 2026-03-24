@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import socketService from "../services/socketService";
 import {
   LayoutDashboard,
@@ -15,7 +15,6 @@ import {
   XCircle,
   Megaphone,
   Trophy,
-  Mic,
   MessageSquare,
   LogOut
 } from "lucide-react";
@@ -75,7 +74,6 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [pendingResources, setPendingResources] = useState(getAdminResPending);
-  const [active, setActive] = useState("Home");
 
   const location = useLocation();
 
@@ -193,17 +191,17 @@ export default function AdminDashboard() {
         </div>
 
         <nav className="flex-1 px-4 space-y-2">
-          <Link to="/admin-dashboard" onClick={() => { setActive("Home"); document.getElementById("dashboard-top")?.scrollIntoView({ behavior: "smooth" }); }} className={active === "Home" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><LayoutDashboard size={18}/> Home</Link>
-          <Link to="/admin-dashboard/students" onClick={() => setActive("Students")} className={active === "Students" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><Users size={18}/> Students</Link>
-          <Link to="/admin-dashboard/companies" onClick={() => setActive("Companies")} className={active === "Companies" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><Building size={18}/> Companies</Link>
-          <Link to="/admin-dashboard/announcements" onClick={() => setActive("Announcements")} className={active === "Announcements" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><Megaphone size={18}/> Announcements</Link>
-          <Link to="/admin-dashboard/competitions" onClick={() => setActive("Competitions")} className={active === "Competitions" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><Trophy size={18}/> Competitions</Link>
-          <Link to="/admin-dashboard/events" onClick={() => setActive("Events")} className={active === "Events" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><Calendar size={18}/> Events</Link>
+          <Link to="/admin-dashboard" onClick={() => { document.getElementById("dashboard-top")?.scrollIntoView({ behavior: "smooth" }); }} className={location.pathname === "/admin-dashboard" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><LayoutDashboard size={18}/> Home</Link>
+          <Link to="/admin-dashboard/students" className={location.pathname === "/admin-dashboard/students" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><Users size={18}/> Students</Link>
+          <Link to="/admin-dashboard/companies" className={location.pathname === "/admin-dashboard/companies" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><Building size={18}/> Companies</Link>
+          <Link to="/admin-dashboard/announcements" className={location.pathname === "/admin-dashboard/announcements" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><Megaphone size={18}/> Announcements</Link>
+          <Link to="/admin-dashboard/competitions" className={location.pathname === "/admin-dashboard/competitions" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><Trophy size={18}/> Competitions</Link>
+          <Link to="/admin-dashboard/events" className={location.pathname === "/admin-dashboard/events" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><Calendar size={18}/> Events</Link>
 
-          <Link to="/admin-dashboard/applications" onClick={() => setActive("Applications")} className={active === "Applications" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><MessageSquare size={18}/> Applications</Link>
+          <Link to="/admin-dashboard/applications" className={location.pathname === "/admin-dashboard/applications" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><MessageSquare size={18}/> Applications</Link>
 
-          <Link to="/admin-dashboard/settings" onClick={() => setActive("Settings")} className={active === "Settings" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><SettingsIcon size={18}/> Settings</Link>
-          <Link to="/admin-dashboard/help" onClick={() => setActive("Help")} className={active === "Help" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><HelpCircle size={18}/> Help</Link>
+          <Link to="/admin-dashboard/settings" className={location.pathname === "/admin-dashboard/settings" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><SettingsIcon size={18}/> Settings</Link>
+          <Link to="/admin-dashboard/help" className={location.pathname === "/admin-dashboard/help" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><HelpCircle size={18}/> Help</Link>
 
           <button onClick={() => setShowLogoutConfirm(true)} className="flex gap-2 p-2 text-red-300">
             <LogOut size={18}/> Logout
