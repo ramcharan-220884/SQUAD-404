@@ -1,4 +1,6 @@
 import { pool } from "../config/db.js";
+import { sendApplicationConfirmationEmail } from "../utils/mailer.js";
+import { generateWhatsAppMessage } from "../utils/templates.js";
 // io removed from here, now accessed via req.io
 
 // Student applies for job
@@ -13,7 +15,7 @@ export const applyJob = async (req, res) => {
     }
 
     // 1 & 2. Check Job and Deadline
-    const [[job]] = await pool.query("SELECT * FROM jobs WHERE id = ?", [job_id]);
+    const [[job]] = await pool.query("SELECT jobs.*, companies.name AS company_name FROM jobs JOIN companies ON jobs.company_id = companies.id WHERE jobs.id = ?", [job_id]);
     if (!job) return res.status(404).json({ success: false, message: "Job not found" });
     if (new Date(job.deadline) < new Date(new Date().setHours(0,0,0,0))) {
       return res.status(400).json({ success: false, message: "Deadline has expired" });
@@ -87,7 +89,25 @@ export const applyJob = async (req, res) => {
       });
     }
 
-    res.json({ success: true, message: "Application submitted successfully" });
+    // Generate WhatsApp Link
+    let whatsappLink = null;
+    if (student.phone) {
+      const waMessage = generateWhatsAppMessage('application_confirmation', {
+        name: student.name,
+        applicationId: appCode,
+        jobTitle: job.title,
+        companyName: job.company_name,
+      });
+      whatsappLink = `https://wa.me/${student.phone}?text=${encodeURIComponent(waMessage)}`;
+    }
+
+    // Send Confirmation Email safely
+    sendApplicationConfirmationEmail(student, job, {
+      application_code: appCode,
+      created_at: new Date().toISOString()
+    }).catch(err => console.error("Optional email dispatch failed:", err));
+
+    res.json({ success: true, message: "Application submitted successfully. Confirmation email sent.", whatsappLink });
 
   } catch (error) {
     if (connection) {

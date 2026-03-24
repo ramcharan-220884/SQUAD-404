@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import socketService from "../services/socketService";
 import {
   LayoutDashboard,
@@ -77,6 +77,13 @@ export default function AdminDashboard() {
   const [pendingResources, setPendingResources] = useState(getAdminResPending);
 
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
 
   const fetchData = React.useCallback(async () => {
     setLoading(true);
@@ -315,6 +322,31 @@ export default function AdminDashboard() {
         )}
 
       </main>
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl shadow-lg max-w-sm w-full p-6 text-center">
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Confirm Logout</h3>
+            <p className="text-gray-500 mb-6 font-medium">Are you sure you want to log out of the admin panel?</p>
+            <div className="flex justify-center gap-4">
+              <button 
+                onClick={() => setShowLogoutConfirm(false)}
+                className="px-6 py-2 rounded-lg font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleLogout}
+                className="px-6 py-2 rounded-lg font-bold text-white bg-red-600 hover:bg-red-700 transition-colors"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
