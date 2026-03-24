@@ -178,10 +178,10 @@ function ResourcesSection() {
           style={{
             display: 'inline-flex', alignItems: 'center', gap: '8px',
             padding: '10px 20px', borderRadius: '20px',
-            background: 'linear-gradient(90deg, #16a34a, #15803d)',
+            background: 'linear-gradient(90deg, #800000, #4a0000)',
             color: '#fff', fontSize: '13px', fontWeight: 700,
             border: 'none', cursor: 'pointer',
-            boxShadow: '0 4px 12px rgba(22,163,74,0.25)',
+            boxShadow: '0 4px 12px rgba(128,0,0,0.25)',
             transition: 'all 0.2s ease',
           }}
           onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-1px)'}
@@ -221,7 +221,7 @@ function ResourcesSection() {
         {mergedItems.map((item, idx) => (
           <div key={idx} style={{
             background: '#fff', borderRadius: '12px', padding: '20px',
-            border: item.status === 'approved' ? '1px solid #bbf7d0' : '1px solid #e8ecf0',
+            border: item.status === 'approved' ? '1px solid #fee2e2' : '1px solid #e8ecf0',
             boxShadow: '0 2px 8px rgba(10,37,64,0.04)',
             transition: 'transform 0.2s ease, box-shadow 0.2s ease',
             display: 'flex', flexDirection: 'column', justifyContent: 'space-between'
@@ -231,7 +231,7 @@ function ResourcesSection() {
           >
             <div>
               {item.status === 'approved' && (
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '10px', fontWeight: 700, color: '#16a34a', background: '#dcfce7', padding: '2px 8px', borderRadius: '20px', marginBottom: '8px', border: '1px solid #bbf7d0', textTransform: 'uppercase' }}>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '10px', fontWeight: 700, color: '#800000', background: '#fdf2f2', padding: '2px 8px', borderRadius: '20px', marginBottom: '8px', border: '1px solid #fee2e2', textTransform: 'uppercase' }}>
                   ✓ Community
                 </span>
               )}
@@ -273,7 +273,7 @@ function ResourcesSection() {
             {submitted ? (
               <div style={{ textAlign: 'center', padding: '24px 0' }}>
                 <div style={{ fontSize: '40px', marginBottom: '12px' }}>✅</div>
-                <p style={{ fontWeight: 700, color: '#16a34a', fontSize: '16px' }}>Submitted for admin approval!</p>
+                <p style={{ fontWeight: 700, color: '#800000', fontSize: '16px' }}>Submitted for admin approval!</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -316,7 +316,7 @@ function ResourcesSection() {
                     Cancel
                   </button>
                   <button type="submit"
-                    style={{ padding: '10px 24px', borderRadius: '12px', background: 'linear-gradient(90deg, #16a34a, #15803d)', color: '#fff', fontSize: '13px', fontWeight: 700, border: 'none', cursor: 'pointer', boxShadow: '0 4px 12px rgba(22,163,74,0.25)' }}>
+                    style={{ padding: '10px 24px', borderRadius: '12px', background: 'linear-gradient(90deg, #800000, #4a0000)', color: '#fff', fontSize: '13px', fontWeight: 700, border: 'none', cursor: 'pointer', boxShadow: '0 4px 12px rgba(128,0,0,0.25)' }}>
                     Submit for Approval
                   </button>
                 </div>
@@ -394,7 +394,7 @@ export default function StudentDashboard() {
   };
 
   return (
-    <div className="db-root">
+    <div className="db-root student-dashboard">
       {/* Sidebar */}
       <Sidebar activeItem={activePage} onItemClick={setActivePage} />
 
