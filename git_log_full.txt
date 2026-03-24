@@ -1,0 +1,50 @@
+4993b0b forms text  updated
+a880b4a forms updated
+7ca4d1c Merge pull request #50 from ramcharan-220884/admin2
+279aee6 Merge pull request #51 from ramcharan-220884/company
+9395821 updated resource section
+73b1c3c profile section
+64a50e6 updated events section
+d7b3ea2 updated competions section
+6501aa5 added basic filter for jobs
+6dd4766 updated profile section
+e0b6da7 Merge pull request #49 from ramcharan-220884/student
+e9eb506 Fix ONLY_FULL_GROUP_BY SQL syntax error in adminStudentService
+9e6105c Merge pull request #48 from ramcharan-220884/student
+a181f18 Fix import path in features migration script
+9f68aa3 Merge pull request #47 from ramcharan-220884/student
+cbf7e57 updated profile section in student dashboard
+1352759 Enhance Student Dashboard Events and restore Admin Dashboard routing
+4f71be4 Merge pull request #46 from ramcharan-220884/backend
+828dca1 Merge branch 'development' into backend
+149c5aa Merge pull request #43 from ramcharan-220884/admin1
+4ba5ed7 Merge pull request #45 from ramcharan-220884/company
+fb60d7c feat: complete candidate hiring pipeline and communication system
+08d8514 removed interviews section in admin dashboard
+9d437bc removed student approval by admin
+edc7f59 Merge branch 'development' into admin1
+e9b3468 manual approval of student is removed
+0569ff3 added
+e437a5d added basic interview feature
+afbd3e3 removed assessments from student dashboard
+cba0dce removed assessments from student dashboard
+a546f46 removed assesment in admin dashboard
+9258a5f Merge pull request #40 from ramcharan-220884/student
+674c795 feat: add email OTP verification for company sign-up. Closes #31
+afaa246 Merge branch 'development' of https://github.com/ramcharan-220884/SQUAD-404 into student
+024c21a Fix ESLint warnings: remove unused imports, vars, and suppress source map warnings
+e5efcfa Merge pull request #39 from ramcharan-220884/company
+4769477 removed unnecessary features in company
+27c3dc4 added analog  resources
+b9b149e added digital resources
+8e382f2 added DSA resource
+0e59aca added aptitude resources
+d347c00 added resource section
+eef105f Merge pull request #30 from ramcharan-220884/company
+4c72b92 updated login form
+69353e0 added
+afa9d56 Merge pull request #28 from ramcharan-220884/backend
+3dde046 backend integration and Google Oauth done
+be91fc4 add
+1877372 Resolved merge conflict in AdminDashboard
+224918b Merge pull request #26 from ramcharan-220884/student

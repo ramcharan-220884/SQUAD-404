@@ -104,8 +104,7 @@ const LoginModal = ({ isOpen, onClose, onSwitchToRegister, initialRole = "studen
             )}
 
             <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[#346b41]/5 text-[#346b41] text-[10px] font-extrabold uppercase tracking-[0.2em] mb-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#346b41] animate-pulse"></span>
-              Secure Portal Access
+              
             </div>
 
             {error && (

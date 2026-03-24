@@ -47,7 +47,7 @@ export default function Login() {
 
   return (
     <div 
-      className="min-h-screen flex items-center justify-center py-10 px-4 relative font-sans"
+      className="min-h-screen flex items-center justify-center py-4 px-4 relative font-sans overflow-y-auto"
     >
       {/* Background with blur and light overlay */}
       <div 
@@ -59,23 +59,23 @@ export default function Login() {
       ></div>
       <div className="absolute inset-0 z-0 bg-white/60"></div>
 
-      <div className="w-full max-w-md bg-white rounded-lg shadow-2xl overflow-hidden relative z-10 p-8 border border-gray-100">
+      <div className="w-full max-w-md bg-white rounded-lg shadow-2xl relative z-10 p-6 border border-gray-100 overflow-y-auto" style={{maxHeight: '95vh'}}>
         
         {/* Logo and Branding */}
-        <div className="flex items-center justify-center mb-6 gap-2">
+        <div className="flex items-center justify-center mb-4 gap-2">
           {/* Shield SVG with Academic Cap inside */}
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#346b41" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             {/* Academic cap inside */}
             <path d="M12 8.5L7 11l5 2.5 5-2.5-5-2.5z" stroke="#346b41" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="currentColor"/>
             <path d="M9 12v3c0 1.5 3 2.5 3 2.5s3-1 3-2.5v-3" stroke="#346b41" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
 
-          <h1 className="text-3xl font-extrabold text-[#052c42] tracking-wider">UPMS</h1>
+          <h1 className="text-2xl font-extrabold text-[#052c42] tracking-wider">UPMS</h1>
         </div>
 
         {/* Role Tabs */}
-        <div className="flex border border-gray-800 rounded-lg overflow-hidden mb-6 w-full">
+        <div className="flex border border-gray-800 rounded-lg overflow-hidden mb-4 w-full">
           <button
             type="button"
             onClick={() => handleRoleChange("student")}
@@ -106,12 +106,12 @@ export default function Login() {
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md mb-6 text-sm">
+          <div className="bg-red-50 border border-red-200 text-red-600 px-3 py-2 rounded-md mb-3 text-sm">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-3">
           <div>
             <label className="block text-sm font-bold text-gray-900 mb-1">Email</label>
             <div className="relative">
@@ -169,19 +169,19 @@ export default function Login() {
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
-      </div>
 
-      {/* Footer Text below Card */}
-      <div className="absolute bottom-12 w-full text-center z-10 flex flex-col gap-1 items-center">
-        <p className="text-gray-900 font-medium text-[15px]">
-          Don't have an account?{" "}
-          <Link to="/register" className="text-[#22c55e] font-semibold hover:underline">
-            Sign Up
-          </Link>
-        </p>
-        <p className="text-gray-900 font-medium text-[15px]">
-          Student <Link to="/register?role=student" className="text-[#22c55e] font-semibold hover:underline">Sign Up</Link> or Recruiter <Link to="/register?role=company" className="text-[#22c55e] font-semibold hover:underline">Sign Up</Link>
-        </p>
+        {/* Footer */}
+        <div className="mt-4 text-center flex flex-col gap-1 items-center">
+          <p className="text-gray-900 font-medium text-[15px]">
+            Don't have an account?{" "}
+            <Link to="/register" className="text-[#22c55e] font-semibold hover:underline">
+              Sign Up
+            </Link>
+          </p>
+          <p className="text-gray-900 font-medium text-[15px]">
+            Student <Link to="/register?role=student" className="text-[#22c55e] font-semibold hover:underline">Sign Up</Link> or Recruiter <Link to="/register?role=company" className="text-[#22c55e] font-semibold hover:underline">Sign Up</Link>
+          </p>
+        </div>
       </div>
     </div>
   );
