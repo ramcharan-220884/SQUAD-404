@@ -67,8 +67,23 @@ export default function ProfileCardView({ profile, onEdit, onSettings }) {
             <Field label="Email Address" value={profile.email} />
             <Field label="Date of Birth" value={formatDate(profile.dob)} />
             <Field label="Gender" value={profile.gender} />
+            <Field label="Location" value={profile.location} />
+            <Field label="Phone" value={`${profile.country_code || '+91'} ${profile.phone || ''}`} />
           </div>
         </div>
+
+        {/* Summary Section */}
+        {profile.summary && (
+          <div className="profile-form-section">
+            <h3 className="profile-form-section-title">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+              Professional Summary
+            </h3>
+            <div className="profile-form-value textarea">
+              {profile.summary}
+            </div>
+          </div>
+        )}
 
         {/* Education Section */}
         <div className="profile-form-section">
@@ -81,6 +96,8 @@ export default function ProfileCardView({ profile, onEdit, onSettings }) {
               <Field label="College / University" value={profile.college} />
             </div>
             <Field label="Degree Program" value={profile.degree} />
+            <Field label="Specialization" value={profile.specialization} />
+            <Field label="Duration" value={profile.edu_start_year && profile.edu_end_year ? `${profile.edu_start_year} - ${profile.edu_end_year}` : null} />
             <Field label="Current CGPA" value={profile.cgpa} />
           </div>
         </div>
@@ -92,42 +109,104 @@ export default function ProfileCardView({ profile, onEdit, onSettings }) {
             Professional Portfolio
           </h3>
           <div className="space-y-6">
-            <Field 
-              label="Key Professional Skills" 
-              value={profile.skills} 
-              textarea={true} 
-            />
-            <Field 
-              label="Technical Projects & Contributions" 
-              value={profile.projects} 
-              textarea={true} 
-            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Field 
+                label="Technical Skills" 
+                value={profile.skills} 
+                textarea={true} 
+              />
+              <Field 
+                label="Tools & Technologies" 
+                value={profile.tools_technologies} 
+                textarea={true} 
+              />
+            </div>
+            
+            <div className="mt-4">
+              <span className="profile-form-label mb-3 block">Projects</span>
+              <div className="grid grid-cols-1 gap-4">
+                {(() => {
+                  let projects = [];
+                  try {
+                    projects = typeof profile.projects === 'string' ? JSON.parse(profile.projects) : (profile.projects || []);
+                  } catch (e) {
+                    return <div className="text-sm italic text-gray-400">Legacy project data: {profile.projects}</div>;
+                  }
+                  
+                  if (!Array.isArray(projects)) return <div className="text-sm italic text-gray-400">{profile.projects || "No projects"}</div>;
+                  
+                  return projects.map((p, i) => (
+                    <div key={i} className="p-4 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-xl shadow-sm">
+                      <div className="font-bold text-[#800000] dark:text-[#ff9999]">{p.title}</div>
+                      <p className="text-xs font-bold text-gray-500 mt-0.5">{p.technologies}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">{p.description}</p>
+                    </div>
+                  ));
+                })()}
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Documents */}
+        {/* Experience Section */}
+        <div className="profile-form-section">
+          <h3 className="profile-form-section-title">
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+            Work Experience
+          </h3>
+          <div className="space-y-4">
+            {(() => {
+              let exps = [];
+              try {
+                exps = typeof profile.internships === 'string' ? JSON.parse(profile.internships) : (profile.internships || []);
+              } catch (e) {
+                return <div className="text-sm italic text-gray-400">No experience records</div>;
+              }
+              
+              if (!Array.isArray(exps) || exps.length === 0) return <div className="text-sm italic text-gray-400">No experience records</div>;
+              
+              return exps.map((exp, i) => (
+                <div key={i} className="p-4 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-xl shadow-sm flex justify-between items-start">
+                  <div>
+                    <div className="font-bold text-gray-900 dark:text-white text-lg">{exp.role}</div>
+                    <div className="text-[#800000] dark:text-[#ff9999] font-bold text-sm">{exp.company}</div>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">{exp.description}</p>
+                  </div>
+                  <div className="text-xs font-bold text-gray-400 bg-gray-50 dark:bg-slate-800 px-2 py-1 rounded">
+                    {exp.startDate} - {exp.endDate}
+                  </div>
+                </div>
+              ));
+            })()}
+          </div>
+        </div>
+
+        {/* Certifications & Documents */}
         <div className="profile-form-section">
           <h3 className="profile-form-section-title">
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-            Verified Documents
+            Certifications & Documents
           </h3>
-          <div className="profile-form-grid">
-            <div className="profile-form-field">
-              <span className="profile-form-label">Resume / CV</span>
-              {profile.resume_url ? (
-                <a href={profile.resume_url} target="_blank" rel="noreferrer" className="profile-form-value text-[#800000] hover:bg-[#800000]/5 transition-colors group">
-                  <svg className="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                  View Attached Resume.pdf
-                </a>
-              ) : (
-                <div className="profile-form-value text-gray-400 italic">No resume uploaded</div>
-              )}
-            </div>
-            <div className="profile-form-field">
-              <span className="profile-form-label">Profile Status</span>
-              <div className="profile-form-value text-green-600 dark:text-green-400 flex items-center">
-                <div className="w-2 h-2 rounded-full bg-green-500 mr-2"></div>
-                Completed & Verified
+          <div className="space-y-6">
+            <Field label="Certifications" value={profile.certifications} textarea={true} />
+            <div className="profile-form-grid">
+              <div className="profile-form-field">
+                <span className="profile-form-label">Resume / CV</span>
+                {profile.resume_url ? (
+                  <a href={profile.resume_url} target="_blank" rel="noreferrer" className="profile-form-value text-[#800000] hover:bg-[#800000]/5 transition-colors group">
+                    <svg className="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                    View Attached Resume.pdf
+                  </a>
+                ) : (
+                  <div className="profile-form-value text-gray-400 italic">No resume uploaded</div>
+                )}
+              </div>
+              <div className="profile-form-field">
+                <span className="profile-form-label">Profile Status</span>
+                <div className="profile-form-value text-green-600 dark:text-green-400 flex items-center">
+                  <div className="w-2 h-2 rounded-full bg-green-500 mr-2"></div>
+                  Completed & Verified
+                </div>
               </div>
             </div>
           </div>

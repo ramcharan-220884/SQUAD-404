@@ -29,6 +29,7 @@ import HelpSupport from "../components/dashboard/HelpSupport";
 import ThemeToggle from "../components/dashboard/ThemeToggle";
 import Competitions from "../components/dashboard/Competitions";
 import Events from "../components/dashboard/Events";
+import Assessments from "../components/dashboard/Assessments";
 import Interviews from "../components/dashboard/Interviews";
 import CandidateCommunication from "../components/dashboard/CandidateCommunication";
 
@@ -56,6 +57,15 @@ import {
 
 const PIE_COLORS = ["#16a34a", "#facc15", "#dc2626"];
 
+// ── localStorage helpers for Resource approvals ──────────────────────────────
+const LS_RES_PENDING  = "pendingResources";
+const LS_RES_APPROVED = "approvedResources";
+const getAdminResPending  = () => JSON.parse(localStorage.getItem(LS_RES_PENDING))  || [];
+const getAdminResApproved = () => JSON.parse(localStorage.getItem(LS_RES_APPROVED)) || [];
+const setAdminResPending  = (arr) => localStorage.setItem(LS_RES_PENDING,  JSON.stringify(arr));
+const setAdminResApproved = (arr) => localStorage.setItem(LS_RES_APPROVED, JSON.stringify(arr));
+// ─────────────────────────────────────────────────────────────────────────────
+
 export default function AdminDashboard() {
   const { showNotification } = useNotification();
   const [stats, setStats] = useState(null);
@@ -64,6 +74,7 @@ export default function AdminDashboard() {
   const [pendingRecruiters, setPendingRecruiters] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [pendingResources, setPendingResources] = useState(getAdminResPending);
 
   const location = useLocation();
 
@@ -103,7 +114,31 @@ export default function AdminDashboard() {
     }
 
     fetchData();
+
+    // Sync resource pending list from localStorage
+    const syncResources = () => setPendingResources(getAdminResPending());
+    window.addEventListener('storage', syncResources);
+    return () => window.removeEventListener('storage', syncResources);
   }, [fetchData, location]);
+
+  const approveResource = (id) => {
+    const pending = getAdminResPending();
+    const res = pending.find(r => r.id === id);
+    if (!res) return;
+    const newPending  = pending.filter(r => r.id !== id);
+    const newApproved = [...getAdminResApproved(), { ...res, status: 'approved' }];
+    setAdminResPending(newPending);
+    setAdminResApproved(newApproved);
+    setPendingResources(newPending);
+    showNotification("Resource approved — now visible to students!", "success", "admin");
+  };
+
+  const rejectResource = (id) => {
+    const newPending = getAdminResPending().filter(r => r.id !== id);
+    setAdminResPending(newPending);
+    setPendingResources(newPending);
+    showNotification("Resource rejected.", "error", "admin");
+  };
 
   const handleStudentAction = async (id, action) => {
     try {
@@ -180,7 +215,23 @@ export default function AdminDashboard() {
       {/* Main */}
       <main className="flex-1 overflow-y-auto p-6">
 
-        {location.pathname === "/admin-dashboard/interviews" ? (
+        {location.pathname === "/admin-dashboard/students" ? (
+          <StudentManagement />
+        ) : location.pathname === "/admin-dashboard/companies" ? (
+          <CompanyManagement />
+        ) : location.pathname === "/admin-dashboard/announcements" ? (
+          <Announcements />
+        ) : location.pathname === "/admin-dashboard/competitions" ? (
+          <Competitions role="admin" />
+        ) : location.pathname === "/admin-dashboard/events" ? (
+          <Events role="admin" />
+        ) : location.pathname === "/admin-dashboard/assessments" ? (
+          <Assessments role="admin" />
+        ) : location.pathname === "/admin-dashboard/settings" ? (
+          <Settings />
+        ) : location.pathname === "/admin-dashboard/help" ? (
+          <HelpSupport role="admin" />
+        ) : location.pathname === "/admin-dashboard/interviews" ? (
           <Interviews role="admin" />
         ) : location.pathname === "/admin-dashboard/applications" ? (
           <CandidateCommunication />
@@ -221,6 +272,45 @@ export default function AdminDashboard() {
                 </PieChart>
               </ResponsiveContainer>
             </div>
+
+            {/* Pending Resource Requests */}
+            {pendingResources.length > 0 && (
+              <div style={{ marginTop: '40px', paddingTop: '32px', borderTop: '2px dashed #93c5fd' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+                  <div style={{ padding: '8px', background: '#dbeafe', borderRadius: '12px', display: 'flex', alignItems: 'center' }}>
+                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" /></svg>
+                  </div>
+                  <div>
+                    <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#1e293b', margin: 0 }}>Pending Resource Requests</h3>
+                    <p style={{ fontSize: '12px', color: '#2563eb', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0 }}>Submitted by students — awaiting your approval</p>
+                  </div>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px' }}>
+                  {pendingResources.map(r => (
+                    <div key={r.id} style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '16px', padding: '20px', position: 'relative', boxShadow: '0 2px 8px rgba(37,99,235,0.06)', transition: 'box-shadow 0.2s' }}>
+                      <span style={{ position: 'absolute', top: '12px', right: '12px', background: '#dbeafe', color: '#1d4ed8', padding: '2px 10px', borderRadius: '20px', fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', border: '1px solid #bfdbfe' }}>Pending</span>
+                      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '10px' }}>
+                        <span style={{ background: '#e0e7ff', color: '#3730a3', padding: '2px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 700, border: '1px solid #c7d2fe' }}>{r.branch}</span>
+                        <span style={{ background: '#f0fdf4', color: '#15803d', padding: '2px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 700, border: '1px solid #bbf7d0' }}>{r.category}</span>
+                      </div>
+                      <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#1e293b', marginBottom: '8px', paddingRight: '60px', lineHeight: 1.4 }}>{r.title}</h4>
+                      <a href={r.link.startsWith('http') ? r.link : `https://${r.link}`} target="_blank" rel="noopener noreferrer"
+                        style={{ fontSize: '12px', color: '#2563eb', fontWeight: 600, wordBreak: 'break-all', display: 'block', marginBottom: '16px' }}>{r.link}</a>
+                      <div style={{ display: 'flex', gap: '10px' }}>
+                        <button onClick={() => approveResource(r.id)}
+                          style={{ flex: 1, padding: '9px', background: '#22c55e', color: '#fff', border: 'none', borderRadius: '10px', fontWeight: 700, fontSize: '13px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                          <CheckCircle size={15} /> Approve
+                        </button>
+                        <button onClick={() => rejectResource(r.id)}
+                          style={{ flex: 1, padding: '9px', background: '#fff', color: '#dc2626', border: '1px solid #fecaca', borderRadius: '10px', fontWeight: 700, fontSize: '13px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                          <XCircle size={15} /> Reject
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </>
         )}
 

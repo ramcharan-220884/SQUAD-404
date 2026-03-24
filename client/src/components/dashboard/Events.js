@@ -1,12 +1,43 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { getEvents, registerForEvent } from '../../services/studentService';
 import { getAdminEvents, createEvent, updateEvent, deleteEvent } from '../../services/adminService';
-import { Plus, Trash2, Calendar, Users, Loader2, AlertCircle, Edit2, Eye, CheckCircle, Search } from 'lucide-react';
+import {
+  Plus, Trash2, Calendar, Users, Loader2, AlertCircle,
+  Edit2, Eye, CheckCircle, Search, Clock, XCircle, Link as LinkIcon
+} from 'lucide-react';
 import { useNotification } from '../../context/NotificationContext';
+
+// ─── localStorage helpers ────────────────────────────────────────────────────
+const LS_PENDING  = "pendingEvents";
+const LS_APPROVED = "approvedEvents";
+
+const getLSPending  = () => JSON.parse(localStorage.getItem(LS_PENDING))  || [];
+const getLSApproved = () => JSON.parse(localStorage.getItem(LS_APPROVED)) || [];
+
+const setLSPending  = (arr) => localStorage.setItem(LS_PENDING,  JSON.stringify(arr));
+const setLSApproved = (arr) => localStorage.setItem(LS_APPROVED, JSON.stringify(arr));
+// ─────────────────────────────────────────────────────────────────────────────
+
+const TYPE_STYLES = {
+  'Seminar':         'bg-purple-100 text-purple-700 border-purple-200',
+  'Hackathon':       'bg-indigo-100 text-indigo-700 border-indigo-200',
+  'Contest':         'bg-pink-100 text-pink-700 border-pink-200',
+  'Workshop':        'bg-blue-100 text-blue-700 border-blue-200',
+  'Placement Drive': 'bg-green-100 text-green-700 border-green-200',
+  'Webinar':         'bg-teal-100 text-teal-700 border-teal-200',
+};
+const getTypeStyle = (type) => TYPE_STYLES[type] || 'bg-orange-100 text-orange-700 border-orange-200';
 
 export default function Events({ role = "student" }) {
   const { showNotification } = useNotification();
-  const [events, setEvents] = useState([]);
+
+  // Backend-fetched events
+  const [backendEvents, setBackendEvents] = useState([]);
+  // localStorage-approved events (student-submitted & admin-approved)
+  const [lsApproved, setLsApproved] = useState(getLSApproved);
+  // Pending student submissions (admin only)
+  const [pendingEvs, setPendingEvs] = useState(getLSPending);
+
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
@@ -15,31 +46,46 @@ export default function Events({ role = "student" }) {
   const [editingId, setEditingId] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
   const [formData, setFormData] = useState({
-    title: "", date: "", type: "Workshop", description: ""
+    title: "", date: "", type: "Workshop", description: "", link: ""
   });
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredEvents = events.filter(ev => 
-    ev.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const fetchEvents = async () => {
+  // ── Fetch backend events ───────────────────────────────────────────────────
+  const fetchEvents = useCallback(async () => {
     try {
       setLoading(true);
       const data = role === 'admin' ? await getAdminEvents() : await getEvents();
-      setEvents(Array.isArray(data) ? data : (data.data || []));
+      setBackendEvents(Array.isArray(data) ? data : (data.data || []));
     } catch (err) {
       console.error("Error loading events", err);
     } finally {
       setLoading(false);
     }
-  };
-
-  useEffect(() => {
-    fetchEvents();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [role]);
 
+  useEffect(() => { fetchEvents(); }, [fetchEvents]);
+
+  // Sync localStorage whenever it changes in another tab
+  useEffect(() => {
+    const sync = () => {
+      setPendingEvs(getLSPending());
+      setLsApproved(getLSApproved());
+    };
+    window.addEventListener('storage', sync);
+    return () => window.removeEventListener('storage', sync);
+  }, []);
+
+  // ── Approved list: merge backend + localStorage-approved ───────────────────
+  const backendApproved = backendEvents.filter(ev => ev.status === 'approved' || !ev.status);
+  const allApproved = [
+    ...backendApproved,
+    ...lsApproved.filter(le => !backendApproved.some(be => be.id === le.id))
+  ];
+  const filteredEvents = allApproved.filter(ev =>
+    ev.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // ── Student: register for backend event ───────────────────────────────────
   const handleRegister = async (eventId) => {
     try {
       setActionLoading(true);
@@ -53,22 +99,43 @@ export default function Events({ role = "student" }) {
     }
   };
 
+  // ── Admin: delete backend event ────────────────────────────────────────────
   const handleDelete = async (id) => {
     if (role !== 'admin') return;
     if (!window.confirm("Delete this event?")) return;
     try {
       await deleteEvent(id);
-      setEvents(events.filter(ev => ev.id !== id));
+      setBackendEvents(prev => prev.filter(ev => ev.id !== id));
       showNotification("Event deleted", "success", "admin");
     } catch (err) {
       showNotification("Error deleting event", "error", "admin");
     }
   };
 
+  // ── Form submit ────────────────────────────────────────────────────────────
   const handleSave = async (e) => {
     e.preventDefault();
     try {
       setActionLoading(true);
+
+      if (role === 'student') {
+        // Save to localStorage pending queue — NO approval here
+        const newEvent = {
+          id: `student-ev-${Date.now()}`,
+          ...formData,
+          status: 'pending',
+          submittedAt: new Date().toISOString()
+        };
+        const updated = [...getLSPending(), newEvent];
+        setLSPending(updated);
+        setPendingEvs(updated);
+        showNotification("Event submitted for admin approval!", "success", "student");
+        setShowModal(false);
+        resetForm();
+        return;
+      }
+
+      // Admin: call real API
       if (isEditing) {
         await updateEvent(editingId, formData);
         showNotification("Event updated", "success", "admin");
@@ -89,7 +156,7 @@ export default function Events({ role = "student" }) {
   const resetForm = () => {
     setIsEditing(false);
     setEditingId(null);
-    setFormData({ title: "", date: "", type: "Workshop", description: "" });
+    setFormData({ title: "", date: "", type: "Workshop", description: "", link: "" });
   };
 
   const handleEdit = (ev) => {
@@ -97,57 +164,111 @@ export default function Events({ role = "student" }) {
     setEditingId(ev.id);
     setFormData({
       title: ev.title,
-      description: ev.description,
-      date: ev.date.split('T')[0],
-      type: ev.type
+      description: ev.description || "",
+      date: ev.date ? ev.date.split('T')[0] : "",
+      type: ev.type || "Workshop",
+      link: ev.link || ""
     });
     setShowModal(true);
   };
 
-  if (loading) return <div className="p-8 text-center text-gray-500 font-bold flex flex-col items-center gap-2"><Loader2 className="animate-spin" /> Loading...</div>;
+  // ── Admin: Approve student submission ──────────────────────────────────────
+  const approveEvent = (id) => {
+    const pending = getLSPending();
+    const evToApprove = pending.find(ev => ev.id === id);
+    if (!evToApprove) return;
+
+    const approved = { ...evToApprove, status: 'approved' };
+    const newPending  = pending.filter(ev => ev.id !== id);
+    const newApproved = [...getLSApproved(), approved];
+
+    setLSPending(newPending);
+    setLSApproved(newApproved);
+    setPendingEvs(newPending);
+    setLsApproved(newApproved);
+
+    showNotification("Event approved — now visible to students!", "success", "admin");
+  };
+
+  // ── Admin: Reject student submission ───────────────────────────────────────
+  const rejectEvent = (id) => {
+    const newPending = getLSPending().filter(ev => ev.id !== id);
+    setLSPending(newPending);
+    setPendingEvs(newPending);
+    showNotification("Event rejected.", "error", "admin");
+  };
+
+  if (loading) return (
+    <div className="p-8 text-center text-gray-500 font-bold flex flex-col items-center gap-2">
+      <Loader2 className="animate-spin" /> Loading...
+    </div>
+  );
 
   return (
     <div className="p-4 md:p-8 space-y-6">
+
+      {/* ── Header ──────────────────────────────────────────────────────────── */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="flex items-center gap-3">
           <Calendar className="w-8 h-8 text-blue-500" />
           <h2 className="text-2xl font-black text-gray-900 dark:text-gray-100">Campus Events</h2>
         </div>
-        {role === 'admin' && (
-          <button onClick={() => { resetForm(); setShowModal(true); }} className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-all shadow-lg active:scale-95">
-            <Plus className="w-5 h-5" /> Schedule Event
-          </button>
-        )}
+        <div className="flex gap-3">
+          {role === 'admin' && (
+            <button
+              onClick={() => { resetForm(); setShowModal(true); }}
+              className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-all shadow-lg active:scale-95"
+            >
+              <Plus className="w-5 h-5" /> Schedule Event
+            </button>
+          )}
+          {role === 'student' && (
+            <button
+              onClick={() => { resetForm(); setShowModal(true); }}
+              className="flex items-center gap-2 px-5 py-2.5 bg-green-600 text-white font-bold rounded-xl hover:bg-green-700 transition-all shadow-lg shadow-green-600/20 active:scale-95"
+            >
+              <Plus className="w-5 h-5" /> Post Event
+            </button>
+          )}
+        </div>
       </div>
       <p className="text-gray-500 dark:text-gray-400 font-medium">Stay updated with campus events, seminars, and workshops.</p>
-      
+
+      {/* ── Search ──────────────────────────────────────────────────────────── */}
       <div className="relative max-w-md">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-        <input 
-          type="text" 
-          placeholder="Search events..." 
+        <input
+          type="text"
+          placeholder="Search events..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-900 dark:text-white"
         />
       </div>
 
+      {/* ── Approved Events Grid ─────────────────────────────────────────────── */}
       {filteredEvents.length === 0 ? (
         <div className="db-placeholder-card mt-8 border-2 border-dashed border-gray-100 dark:border-slate-800 p-12 text-center text-gray-400 font-bold rounded-[2rem]">
-            <AlertCircle className="w-12 h-12 mx-auto mb-4 opacity-20" />
-            <p>No upcoming events found.</p>
+          <AlertCircle className="w-12 h-12 mx-auto mb-4 opacity-20" />
+          <p>No upcoming events found.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
           {filteredEvents.map(ev => (
-            <div key={ev.id} className="bg-white dark:bg-slate-800 p-6 rounded-[2rem] shadow-sm border border-gray-100 dark:border-slate-700 relative group transition-all hover:shadow-md">
+            <div key={ev.id} className="bg-white dark:bg-slate-800 p-6 rounded-[2rem] shadow-sm border border-gray-100 dark:border-slate-700 relative group transition-all hover:shadow-md hover:-translate-y-1">
               <div className="flex justify-between items-start mb-3">
-                <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${
-                    ev.type === 'Seminar' ? 'bg-purple-100 text-purple-700 border-purple-200' : 
-                    ev.type === 'Workshop' ? 'bg-blue-100 text-blue-700 border-blue-200' : 'bg-orange-100 text-orange-700 border-orange-200'
-                }`}>{ev.type}</span>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${getTypeStyle(ev.type)}`}>
+                    {ev.type}
+                  </span>
+                  {ev.status === 'approved' && (
+                    <span className="px-2 py-1 rounded-full text-[9px] font-black uppercase bg-green-100 text-green-700 border border-green-200 flex items-center gap-1">
+                      <CheckCircle className="w-3 h-3" /> Approved
+                    </span>
+                  )}
+                </div>
                 {role === 'admin' && (
-                  <div className="flex gap-2 transition-all">
+                  <div className="flex gap-2 transition-all opacity-0 group-hover:opacity-100">
                     <button onClick={() => handleEdit(ev)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-xl transition-colors">
                       <Edit2 className="w-4 h-4" />
                     </button>
@@ -157,37 +278,38 @@ export default function Events({ role = "student" }) {
                   </div>
                 )}
               </div>
+
               <h3 className="text-lg font-bold text-gray-900 dark:text-white uppercase tracking-tight">{ev.title}</h3>
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 line-clamp-2">{ev.description}</p>
-              
+
               <div className="flex items-center gap-4 mt-6 pt-4 border-t border-gray-50 dark:border-slate-700">
-                  <div className="flex items-center gap-1.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest flex-1">
-                    <Calendar className="w-3.5 h-3.5" />
-                    <span>{new Date(ev.date).toLocaleDateString()}</span>
+                <div className="flex items-center gap-1.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest flex-1">
+                  <Calendar className="w-3.5 h-3.5" />
+                  <span>{ev.date ? new Date(ev.date).toLocaleDateString() : 'TBD'}</span>
+                </div>
+                {role === 'admin' && typeof ev.registered_count !== 'undefined' && (
+                  <div className="flex items-center gap-1.5 text-[10px] font-bold text-blue-500 bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded-md uppercase tracking-widest">
+                    <Users className="w-3.5 h-3.5" />
+                    <span>{ev.registered_count || 0} Registered</span>
                   </div>
-                  {role === 'admin' && (
-                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-blue-500 bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded-md uppercase tracking-widest">
-                        <Users className="w-3.5 h-3.5" />
-                        <span>{ev.registered_count || 0} Registered</span>
-                    </div>
-                  )}
+                )}
               </div>
 
               <div className="flex flex-col gap-2 mt-4">
-                <button 
+                <button
                   onClick={() => { setSelectedEvent(ev); setShowDetailModal(true); }}
                   className="w-full py-2.5 bg-gray-50 dark:bg-slate-700/50 text-gray-700 dark:text-gray-300 font-bold rounded-xl hover:bg-gray-100 transition-all border border-gray-100 dark:border-slate-700 text-xs flex items-center justify-center gap-2"
                 >
                   <Eye className="w-4 h-4" /> View Details
                 </button>
-                
-                {role === 'student' && (
+
+                {role === 'student' && !ev.status && (
                   ev.registered ? (
                     <div className="w-full py-2.5 bg-green-50 text-green-700 font-bold rounded-xl border border-green-100 text-xs flex items-center justify-center gap-2">
                       <CheckCircle className="w-4 h-4" /> Registered
                     </div>
                   ) : (
-                    <button 
+                    <button
                       onClick={() => handleRegister(ev.id)}
                       disabled={actionLoading}
                       className="w-full py-2.5 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/10 text-xs flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
@@ -202,7 +324,67 @@ export default function Events({ role = "student" }) {
         </div>
       )}
 
-      {/* Detail Modal */}
+      {/* ── Admin Only: Pending Student Submissions ──────────────────────────── */}
+      {role === 'admin' && pendingEvs.length > 0 && (
+        <div className="mt-12 pt-8 border-t-2 border-dashed border-blue-200 dark:border-blue-900/50">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2 bg-blue-100 text-blue-600 rounded-xl">
+              <Clock className="w-6 h-6" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">Pending Event Requests</h3>
+              <p className="text-xs text-blue-600 font-bold uppercase tracking-wider">Submitted by students — awaiting your approval</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {pendingEvs.map(ev => (
+              <div key={ev.id} className="bg-blue-50/50 dark:bg-blue-900/10 p-6 rounded-[2rem] border border-blue-200/60 dark:border-blue-800/30 relative shadow-sm hover:shadow-md transition-all">
+                <span className="absolute top-4 right-4 bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-[9px] font-black uppercase flex items-center gap-1 border border-blue-200">
+                  <Clock className="w-3 h-3" /> Pending
+                </span>
+                <div className="mb-2">
+                  <span className={`px-2 py-1 rounded-lg text-[9px] font-black uppercase border ${getTypeStyle(ev.type)}`}>{ev.type}</span>
+                </div>
+                <h4 className="font-bold text-gray-900 dark:text-white text-lg mb-1 leading-tight pr-20">{ev.title}</h4>
+                <p className="text-xs text-gray-600 dark:text-gray-400 mb-4 line-clamp-2 leading-relaxed">{ev.description}</p>
+
+                <div className="flex items-center gap-2 mb-4 text-[10px] font-bold text-gray-500 uppercase">
+                  <Calendar className="w-3.5 h-3.5" />
+                  <span>{ev.date ? new Date(ev.date).toLocaleDateString() : 'TBD'}</span>
+                </div>
+
+                {ev.link && (
+                  <a
+                    href={ev.link.startsWith('http') ? ev.link : `https://${ev.link}`}
+                    target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 text-[10px] font-bold text-blue-600 mb-4 hover:underline"
+                  >
+                    <LinkIcon className="w-3.5 h-3.5" /> Event Link
+                  </a>
+                )}
+
+                <div className="flex gap-3 mt-auto">
+                  <button
+                    onClick={() => approveEvent(ev.id)}
+                    className="flex-1 py-2.5 bg-green-500 hover:bg-green-600 text-white rounded-xl font-bold text-xs transition flex items-center justify-center gap-1.5 shadow-sm active:scale-95"
+                  >
+                    <CheckCircle className="w-4 h-4" /> Approve
+                  </button>
+                  <button
+                    onClick={() => rejectEvent(ev.id)}
+                    className="flex-1 py-2.5 bg-white border border-red-200 hover:bg-red-50 text-red-600 rounded-xl font-bold text-xs transition flex items-center justify-center gap-1.5 shadow-sm active:scale-95"
+                  >
+                    <XCircle className="w-4 h-4" /> Reject
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── Detail Modal ─────────────────────────────────────────────────────── */}
       {showDetailModal && selectedEvent && (
         <div className="fixed inset-0 bg-black/60 z-[200] flex justify-center items-center p-4">
           <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] w-full max-w-2xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300 border dark:border-slate-800">
@@ -213,63 +395,96 @@ export default function Events({ role = "student" }) {
               <h3 className="text-3xl font-black tracking-tight leading-tight uppercase mb-4">{selectedEvent.title}</h3>
               <div className="flex flex-wrap gap-3">
                 <span className="px-3 py-1 bg-white/20 rounded-lg text-[10px] font-black uppercase tracking-wider backdrop-blur-md">{selectedEvent.type}</span>
-                <span className="px-3 py-1 bg-white/20 rounded-lg text-[10px] font-black uppercase tracking-wider backdrop-blur-md">{new Date(selectedEvent.date).toLocaleDateString()}</span>
+                <span className="px-3 py-1 bg-white/20 rounded-lg text-[10px] font-black uppercase tracking-wider backdrop-blur-md">
+                  {selectedEvent.date ? new Date(selectedEvent.date).toLocaleDateString() : 'TBD'}
+                </span>
+                {selectedEvent.status === 'approved' && (
+                  <span className="px-3 py-1 bg-green-500/80 rounded-lg text-[10px] font-black uppercase tracking-wider border border-green-400">Approved</span>
+                )}
               </div>
             </div>
             <div className="p-8 max-h-[60vh] overflow-y-auto custom-scrollbar">
               <div className="prose dark:prose-invert max-w-none">
                 <h4 className="text-xs font-black uppercase tracking-[0.2em] text-blue-500 mb-4">Event Description</h4>
                 <p className="text-gray-700 dark:text-gray-300 leading-relaxed font-medium whitespace-pre-wrap">{selectedEvent.description}</p>
+
+                {selectedEvent.link && (
+                  <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-2xl border border-blue-100 dark:border-blue-800/50">
+                    <a href={selectedEvent.link.startsWith('http') ? selectedEvent.link : `https://${selectedEvent.link}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-bold hover:underline">
+                      <LinkIcon className="w-4 h-4" /> Event Link / Resource
+                    </a>
+                  </div>
+                )}
               </div>
             </div>
             <div className="p-8 bg-gray-50 dark:bg-slate-800/50 border-t dark:border-slate-800 flex justify-between items-center">
-               <button onClick={() => setShowDetailModal(false)} className="px-6 py-3 border-2 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-gray-400 font-bold rounded-2xl hover:bg-white dark:hover:bg-slate-800 transition-all">Close</button>
-               {role === 'student' && !selectedEvent.registered && (
-                 <button onClick={() => { handleRegister(selectedEvent.id); setShowDetailModal(false); }} className="px-10 py-3 bg-blue-600 text-white font-black rounded-2xl hover:bg-blue-700 transition-all shadow-xl shadow-blue-500/20 active:scale-95">Register Now</button>
-               )}
+              <button onClick={() => setShowDetailModal(false)} className="px-6 py-3 border-2 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-gray-400 font-bold rounded-2xl hover:bg-white dark:hover:bg-slate-800 transition-all">Close</button>
+              {role === 'student' && !selectedEvent.registered && !selectedEvent.status && (
+                <button onClick={() => { handleRegister(selectedEvent.id); setShowDetailModal(false); }} className="px-10 py-3 bg-blue-600 text-white font-black rounded-2xl hover:bg-blue-700 transition-all shadow-xl shadow-blue-500/20 active:scale-95">Register Now</button>
+              )}
             </div>
           </div>
         </div>
       )}
 
+      {/* ── Post / Schedule Event Modal ───────────────────────────────────────── */}
       {showModal && (
         <div className="fixed inset-0 bg-black/60 z-[200] flex justify-center items-center p-4">
           <div className="bg-white dark:bg-slate-900 p-8 rounded-[2rem] w-full max-w-lg shadow-2xl border border-gray-100 dark:border-slate-800 animate-in zoom-in-95 duration-200">
-            <h3 className="text-2xl font-black text-gray-900 dark:text-white mb-6 uppercase tracking-tight">{isEditing ? 'Edit Event' : 'Schedule New Event'}</h3>
+            <h3 className="text-2xl font-black text-gray-900 dark:text-white mb-6 uppercase tracking-tight">
+              {role === 'student' ? 'Post New Event' : (isEditing ? 'Edit Event' : 'Schedule New Event')}
+            </h3>
             <form onSubmit={handleSave} className="space-y-5">
               <div>
                 <label className="text-xs font-black uppercase tracking-widest text-gray-400 mb-2 block">Event Title</label>
-                <input required value={formData.title} onChange={e=>setFormData({...formData, title: e.target.value})} className="w-full bg-gray-50 dark:bg-slate-800 border-2 border-transparent focus:border-blue-500 p-3.5 rounded-2xl outline-none font-bold text-gray-900 dark:text-gray-100 transition-all" />
+                <input required value={formData.title} onChange={e => setFormData({ ...formData, title: e.target.value })}
+                  className="w-full bg-gray-50 dark:bg-slate-800 border-2 border-transparent focus:border-blue-500 p-3.5 rounded-2xl outline-none font-bold text-gray-900 dark:text-gray-100 transition-all"
+                  placeholder="e.g. AI Seminar 2026" />
               </div>
               <div>
                 <label className="text-xs font-black uppercase tracking-widest text-gray-400 mb-2 block">Description</label>
-                <textarea required value={formData.description} onChange={e=>setFormData({...formData, description: e.target.value})} className="w-full bg-gray-50 dark:bg-slate-800 border-2 border-transparent focus:border-blue-500 p-3.5 rounded-2xl outline-none font-bold text-gray-900 dark:text-gray-100 transition-all h-32" />
+                <textarea required value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })}
+                  className="w-full bg-gray-50 dark:bg-slate-800 border-2 border-transparent focus:border-blue-500 p-3.5 rounded-2xl outline-none font-bold text-gray-900 dark:text-gray-100 transition-all h-32"
+                  placeholder="Details about your event..." />
               </div>
               <div className="flex gap-4">
                 <div className="w-1/2">
-                    <label className="text-xs font-black uppercase tracking-widest text-gray-400 mb-2 block">Date</label>
-                    <input required type="date" value={formData.date} onChange={e=>setFormData({...formData, date: e.target.value})} className="w-full bg-gray-50 dark:bg-slate-800 border-2 border-transparent focus:border-blue-500 p-3.5 rounded-2xl outline-none font-bold text-gray-900 dark:text-gray-100 transition-all" />
+                  <label className="text-xs font-black uppercase tracking-widest text-gray-400 mb-2 block">Date</label>
+                  <input required type="date" value={formData.date} onChange={e => setFormData({ ...formData, date: e.target.value })}
+                    className="w-full bg-gray-50 dark:bg-slate-800 border-2 border-transparent focus:border-blue-500 p-3.5 rounded-2xl outline-none font-bold text-gray-900 dark:text-gray-100 transition-all" />
                 </div>
                 <div className="w-1/2">
-                    <label className="text-xs font-black uppercase tracking-widest text-gray-400 mb-2 block">Event Type</label>
-                    <select value={formData.type} onChange={e=>setFormData({...formData, type: e.target.value})} className="w-full bg-gray-50 dark:bg-slate-800 border-2 border-transparent focus:border-blue-500 p-3.5 rounded-2xl outline-none font-bold text-gray-900 dark:text-gray-100 transition-all">
-                        <option value="Workshop">Workshop</option>
-                        <option value="Seminar">Seminar</option>
-                        <option value="Webinar">Webinar</option>
-                        <option value="Placement Drive">Placement Drive</option>
-                    </select>
+                  <label className="text-xs font-black uppercase tracking-widest text-gray-400 mb-2 block">Category</label>
+                  <select value={formData.type} onChange={e => setFormData({ ...formData, type: e.target.value })}
+                    className="w-full bg-gray-50 dark:bg-slate-800 border-2 border-transparent focus:border-blue-500 p-3.5 rounded-2xl outline-none font-bold text-gray-900 dark:text-gray-100 transition-all">
+                    <option value="Workshop">Workshop</option>
+                    <option value="Seminar">Seminar</option>
+                    <option value="Hackathon">Hackathon</option>
+                    <option value="Contest">Contest</option>
+                    {role === 'admin' && <option value="Placement Drive">Placement Drive</option>}
+                    {role === 'admin' && <option value="Webinar">Webinar</option>}
+                  </select>
                 </div>
               </div>
+              <div>
+                <label className="text-xs font-black uppercase tracking-widest text-gray-400 mb-2 block">Link (Optional)</label>
+                <input type="url" value={formData.link || ''} onChange={e => setFormData({ ...formData, link: e.target.value })}
+                  className="w-full bg-gray-50 dark:bg-slate-800 border-2 border-transparent focus:border-blue-500 p-3.5 rounded-2xl outline-none font-bold text-gray-900 dark:text-gray-100 transition-all"
+                  placeholder="https://..." />
+              </div>
               <div className="flex justify-end gap-3 mt-8">
-                <button type="button" onClick={() => setShowModal(false)} className="px-6 py-3 border rounded-2xl font-bold">Cancel</button>
-                <button disabled={actionLoading} type="submit" className="px-8 py-3 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-700 flex items-center gap-2">
-                  {actionLoading ? <Loader2 className="w-4 h-4 animate-spin"/> : null} {isEditing ? 'Save Changes' : 'Publish'}
+                <button type="button" onClick={() => setShowModal(false)} className="px-6 py-3 border rounded-2xl font-bold hover:bg-gray-50 transition-colors">Cancel</button>
+                <button disabled={actionLoading} type="submit"
+                  className={`px-8 py-3 text-white rounded-2xl font-bold flex items-center gap-2 transition-all shadow-lg active:scale-95 ${role === 'student' ? 'bg-green-600 hover:bg-green-700 shadow-green-600/30' : 'bg-blue-600 hover:bg-blue-700 shadow-blue-500/30'}`}>
+                  {actionLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                  {role === 'student' ? 'Submit for Approval' : (isEditing ? 'Save Changes' : 'Publish')}
                 </button>
               </div>
             </form>
           </div>
         </div>
       )}
+
     </div>
   );
 }
