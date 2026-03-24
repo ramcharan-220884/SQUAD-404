@@ -200,7 +200,6 @@ export default function AdminDashboard() {
           <Link to="/admin-dashboard/events" className="flex gap-2"><Calendar size={18}/> Events</Link>
 
           <Link to="/admin-dashboard/assessments" className="flex gap-2"><FileCheck size={18}/> Assessments</Link>
-          <Link to="/admin-dashboard/interviews" className="flex gap-2"><Mic size={18}/> Interviews</Link>
           <Link to="/admin-dashboard/applications" className="flex gap-2"><MessageSquare size={18}/> Applications</Link>
 
           <Link to="/admin-dashboard/settings" className="flex gap-2"><SettingsIcon size={18}/> Settings</Link>
