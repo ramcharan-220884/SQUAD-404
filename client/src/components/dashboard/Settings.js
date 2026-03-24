@@ -249,24 +249,6 @@ export default function Settings() {
           </div>
         </div>
 
-        {/* Row 2: Appearance */}
-        <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-300">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="p-3 bg-blue-50 text-blue-600 rounded-2xl">
-              <Layers className="w-6 h-6" />
-            </div>
-            <h3 className="text-xl font-bold text-gray-900">Appearance Settings</h3>
-          </div>
-          <div className="flex items-center justify-between p-4 bg-gray-50/50 rounded-2xl border border-gray-100 group transition-all hover:bg-white hover:border-blue-200 cursor-pointer" onClick={() => setDarkMode(!darkMode)}>
-            <div>
-              <p className="text-sm font-bold text-gray-700">Dark Mode</p>
-              <p className="text-[10px] text-gray-500">Enable high-contrast dark theme</p>
-            </div>
-            <button className={`w-12 h-6 rounded-full transition-all relative ${darkMode ? "bg-blue-600" : "bg-gray-200"}`}>
-              <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${darkMode ? "left-7" : "left-1"}`} />
-            </button>
-          </div>
-        </div>
 
         {/* Row 3: Notifications */}
         <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-300">

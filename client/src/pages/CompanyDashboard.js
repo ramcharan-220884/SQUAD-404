@@ -23,7 +23,6 @@ import {
 import Announcements from "../components/dashboard/Announcements";
 import Competitions from "../components/dashboard/Competitions";
 import Events from "../components/dashboard/Events";
-import ThemeToggle from "../components/dashboard/ThemeToggle";
 import CompanySidebar from "../components/dashboard/CompanySidebar";
 import { 
   BarChart, 
@@ -493,7 +492,6 @@ export default function CompanyDashboard() {
               <h2 className="text-4xl font-black text-gray-900 tracking-tight">Welcome back, {companyProfile.name}!</h2>
               <p className="text-gray-500 text-lg mt-2 font-medium">Here's what's happening with your recruitment today.</p>
             </div>
-            <ThemeToggle role="company" />
           </div>
           
           {/* Dashboard Statistics Cards */}
