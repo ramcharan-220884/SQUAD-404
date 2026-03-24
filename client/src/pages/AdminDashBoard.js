@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import socketService from "../services/socketService";
 import {
   LayoutDashboard,
@@ -75,6 +75,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [pendingResources, setPendingResources] = useState(getAdminResPending);
+  const [active, setActive] = useState("Home");
 
   const location = useLocation();
 
@@ -192,19 +193,19 @@ export default function AdminDashboard() {
         </div>
 
         <nav className="flex-1 px-4 space-y-2">
-          <Link to="/admin-dashboard?scroll=top" className="flex gap-2"><LayoutDashboard size={18}/> Home</Link>
-          <Link to="/admin-dashboard/students" className="flex gap-2"><Users size={18}/> Students</Link>
-          <Link to="/admin-dashboard/companies" className="flex gap-2"><Building size={18}/> Companies</Link>
-          <Link to="/admin-dashboard/announcements" className="flex gap-2"><Megaphone size={18}/> Announcements</Link>
-          <Link to="/admin-dashboard/competitions" className="flex gap-2"><Trophy size={18}/> Competitions</Link>
-          <Link to="/admin-dashboard/events" className="flex gap-2"><Calendar size={18}/> Events</Link>
+          <Link to="/admin-dashboard" onClick={() => { setActive("Home"); document.getElementById("dashboard-top")?.scrollIntoView({ behavior: "smooth" }); }} className={active === "Home" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><LayoutDashboard size={18}/> Home</Link>
+          <Link to="/admin-dashboard/students" onClick={() => setActive("Students")} className={active === "Students" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><Users size={18}/> Students</Link>
+          <Link to="/admin-dashboard/companies" onClick={() => setActive("Companies")} className={active === "Companies" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><Building size={18}/> Companies</Link>
+          <Link to="/admin-dashboard/announcements" onClick={() => setActive("Announcements")} className={active === "Announcements" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><Megaphone size={18}/> Announcements</Link>
+          <Link to="/admin-dashboard/competitions" onClick={() => setActive("Competitions")} className={active === "Competitions" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><Trophy size={18}/> Competitions</Link>
+          <Link to="/admin-dashboard/events" onClick={() => setActive("Events")} className={active === "Events" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><Calendar size={18}/> Events</Link>
 
-          <Link to="/admin-dashboard/applications" className="flex gap-2"><MessageSquare size={18}/> Applications</Link>
+          <Link to="/admin-dashboard/applications" onClick={() => setActive("Applications")} className={active === "Applications" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><MessageSquare size={18}/> Applications</Link>
 
-          <Link to="/admin-dashboard/settings" className="flex gap-2"><SettingsIcon size={18}/> Settings</Link>
-          <Link to="/admin-dashboard/help" className="flex gap-2"><HelpCircle size={18}/> Help</Link>
+          <Link to="/admin-dashboard/settings" onClick={() => setActive("Settings")} className={active === "Settings" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><SettingsIcon size={18}/> Settings</Link>
+          <Link to="/admin-dashboard/help" onClick={() => setActive("Help")} className={active === "Help" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><HelpCircle size={18}/> Help</Link>
 
-          <button onClick={() => setShowLogoutConfirm(true)} className="flex gap-2 text-red-300">
+          <button onClick={() => setShowLogoutConfirm(true)} className="flex gap-2 p-2 text-red-300">
             <LogOut size={18}/> Logout
           </button>
         </nav>
