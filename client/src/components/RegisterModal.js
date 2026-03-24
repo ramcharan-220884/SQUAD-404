@@ -85,8 +85,8 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md overflow-hidden">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden relative border border-white/20 animate-in fade-in zoom-in duration-300">
+    <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-y-auto max-h-[95vh] relative border border-white/20 animate-in fade-in zoom-in duration-300 my-auto">
 
         {/* Close Button */}
         <button
@@ -99,11 +99,11 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
           </svg>
         </button>
 
-        <div className="p-6 lg:p-8 font-['Poppins']">
+        <div className="p-6 font-['Poppins']">
           {/* Header */}
-          <div className="mb-7 flex flex-col items-center text-center">
-            <div className="flex items-center justify-center mb-5 gap-3 px-4 py-2 rounded-2xl bg-gray-50/50 border border-gray-100/50">
-              <div className="w-12 h-12 bg-gradient-to-tr from-[#346b41] to-[#4caf50] rounded-2xl flex items-center justify-center text-white shadow-lg shadow-[#346b41]/20 transform -rotate-3 hover:rotate-0 transition-transform duration-300">
+          <div className="mb-3 flex flex-col items-center text-center">
+            <div className="flex items-center justify-center mb-3 gap-2 px-4 py-1.5 rounded-2xl bg-gray-50/50 border border-gray-100/50">
+              <div className="w-10 h-10 bg-gradient-to-tr from-[#346b41] to-[#4caf50] rounded-2xl flex items-center justify-center text-white shadow-lg shadow-[#346b41]/20 transform -rotate-3 hover:rotate-0 transition-transform duration-300">
                 <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.989-2.386l-.548-.547z" />
                 </svg>
@@ -114,13 +114,13 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
               </div>
             </div>
 
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#346b41]/5 text-[#346b41] text-[10px] font-extrabold uppercase tracking-[0.2em]">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#346b41]/5 text-[#346b41] text-[10px] font-extrabold uppercase tracking-[0.2em]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#346b41] animate-pulse"></span>
               Student Sign Up
             </div>
           </div>
 
-          <div className="w-full flex justify-center mb-6">
+          <div className="w-full flex justify-center mb-3">
             <GoogleLogin 
               onSuccess={handleGoogleSuccess} 
               onError={() => showNotification("Google Sign-Up failed to connect.", "error")}
@@ -131,7 +131,7 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
             />
           </div>
 
-          <div className="flex items-center w-full mb-6">
+          <div className="flex items-center w-full mb-3">
             <div className="flex-1 border-t border-gray-200"></div>
             <span className="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Or standard signup</span>
             <div className="flex-1 border-t border-gray-200"></div>
@@ -139,7 +139,7 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
 
           {/* Error */}
           {error && (
-            <div className="bg-red-50 border-2 border-red-100 text-red-600 px-4 py-3 rounded-2xl text-xs font-semibold flex items-center gap-3 mb-5">
+            <div className="bg-red-50 border-2 border-red-100 text-red-600 px-3 py-2 rounded-2xl text-[10px] font-semibold flex items-center gap-2 mb-3">
               <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -148,7 +148,7 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
           )}
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-2.5">
             {/* Full Name */}
             <div className="space-y-2">
               <label className="block text-[11px] font-extrabold text-[#052c42] uppercase tracking-[0.2em] ml-1">Full Name</label>
@@ -243,12 +243,12 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
                   ? 'bg-gray-300 cursor-not-allowed'
                   : 'bg-gradient-to-r from-[#346b41] to-[#4caf50] hover:shadow-2xl hover:shadow-[#346b41]/30 hover:-translate-y-0.5'
               }`}
-              style={{ padding: '1rem' }}
+              style={{ padding: '0.75rem' }}
             >
               {loading ? 'Creating Account...' : 'Create Account'}
             </button>
 
-            <p className="mt-5 text-center text-[12px] text-gray-400 font-medium">
+            <p className="mt-3 text-center text-[12px] text-gray-400 font-medium">
               Already have an account?{" "}
               <button
                 type="button"
