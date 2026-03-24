@@ -8,7 +8,8 @@ export const getProfile = async (req, res, next) => {
       `SELECT 
         id, name, email, first_name, last_name, dob, gender, college, degree, phone, country_code,
         skills, projects, internships, profile_photo_url, profile_completed,
-        branch, cgpa, resume_url, placed_status, dark_mode, created_at 
+        branch, cgpa, resume_url, placed_status, dark_mode, created_at,
+        summary, location, specialization, edu_start_year, edu_end_year, tools_technologies, certifications
        FROM students WHERE id = ?`,
       [id]
     );
@@ -30,7 +31,8 @@ export const updateProfile = async (req, res, next) => {
     const { 
       name, first_name, last_name, dob, gender, college, degree, phone, country_code,
       skills, projects, internships, profile_photo_url, profile_completed,
-      branch, cgpa, resume_url, dark_mode 
+      branch, cgpa, resume_url, dark_mode,
+      summary, location, specialization, edu_start_year, edu_end_year, tools_technologies, certifications
     } = req.body;
 
     // Build the dynamic update query to handle partial updates (like from settings)
@@ -64,6 +66,13 @@ export const updateProfile = async (req, res, next) => {
     if (cgpa !== undefined) { fields.push("cgpa = ?"); values.push(cgpa); }
     if (resume_url !== undefined) { fields.push("resume_url = ?"); values.push(resume_url); }
     if (dark_mode !== undefined) { fields.push("dark_mode = ?"); values.push(dark_mode); }
+    if (summary !== undefined) { fields.push("summary = ?"); values.push(summary); }
+    if (location !== undefined) { fields.push("location = ?"); values.push(location); }
+    if (specialization !== undefined) { fields.push("specialization = ?"); values.push(specialization); }
+    if (edu_start_year !== undefined) { fields.push("edu_start_year = ?"); values.push(edu_start_year); }
+    if (edu_end_year !== undefined) { fields.push("edu_end_year = ?"); values.push(edu_end_year); }
+    if (tools_technologies !== undefined) { fields.push("tools_technologies = ?"); values.push(tools_technologies); }
+    if (certifications !== undefined) { fields.push("certifications = ?"); values.push(certifications); }
 
     if (fields.length === 0) {
       return res.status(400).json({ success: false, message: "No fields to update" });

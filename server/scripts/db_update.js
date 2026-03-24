@@ -60,6 +60,27 @@ const runUpdates = async () => {
     `);
     console.log("- Created notifications table");
 
+    // Add new resume fields to students
+    const newFields = [
+      { name: 'summary', type: 'TEXT' },
+      { name: 'location', type: 'VARCHAR(100)' },
+      { name: 'specialization', type: 'VARCHAR(100)' },
+      { name: 'edu_start_year', type: 'VARCHAR(10)' },
+      { name: 'edu_end_year', type: 'VARCHAR(10)' },
+      { name: 'tools_technologies', type: 'TEXT' },
+      { name: 'certifications', type: 'TEXT' }
+    ];
+
+    for (const field of newFields) {
+      try {
+        await pool.query(`ALTER TABLE students ADD COLUMN ${field.name} ${field.type} DEFAULT NULL`);
+        console.log(`- Added ${field.name} to students`);
+      } catch (e) {
+        if (e.code === 'ER_DUP_FIELDNAME') console.log(`- ${field.name} already exists, skipping`);
+        else throw e;
+      }
+    }
+
     console.log("DB update completed successfully.");
     process.exit(0);
   } catch (err) {
