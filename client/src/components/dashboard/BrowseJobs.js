@@ -3,17 +3,9 @@ import { getAvailableJobs, applyForJob, getProfile } from '../../services/studen
 import { useNotification } from '../../context/NotificationContext';
 import { SkeletonCard } from '../LoadingSpinner';
 import EmptyState from '../EmptyState';
+import { JobTable } from './JobTable';
 
-function CompanyLogo({ job }) {
-  return (
-    <div
-      className="job-logo-abbr"
-      style={{ background: job.logoColor || '#800000' }}
-    >
-      {(job.company_name || job.company || 'CO').slice(0, 2).toUpperCase()}
-    </div>
-  );
-}
+// Removed local JobTableRow and JobTable as they are now in shared JobTable.js
 
 export default function BrowseJobs({ onJobApplied }) {
   const { showNotification } = useNotification();
@@ -130,52 +122,8 @@ export default function BrowseJobs({ onJobApplied }) {
     );
   }
 
-  const renderJobCard = (job) => (
-    <div key={job.id} className="bj-card">
-      {/* Card Header */}
-      <div className="bj-card-header">
-        <CompanyLogo job={job} />
-        <div className="bj-card-meta">
-          <h3 className="bj-card-title">{job.role || job.title}</h3>
-          <p className="bj-card-company">{job.company_name || 'Company'}</p>
-        </div>
-      </div>
-
-      {/* Description */}
-      {job.description && (
-        <p style={{ fontSize: '13px', color: '#666', margin: '8px 0', lineHeight: 1.5 }}>
-          {job.description.length > 100 ? job.description.slice(0, 100) + '...' : job.description}
-        </p>
-      )}
-
-      {/* Info Row */}
-      <div className="bj-info-row">
-        <span className="bj-info-pill">
-          💰 {job.package || job.ctc || 'Not specified'}
-        </span>
-        <span className="bj-info-pill">
-          🎓 Min CGPA: {job.eligibility_cgpa || job.min_cgpa || 'Any'}
-        </span>
-        {job.deadline && (
-           <span className="bj-info-pill">
-             📅 Deadline: {new Date(job.deadline).toLocaleDateString()}
-           </span>
-        )}
-      </div>
-
-      {/* Apply Button */}
-      <button 
-        className="bj-apply-btn" 
-        onClick={() => handleApply(job.id)}
-        disabled={applyingId === job.id || job.applied || !hasPhone}
-        style={(applyingId === job.id || job.applied || !hasPhone) ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
-      >
-        {!hasPhone ? 'Phone Required' : job.applied ? 'Applied' : applyingId === job.id ? 'Applying...' : 'Apply Now'}
-      </button>
-    </div>
-  );
-
   return (
+
     <div className="bj-root" style={{ paddingBottom: '40px' }}>
       {/* 1. Recommended Jobs Section */}
       <div className="bj-section mb-10">
@@ -184,17 +132,14 @@ export default function BrowseJobs({ onJobApplied }) {
           <p className="bj-sub">Skill-matched opportunities tailored for your profile</p>
         </div>
 
-        <div className="bj-grid">
-          {filteredJobs.length === 0 ? (
-            <div style={{ gridColumn: '1 / -1' }}>
-              <div className="bg-[#800000]/5 border border-dashed border-[#800000]/20 rounded-xl p-8 text-center">
-                <p className="text-[#800000] font-medium">No jobs match your skills yet</p>
-                <p className="text-sm text-gray-500 mt-1">Try adding more skills to your profile to see recommendations here.</p>
-              </div>
-            </div>
-          ) : (
-            filteredJobs.map(renderJobCard)
-          )}
+        <div className="bj-content">
+          <JobTable 
+            jobs={filteredJobs} 
+            applyingId={applyingId} 
+            hasPhone={hasPhone} 
+            handleApply={handleApply}
+            emptyMessage="No jobs match your skills yet. Try adding more skills to your profile."
+          />
         </div>
       </div>
 
@@ -207,19 +152,14 @@ export default function BrowseJobs({ onJobApplied }) {
           <p className="bj-sub">{allJobs.length} total opportunities available</p>
         </div>
 
-        <div className="bj-grid">
-          {allJobs.length === 0 ? (
-            <div style={{ gridColumn: '1 / -1' }}>
-              <EmptyState
-                icon="💼"
-                title="No jobs available right now"
-                subtitle="New positions are posted regularly. Check back soon!"
-                action={{ label: "Refresh", onClick: fetchJobs }}
-              />
-            </div>
-          ) : (
-            allJobs.map(renderJobCard)
-          )}
+        <div className="bj-content">
+          <JobTable 
+            jobs={allJobs} 
+            applyingId={applyingId} 
+            hasPhone={hasPhone} 
+            handleApply={handleApply}
+            onRefresh={fetchJobs}
+          />
         </div>
       </div>
 

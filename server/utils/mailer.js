@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
-import { generateEmailTemplate } from './templates.js';
+import { generateEmailTemplate, generateApplicationConfirmationTemplate } from './templates.js';
 
 dotenv.config();
 
@@ -19,7 +19,7 @@ const transporter = nodemailer.createTransport({
 export const sendEmail = async ({ to, subject, html }) => {
   try {
     const info = await transporter.sendMail({
-      from: `"SQUAD-404 Support" <${process.env.EMAIL_USER}>`,
+      from: `"EDUVATE Support" <${process.env.EMAIL_USER}>`,
       to,
       subject,
       html
@@ -39,22 +39,42 @@ export const sendPasswordResetEmail = async (email, rawToken) => {
   const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/reset-password?token=${rawToken}`;
   
   const html = `
-    <div style="font-family: 'Helvetica Neue', Arial, sans-serif; padding: 30px; max-width: 600px; margin: 0 auto; background-color: #f9f9fa; border-radius: 12px; border: 1px solid #eaebed;">
-        <div style="text-align: center; margin-bottom: 25px;">
-           <h2 style="color: #052c42; font-weight: 900; margin: 0; letter-spacing: -0.5px;">EDUVATE <span style="color: #346b41;">PORTAL</span></h2>
-           <p style="color: #888; font-size: 11px; margin-top: 5px; text-transform: uppercase; letter-spacing: 2px;">Security Notice</p>
-        </div>
-        <div style="background-color: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
-            <p style="color: #333; font-size: 15px; line-height: 1.6; margin-top: 0;">Hello,</p>
-            <p style="color: #555; font-size: 15px; line-height: 1.6;">You recently requested to reset your password for your EDUVATE account. Click the button below to securely set a new password. This link is extremely time-sensitive and will aggressively expire in <strong>15 minutes</strong>.</p>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body style="margin: 0; padding: 0; background-color: #f4f6f8; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+      <div style="padding: 40px 20px;">
+        <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); border: 1px solid #e5e7eb;">
+          
+          <div style="background-color: #ffffff; padding: 30px; text-align: center; border-bottom: 3px solid #ef4444;">
+            <h1 style="margin: 0; font-size: 26px; font-weight: 800; color: #111827; letter-spacing: -0.5px;">EDUVATE</h1>
+            <p style="margin: 5px 0 0; font-size: 13px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 1.5px;">Security Notice</p>
+          </div>
+
+          <div style="padding: 40px 30px;">
+            <p style="margin: 0 0 20px; font-size: 18px; color: #1f2937; font-weight: 600;">Hello,</p>
+            <p style="margin: 0 0 30px; font-size: 16px; line-height: 1.6; color: #4b5563;">
+              You recently requested to reset your password for your EDUVATE account. Click the secure button below to set a new password. This link is extremely time-sensitive and will expire in <strong>15 minutes</strong>.
+            </p>
             
             <div style="text-align: center; margin: 35px 0;">
-                <a href="${resetUrl}" style="display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; font-weight: bold; text-decoration: none; border-radius: 8px; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);">Securely Reset Password</a>
+              <a href="${resetUrl}" style="display: inline-block; padding: 14px 32px; background-color: #ef4444; color: #ffffff; font-weight: 600; text-decoration: none; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
+                Securely Reset Password
+              </a>
             </div>
             
-            <p style="color: #888; font-size: 13px; line-height: 1.5; border-top: 1px solid #eee; padding-top: 20px;">If you did not make this request or you do not have an EDUVATE account, please completely ignore this email.</p>
+            <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #6b7280; border-top: 1px solid #e5e7eb; padding-top: 20px;">
+              If you did not make this request or you do not have an EDUVATE account, please completely ignore this email.
+            </p>
+          </div>
+          
         </div>
-    </div>
+      </div>
+    </body>
+    </html>
   `;
 
   return sendEmail({ to: email, subject: "Secure Password Reset - EDUVATE", html });
@@ -65,12 +85,35 @@ export const sendPasswordResetEmail = async (email, rawToken) => {
  */
 export const sendNotificationEmail = async (email, subject, message) => {
   const html = `
-    <div style="font-family: Arial, sans-serif; padding: 24px; max-width: 600px;">
-        <h2 style="color: #052c42;">EDUVATE Notification</h2>
-        <div style="padding: 20px; border-left: 4px solid #16a34a; background-color: #f8fafc;">
-            <p style="color: #334155; margin: 0; line-height: 1.6;">${message}</p>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body style="margin: 0; padding: 0; background-color: #f4f6f8; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+      <div style="padding: 40px 20px;">
+        <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); border: 1px solid #e5e7eb;">
+          
+          <div style="background-color: #ffffff; padding: 30px; text-align: center; border-bottom: 3px solid #3b82f6;">
+            <h1 style="margin: 0; font-size: 26px; font-weight: 800; color: #111827; letter-spacing: -0.5px;">EDUVATE</h1>
+            <p style="margin: 5px 0 0; font-size: 13px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 1.5px;">Notification</p>
+          </div>
+
+          <div style="padding: 40px 30px;">
+            <div style="padding: 20px; border-left: 4px solid #3b82f6; background-color: #f0fdf4;">
+              <p style="color: #1f2937; margin: 0; line-height: 1.6; font-size: 16px;">${message}</p>
+            </div>
+          </div>
+          
+          <div style="background-color: #f9fafb; padding: 24px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
+            <p style="margin: 0; font-size: 13px; color: #6b7280;">Need help? Contact <a href="mailto:support@eduvate.com" style="color: #3b82f6; text-decoration: none; font-weight: 500;">support@eduvate.com</a></p>
+            <p style="margin: 8px 0 0; font-size: 12px; color: #9ca3af;">This is an automated message. Please do not reply.</p>
+          </div>
         </div>
-    </div>
+      </div>
+    </body>
+    </html>
   `;
   return sendEmail({ to: email, subject, html });
 };
@@ -80,22 +123,42 @@ export const sendNotificationEmail = async (email, subject, message) => {
  */
 export const sendOTPEmail = async (email, otp) => {
   const html = `
-    <div style="font-family: 'Helvetica Neue', Arial, sans-serif; padding: 30px; max-width: 600px; margin: 0 auto; background-color: #f9f9fa; border-radius: 12px; border: 1px solid #eaebed;">
-        <div style="text-align: center; margin-bottom: 25px;">
-           <h2 style="color: #052c42; font-weight: 900; margin: 0; letter-spacing: -0.5px;">EDUVATE <span style="color: #7c3aed;">PORTAL</span></h2>
-           <p style="color: #888; font-size: 11px; margin-top: 5px; text-transform: uppercase; letter-spacing: 2px;">Email Verification</p>
-        </div>
-        <div style="background-color: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
-            <p style="color: #333; font-size: 15px; line-height: 1.6; margin-top: 0;">Hello,</p>
-            <p style="color: #555; font-size: 15px; line-height: 1.6;">Thank you for registering on EDUVATE. Use the verification code below to complete your company sign-up. This code will expire in <strong>10 minutes</strong>.</p>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body style="margin: 0; padding: 0; background-color: #f4f6f8; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+      <div style="padding: 40px 20px;">
+        <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); border: 1px solid #e5e7eb;">
+          
+          <div style="background-color: #ffffff; padding: 30px; text-align: center; border-bottom: 3px solid #8b5cf6;">
+            <h1 style="margin: 0; font-size: 26px; font-weight: 800; color: #111827; letter-spacing: -0.5px;">EDUVATE</h1>
+            <p style="margin: 5px 0 0; font-size: 13px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 1.5px;">Email Verification</p>
+          </div>
+
+          <div style="padding: 40px 30px;">
+            <p style="margin: 0 0 20px; font-size: 18px; color: #1f2937; font-weight: 600;">Hello,</p>
+            <p style="margin: 0 0 30px; font-size: 16px; line-height: 1.6; color: #4b5563;">
+              Thank you for registering on EDUVATE. Use the secure verification code below to complete your company sign-up. This code will expire in <strong>10 minutes</strong>.
+            </p>
             
-            <div style="text-align: center; margin: 35px 0;">
-                <div style="display: inline-block; padding: 18px 40px; background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); color: white; font-weight: 900; font-size: 32px; letter-spacing: 12px; border-radius: 12px; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);">${otp}</div>
+            <div style="text-align: center; margin: 40px 0;">
+              <div style="display: inline-block; padding: 20px 48px; background-color: #f3f4f6; color: #111827; font-weight: 800; font-size: 36px; letter-spacing: 14px; border-radius: 8px; border: 2px dashed #8b5cf6;">
+                ${otp}
+              </div>
             </div>
             
-            <p style="color: #888; font-size: 13px; line-height: 1.5; border-top: 1px solid #eee; padding-top: 20px;">If you did not request this code, please ignore this email. Do not share this code with anyone.</p>
+            <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #6b7280; border-top: 1px solid #e5e7eb; padding-top: 20px;">
+              If you did not request this code, please securely ignore this email. Do not share this code with anyone.
+            </p>
+          </div>
+          
         </div>
-    </div>
+      </div>
+    </body>
+    </html>
   `;
 
   return sendEmail({ to: email, subject: "EDUVATE - Email Verification Code", html });
@@ -115,4 +178,25 @@ export const sendInterviewEmail = async (email, details) => {
 export const sendOrientationEmail = async (email, details) => {
   const html = generateEmailTemplate('orientation', details);
   return sendEmail({ to: email, subject: "Orientation Program Details - EDUVATE", html });
+};
+
+/**
+ * Sends a professional confirmation email when a student applies for a job
+ */
+export const sendApplicationConfirmationEmail = async (student, job, application) => {
+  const html = generateApplicationConfirmationTemplate({
+    name: student.name,
+    applicationId: application.application_code,
+    jobTitle: job.title,
+    companyName: job.company_name,
+    appliedOn: new Date(application.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+    location: job.location,
+    salary: job.ctc
+  });
+
+  return sendEmail({ 
+    to: student.email, 
+    subject: `Application Submitted Successfully – ${job.title}`, 
+    html 
+  });
 };

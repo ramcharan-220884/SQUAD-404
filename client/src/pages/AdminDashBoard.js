@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import socketService from "../services/socketService";
 import {
   LayoutDashboard,
@@ -16,7 +16,9 @@ import {
   Megaphone,
   Trophy,
   MessageSquare,
-  LogOut
+  LogOut,
+  ChevronRight,
+  Mic
 } from "lucide-react";
 import { useNotification } from "../context/NotificationContext";
 
@@ -31,6 +33,7 @@ import Events from "../components/dashboard/Events";
 import Assessments from "../components/dashboard/Assessments";
 import Interviews from "../components/dashboard/Interviews";
 import CandidateCommunication from "../components/dashboard/CandidateCommunication";
+import ThemeToggle from "../components/dashboard/ThemeToggle";
 
 import {
   BarChart,
@@ -56,26 +59,66 @@ import {
 
 const PIE_COLORS = ["#16a34a", "#facc15", "#dc2626"];
 
-// ── localStorage helpers for Resource approvals ──────────────────────────────
-const LS_RES_PENDING  = "pendingResources";
+// LocalStorage helpers
+const LS_RES_PENDING = "pendingResources";
 const LS_RES_APPROVED = "approvedResources";
-const getAdminResPending  = () => JSON.parse(localStorage.getItem(LS_RES_PENDING))  || [];
-const getAdminResApproved = () => JSON.parse(localStorage.getItem(LS_RES_APPROVED)) || [];
-const setAdminResPending  = (arr) => localStorage.setItem(LS_RES_PENDING,  JSON.stringify(arr));
-const setAdminResApproved = (arr) => localStorage.setItem(LS_RES_APPROVED, JSON.stringify(arr));
-// ─────────────────────────────────────────────────────────────────────────────
+
+const getAdminResPending = () =>
+  JSON.parse(localStorage.getItem(LS_RES_PENDING)) || [];
+
+const getAdminResApproved = () =>
+  JSON.parse(localStorage.getItem(LS_RES_APPROVED)) || [];
+
+const setAdminResPending = (arr) =>
+  localStorage.setItem(LS_RES_PENDING, JSON.stringify(arr));
+
+const setAdminResApproved = (arr) =>
+  localStorage.setItem(LS_RES_APPROVED, JSON.stringify(arr));
+
+// ── Sidebar nav config ──────────────────────────────────────────────────────
+const NAV_SECTIONS = [
+  { id: "home",          label: "Dashboard",            icon: LayoutDashboard },
+  { id: "students",      label: "Student Management",   icon: Users },
+  { id: "companies",     label: "Company Management",   icon: Building },
+  { id: "announcements", label: "Announcements",        icon: Megaphone },
+  { id: "events",        label: "Campus Events",        icon: Calendar },
+  { id: "competitions",  label: "Competitions",         icon: Trophy },
+  { id: "assessments",   label: "Assessments",          icon: FileCheck },
+  { id: "interviews",    label: "Interviews",           icon: Mic },
+  { id: "communication", label: "Candidate Comms",      icon: MessageSquare },
+  { id: "settings",      label: "Settings",             icon: SettingsIcon },
+  { id: "help",          label: "Help & Support",       icon: HelpCircle },
+];
 
 export default function AdminDashboard() {
   const { showNotification } = useNotification();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const [activeSection, setActiveSection] = useState("home");
   const [stats, setStats] = useState(null);
   const [placementAnalytics, setPlacementAnalytics] = useState([]);
   const [pendingStudents, setPendingStudents] = useState([]);
   const [pendingRecruiters, setPendingRecruiters] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
-  const [pendingResources, setPendingResources] = useState(getAdminResPending);
+  const [pendingResources, setPendingResources] = useState(getAdminResPending());
 
-  const location = useLocation();
+  // ✅ ADMIN1 LOGOUT (FINAL)
+  const handleConfirmLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("userId");
+    sessionStorage.clear();
+    socketService.disconnect();
+    navigate("/");
+  };
+
+  const handleCancelLogout = () => {
+    setShowLogoutConfirm(false);
+  };
 
   const fetchData = React.useCallback(async () => {
     setLoading(true);
@@ -89,11 +132,18 @@ export default function AdminDashboard() {
       setStats(statsData);
       setPlacementAnalytics(analyticsData);
 
-      setPendingStudents(pendingData.filter(u => u.type === "student"));
-      setPendingRecruiters(pendingData.filter(u => u.type === "company"));
+      setPendingStudents(
+        pendingData.filter((u) => u.type === "student")
+      );
+      setPendingRecruiters(
+        pendingData.filter((u) => u.type === "company")
+      );
     } catch (err) {
-      console.error("Error fetching admin data:", err);
-      showNotification(`Failed to fetch dashboard data: ${err.message}`, "error", "admin");
+      showNotification(
+        `Failed to fetch dashboard data: ${err.message}`,
+        "error",
+        "admin"
+      );
     } finally {
       setLoading(false);
     }
@@ -107,240 +157,453 @@ export default function AdminDashboard() {
     const scrollTarget = searchParams.get("scroll");
 
     if (scrollTarget === "analytics") {
-      document.getElementById("analytics-section")?.scrollIntoView({ behavior: "smooth" });
+      document
+        .getElementById("analytics-section")
+        ?.scrollIntoView({ behavior: "smooth" });
     } else if (scrollTarget === "top") {
-      document.getElementById("dashboard-top")?.scrollIntoView({ behavior: "smooth" });
+      document
+        .getElementById("dashboard-top")
+        ?.scrollIntoView({ behavior: "smooth" });
     }
 
     fetchData();
 
-    // Sync resource pending list from localStorage
-    const syncResources = () => setPendingResources(getAdminResPending());
-    window.addEventListener('storage', syncResources);
-    return () => window.removeEventListener('storage', syncResources);
+    const syncResources = () =>
+      setPendingResources(getAdminResPending());
+
+    window.addEventListener("storage", syncResources);
+
+    return () =>
+      window.removeEventListener("storage", syncResources);
   }, [fetchData, location]);
 
   const approveResource = (id) => {
     const pending = getAdminResPending();
-    const res = pending.find(r => r.id === id);
+    const res = pending.find((r) => r.id === id);
     if (!res) return;
-    const newPending  = pending.filter(r => r.id !== id);
-    const newApproved = [...getAdminResApproved(), { ...res, status: 'approved' }];
+
+    const newPending = pending.filter((r) => r.id !== id);
+    const newApproved = [
+      ...getAdminResApproved(),
+      { ...res, status: "approved" }
+    ];
+
     setAdminResPending(newPending);
     setAdminResApproved(newApproved);
     setPendingResources(newPending);
-    showNotification("Resource approved — now visible to students!", "success", "admin");
+
+    showNotification(
+      "Resource approved — now visible to students!",
+      "success",
+      "admin"
+    );
   };
 
   const rejectResource = (id) => {
-    const newPending = getAdminResPending().filter(r => r.id !== id);
+    const newPending = getAdminResPending().filter(
+      (r) => r.id !== id
+    );
     setAdminResPending(newPending);
     setPendingResources(newPending);
+
     showNotification("Resource rejected.", "error", "admin");
   };
 
-  const handleStudentAction = async (id, action) => {
+  const handleApproveUser = async (id, type) => {
     try {
-      if (action === "Approve") await approveUser(id, "student");
-      else await rejectUser(id, "student");
-
-      showNotification(`Student ${action}d successfully`, "success", "admin");
+      await approveUser(id, type);
+      showNotification(`${type === "student" ? "Student" : "Recruiter"} approved!`, "success", "admin");
       fetchData();
     } catch (err) {
-      showNotification(`Failed to ${action} student`, "error", "admin");
+      showNotification("Failed to approve user", "error", "admin");
     }
   };
 
-  const handleActionRecruiter = async (id, action, type) => {
+  const handleRejectUser = async (id, type) => {
     try {
-      if (action === "approve") await approveUser(id, type);
-      else await rejectUser(id, type);
-
-      showNotification(`Recruiter ${action}d successfully`, "success", "admin");
+      await rejectUser(id, type);
+      showNotification(`${type === "student" ? "Student" : "Recruiter"} rejected.`, "error", "admin");
       fetchData();
     } catch (err) {
-      showNotification(`Failed to ${action} recruiter`, "error", "admin");
+      showNotification("Failed to reject user", "error", "admin");
     }
   };
 
-  const statCards = stats ? [
-    { title: "Total Students", value: String(stats.totalStudents || 0), icon: <Users className="w-6 h-6 text-green-600" /> },
-    { title: "Total Recruiters", value: String(stats.activeCompanies || 0), icon: <Building className="w-6 h-6 text-green-600" /> },
-    { title: "Active Jobs", value: String(stats.totalJobs || 0), icon: <Briefcase className="w-6 h-6 text-green-600" /> },
-    { title: "Pending Approvals", value: String(stats.pendingApprovals || 0), icon: <FileCheck className="w-6 h-6 text-green-600" /> },
-    { title: "Pending Students", value: String(pendingStudents.length), icon: <UserPlus className="w-6 h-6 text-green-600" /> },
-    { title: "Pending Recruiters", value: String(pendingRecruiters.length), icon: <Building className="w-6 h-6 text-green-600" /> }
-  ] : [];
+  // ── Render main content based on active section ─────────────────────────
+  const renderContent = () => {
+    if (activeSection !== "home" && loading) {
+      return (
+        <div className="flex items-center justify-center h-64 text-gray-400 font-bold">
+          Loading...
+        </div>
+      );
+    }
 
-  const applicationStatus = stats ? [
-    { name: "Active Students", value: Math.max(0, (stats.totalStudents || 0) - pendingStudents.length) },
-    { name: "Pending", value: stats.pendingApprovals || 0 },
-    { name: "Active Companies", value: stats.activeCompanies || 0 }
-  ] : [];
+    switch (activeSection) {
+      case "students":
+        return <StudentManagement />;
+      case "companies":
+        return <CompanyManagement />;
+      case "announcements":
+        return <Announcements role="admin" />;
+      case "events":
+        return <Events role="admin" />;
+      case "competitions":
+        return <Competitions role="admin" />;
+      case "assessments":
+        return <Assessments role="admin" />;
+      case "interviews":
+        return <Interviews role="admin" />;
+      case "communication":
+        return <CandidateCommunication />;
+      case "settings":
+        return <Settings />;
+      case "help":
+        return <HelpSupport />;
+      default:
+        return renderHomeDashboard();
+    }
+  };
 
-  if (loading) return <div className="flex h-screen items-center justify-center">Loading...</div>;
+  const renderHomeDashboard = () => {
+    if (loading) {
+      return (
+        <div className="flex items-center justify-center h-64 text-gray-400 font-bold">
+          Loading dashboard...
+        </div>
+      );
+    }
+
+    const statsCards = [
+      { label: "Total Students", value: stats?.totalStudents ?? 0, color: "bg-blue-50 text-blue-700" },
+      { label: "Total Companies", value: stats?.totalCompanies ?? 0, color: "bg-green-50 text-green-700" },
+      { label: "Pending Approvals", value: (pendingStudents.length + pendingRecruiters.length), color: "bg-orange-50 text-orange-700" },
+      { label: "Total Placements", value: stats?.totalPlacements ?? 0, color: "bg-purple-50 text-purple-700" },
+    ];
+
+    const pieData = [
+      { name: "Placed", value: stats?.placedStudents ?? 0 },
+      { name: "In Progress", value: stats?.inProgressStudents ?? 0 },
+      { name: "Unplaced", value: stats?.unplacedStudents ?? 0 },
+    ];
+
+    return (
+      <div id="dashboard-top" className="space-y-8">
+        <div>
+          <h2 className="text-3xl font-bold text-gray-900">Overview Dashboard</h2>
+          <p className="text-gray-500 mt-1 font-medium">Welcome back, Admin! Here's what's happening.</p>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {statsCards.map((card, i) => (
+            <div key={i} className={`rounded-2xl p-6 shadow-sm border border-gray-100 ${card.color}`}>
+              <p className="text-sm font-bold uppercase tracking-widest opacity-70">{card.label}</p>
+              <h3 className="text-4xl font-black mt-2">{card.value}</h3>
+            </div>
+          ))}
+        </div>
+
+        {/* Charts */}
+        <div id="analytics-section" className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+            <h3 className="text-lg font-bold text-gray-800 mb-4">Placement Analytics</h3>
+            <ResponsiveContainer width="100%" height={250}>
+              <BarChart data={placementAnalytics.length > 0 ? placementAnalytics : [{ name: "No Data", value: 0 }]}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+                <YAxis tick={{ fontSize: 12 }} />
+                <Tooltip />
+                <Bar dataKey="value" fill="#16a34a" radius={[6, 6, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+            <h3 className="text-lg font-bold text-gray-800 mb-4">Student Status</h3>
+            <ResponsiveContainer width="100%" height={250}>
+              <PieChart>
+                <Pie
+                  data={pieData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={100}
+                  dataKey="value"
+                  label={({ name, value }) => `${name}: ${value}`}
+                  labelLine={false}
+                >
+                  {pieData.map((_, idx) => (
+                    <Cell key={idx} fill={PIE_COLORS[idx % PIE_COLORS.length]} />
+                  ))}
+                </Pie>
+                <Legend />
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Pending Approvals */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Pending Students */}
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-50 flex items-center justify-between">
+              <h3 className="font-bold text-gray-800 flex items-center gap-2">
+                <UserPlus className="w-5 h-5 text-green-600" />
+                Pending Students ({pendingStudents.length})
+              </h3>
+            </div>
+            <div className="divide-y divide-gray-50">
+              {pendingStudents.length === 0 ? (
+                <p className="text-center text-gray-400 font-medium py-8">No pending students</p>
+              ) : (
+                pendingStudents.slice(0, 5).map((u) => (
+                  <div key={u.id} className="px-6 py-4 flex items-center justify-between">
+                    <div>
+                      <p className="font-bold text-gray-800 text-sm">{u.name}</p>
+                      <p className="text-xs text-gray-400">{u.email}</p>
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleApproveUser(u.id, "student")}
+                        className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                      >
+                        <CheckCircle className="w-5 h-5" />
+                      </button>
+                      <button
+                        onClick={() => handleRejectUser(u.id, "student")}
+                        className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                      >
+                        <XCircle className="w-5 h-5" />
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+            {pendingStudents.length > 5 && (
+              <div className="px-6 py-3 border-t border-gray-50">
+                <button
+                  onClick={() => setActiveSection("students")}
+                  className="text-sm text-green-600 font-bold hover:underline flex items-center gap-1"
+                >
+                  View all {pendingStudents.length} pending students <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Pending Recruiters */}
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-50 flex items-center justify-between">
+              <h3 className="font-bold text-gray-800 flex items-center gap-2">
+                <Building className="w-5 h-5 text-blue-600" />
+                Pending Recruiters ({pendingRecruiters.length})
+              </h3>
+            </div>
+            <div className="divide-y divide-gray-50">
+              {pendingRecruiters.length === 0 ? (
+                <p className="text-center text-gray-400 font-medium py-8">No pending recruiters</p>
+              ) : (
+                pendingRecruiters.slice(0, 5).map((u) => (
+                  <div key={u.id} className="px-6 py-4 flex items-center justify-between">
+                    <div>
+                      <p className="font-bold text-gray-800 text-sm">{u.name}</p>
+                      <p className="text-xs text-gray-400">{u.email}</p>
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleApproveUser(u.id, "company")}
+                        className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                      >
+                        <CheckCircle className="w-5 h-5" />
+                      </button>
+                      <button
+                        onClick={() => handleRejectUser(u.id, "company")}
+                        className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                      >
+                        <XCircle className="w-5 h-5" />
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+            {pendingRecruiters.length > 5 && (
+              <div className="px-6 py-3 border-t border-gray-50">
+                <button
+                  onClick={() => setActiveSection("companies")}
+                  className="text-sm text-blue-600 font-bold hover:underline flex items-center gap-1"
+                >
+                  View all {pendingRecruiters.length} pending recruiters <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Pending Resource Requests */}
+        {pendingResources.length > 0 && (
+          <div style={{ marginTop: '40px', paddingTop: '32px', borderTop: '2px dashed #93c5fd' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+              <div style={{ padding: '8px', background: '#dbeafe', borderRadius: '12px', display: 'flex', alignItems: 'center' }}>
+                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" /></svg>
+              </div>
+              <div>
+                <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#1e293b', margin: 0 }}>Pending Resource Requests</h3>
+                <p style={{ fontSize: '12px', color: '#2563eb', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0 }}>Submitted by students — awaiting your approval</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {pendingResources.map(r => (
+                <div key={r.id} style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '16px', padding: '20px', position: 'relative', boxShadow: '0 2px 8px rgba(37,99,235,0.06)', transition: 'box-shadow 0.2s' }}>
+                  <span style={{ position: 'absolute', top: '12px', right: '12px', background: '#dbeafe', color: '#1d4ed8', padding: '2px 10px', borderRadius: '20px', fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', border: '1px solid #bfdbfe' }}>Pending</span>
+                  <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '10px' }}>
+                    <span style={{ background: '#e0e7ff', color: '#3730a3', padding: '2px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 700, border: '1px solid #c7d2fe' }}>{r.branch}</span>
+                    <span style={{ background: '#f0fdf4', color: '#15803d', padding: '2px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 700, border: '1px solid #bbf7d0' }}>{r.category}</span>
+                  </div>
+                  <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#1e293b', marginBottom: '8px', paddingRight: '60px', lineHeight: 1.4 }}>{r.title}</h4>
+                  <a href={r.link.startsWith('http') ? r.link : `https://${r.link}`} target="_blank" rel="noopener noreferrer"
+                    style={{ fontSize: '12px', color: '#2563eb', fontWeight: 600, wordBreak: 'break-all', display: 'block', marginBottom: '16px' }}>{r.link}</a>
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <button onClick={() => approveResource(r.id)}
+                      style={{ flex: 1, padding: '9px', background: '#22c55e', color: '#fff', border: 'none', borderRadius: '10px', fontWeight: 700, fontSize: '13px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                      <CheckCircle size={15} /> Approve
+                    </button>
+                    <button onClick={() => rejectResource(r.id)}
+                      style={{ flex: 1, padding: '9px', background: '#fff', color: '#dc2626', border: '1px solid #fecaca', borderRadius: '10px', fontWeight: 700, fontSize: '13px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                      <XCircle size={15} /> Reject
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Quick Nav Cards */}
+        <div>
+          <h3 className="text-lg font-bold text-gray-800 mb-4">Quick Access</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+            {NAV_SECTIONS.filter(s => s.id !== "home").map((section) => {
+              const Icon = section.icon;
+              return (
+                <button
+                  key={section.id}
+                  onClick={() => setActiveSection(section.id)}
+                  className="flex flex-col items-center gap-2 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-green-200 hover:-translate-y-1 transition-all group"
+                >
+                  <div className="p-2 bg-green-50 text-green-700 rounded-xl group-hover:bg-green-100 transition-colors">
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <span className="text-xs font-bold text-gray-600 text-center leading-tight">{section.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="flex h-screen bg-gray-50">
 
       {/* Sidebar */}
-      <aside className="w-64 bg-green-900 text-green-50 hidden md:flex flex-col">
-        <div className="p-4">
+      <aside className="w-64 bg-green-900 text-green-50 hidden md:flex flex-col shrink-0">
+        <div className="p-5 border-b border-green-800">
           <h1 className="text-2xl font-bold text-white">EDUVATE</h1>
-          <p className="text-xs text-green-300">Admin Portal</p>
+          <p className="text-xs text-green-300 mt-0.5">Admin Portal</p>
         </div>
 
-        <nav className="flex-1 px-4 space-y-2">
-          <Link to="/admin-dashboard" onClick={() => { document.getElementById("dashboard-top")?.scrollIntoView({ behavior: "smooth" }); }} className={location.pathname === "/admin-dashboard" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><LayoutDashboard size={18}/> Home</Link>
-          <Link to="/admin-dashboard/students" className={location.pathname === "/admin-dashboard/students" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><Users size={18}/> Students</Link>
-          <Link to="/admin-dashboard/companies" className={location.pathname === "/admin-dashboard/companies" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><Building size={18}/> Companies</Link>
-          <Link to="/admin-dashboard/announcements" className={location.pathname === "/admin-dashboard/announcements" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><Megaphone size={18}/> Announcements</Link>
-          <Link to="/admin-dashboard/competitions" className={location.pathname === "/admin-dashboard/competitions" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><Trophy size={18}/> Competitions</Link>
-          <Link to="/admin-dashboard/events" className={location.pathname === "/admin-dashboard/events" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><Calendar size={18}/> Events</Link>
-
-          <Link to="/admin-dashboard/applications" className={location.pathname === "/admin-dashboard/applications" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><MessageSquare size={18}/> Applications</Link>
-
-          <Link to="/admin-dashboard/settings" className={location.pathname === "/admin-dashboard/settings" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><SettingsIcon size={18}/> Settings</Link>
-          <Link to="/admin-dashboard/help" className={location.pathname === "/admin-dashboard/help" ? "active flex gap-2 p-2" : "flex gap-2 p-2 sidebar-link"}><HelpCircle size={18}/> Help</Link>
-
-          <button onClick={() => setShowLogoutConfirm(true)} className="flex gap-2 p-2 text-red-300">
-            <LogOut size={18}/> Logout
-          </button>
+        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+          {NAV_SECTIONS.map((section) => {
+            const Icon = section.icon;
+            const isActive = activeSection === section.id;
+            const isHome = section.id === "home";
+            
+            return (
+              <button
+                key={section.id}
+                onClick={() => {
+                  setActiveSection(section.id);
+                  if (isHome) {
+                    document.getElementById("dashboard-top")?.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
+                className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+                  isActive
+                    ? "bg-green-700 text-white shadow-sm"
+                    : "text-green-200 hover:bg-green-800 hover:text-white"
+                }`}
+              >
+                <Icon size={17} className="shrink-0" />
+                {section.label}
+              </button>
+            );
+          })}
         </nav>
+
+        <div className="p-3 border-t border-green-800">
+          <button
+            onClick={() => setShowLogoutConfirm(true)}
+            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold text-red-300 hover:bg-red-900/30 hover:text-red-200 transition-all"
+          >
+            <LogOut size={17} className="shrink-0" />
+            Logout
+          </button>
+        </div>
       </aside>
 
-      {/* Main */}
-      <main className="flex-1 overflow-y-auto p-6">
+      {/* Main Content */}
+      <main className="flex-1 overflow-y-auto">
+        {/* Top breadcrumb bar */}
+        <div className="sticky top-0 z-10 bg-white border-b border-gray-100 px-8 py-3 flex items-center justify-between shadow-sm">
+          <div className="flex items-center gap-2 text-sm text-gray-500 font-medium">
+            <span className="text-green-800 font-bold">Admin</span>
+            <ChevronRight className="w-4 h-4" />
+            <span className="text-gray-800 font-semibold capitalize">
+              {NAV_SECTIONS.find(s => s.id === activeSection)?.label || "Dashboard"}
+            </span>
+          </div>
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+          </div>
+        </div>
 
-        {location.pathname === "/admin-dashboard/students" ? (
-          <StudentManagement />
-        ) : location.pathname === "/admin-dashboard/companies" ? (
-          <CompanyManagement />
-        ) : location.pathname === "/admin-dashboard/announcements" ? (
-          <Announcements />
-        ) : location.pathname === "/admin-dashboard/competitions" ? (
-          <Competitions role="admin" />
-        ) : location.pathname === "/admin-dashboard/events" ? (
-          <Events role="admin" />
-        ) : location.pathname === "/admin-dashboard/assessments" ? (
-          <Assessments role="admin" />
-        ) : location.pathname === "/admin-dashboard/settings" ? (
-          <Settings />
-        ) : location.pathname === "/admin-dashboard/help" ? (
-          <HelpSupport role="admin" />
-        ) : location.pathname === "/admin-dashboard/interviews" ? (
-          <Interviews role="admin" />
-        ) : location.pathname === "/admin-dashboard/applications" ? (
-          <CandidateCommunication />
-        ) : (
-          <>
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-3xl font-bold">Overview Dashboard</h2>
-            </div>
-
-            <div className="grid grid-cols-3 gap-6 mb-10">
-              {statCards.map((s, i) => (
-                <div key={i} className="bg-white p-6 rounded-xl shadow">
-                  {s.icon}
-                  <p>{s.title}</p>
-                  <p className="text-2xl font-bold">{s.value}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="grid grid-cols-2 gap-8">
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={placementAnalytics}>
-                  <CartesianGrid strokeDasharray="3 3"/>
-                  <XAxis dataKey="year"/>
-                  <YAxis/>
-                  <Tooltip/>
-                  <Bar dataKey="placements" fill="#16a34a"/>
-                </BarChart>
-              </ResponsiveContainer>
-
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie data={applicationStatus} dataKey="value" outerRadius={100}>
-                    {applicationStatus.map((e, i) => <Cell key={i} fill={PIE_COLORS[i]} />)}
-                  </Pie>
-                  <Legend/>
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-
-            {/* Pending Resource Requests */}
-            {pendingResources.length > 0 && (
-              <div style={{ marginTop: '40px', paddingTop: '32px', borderTop: '2px dashed #93c5fd' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
-                  <div style={{ padding: '8px', background: '#dbeafe', borderRadius: '12px', display: 'flex', alignItems: 'center' }}>
-                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" /></svg>
-                  </div>
-                  <div>
-                    <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#1e293b', margin: 0 }}>Pending Resource Requests</h3>
-                    <p style={{ fontSize: '12px', color: '#2563eb', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0 }}>Submitted by students — awaiting your approval</p>
-                  </div>
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px' }}>
-                  {pendingResources.map(r => (
-                    <div key={r.id} style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '16px', padding: '20px', position: 'relative', boxShadow: '0 2px 8px rgba(37,99,235,0.06)', transition: 'box-shadow 0.2s' }}>
-                      <span style={{ position: 'absolute', top: '12px', right: '12px', background: '#dbeafe', color: '#1d4ed8', padding: '2px 10px', borderRadius: '20px', fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', border: '1px solid #bfdbfe' }}>Pending</span>
-                      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '10px' }}>
-                        <span style={{ background: '#e0e7ff', color: '#3730a3', padding: '2px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 700, border: '1px solid #c7d2fe' }}>{r.branch}</span>
-                        <span style={{ background: '#f0fdf4', color: '#15803d', padding: '2px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 700, border: '1px solid #bbf7d0' }}>{r.category}</span>
-                      </div>
-                      <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#1e293b', marginBottom: '8px', paddingRight: '60px', lineHeight: 1.4 }}>{r.title}</h4>
-                      <a href={r.link.startsWith('http') ? r.link : `https://${r.link}`} target="_blank" rel="noopener noreferrer"
-                        style={{ fontSize: '12px', color: '#2563eb', fontWeight: 600, wordBreak: 'break-all', display: 'block', marginBottom: '16px' }}>{r.link}</a>
-                      <div style={{ display: 'flex', gap: '10px' }}>
-                        <button onClick={() => approveResource(r.id)}
-                          style={{ flex: 1, padding: '9px', background: '#22c55e', color: '#fff', border: 'none', borderRadius: '10px', fontWeight: 700, fontSize: '13px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
-                          <CheckCircle size={15} /> Approve
-                        </button>
-                        <button onClick={() => rejectResource(r.id)}
-                          style={{ flex: 1, padding: '9px', background: '#fff', color: '#dc2626', border: '1px solid #fecaca', borderRadius: '10px', fontWeight: 700, fontSize: '13px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
-                          <XCircle size={15} /> Reject
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </>
-        )}
-
+        {/* Page content */}
+        <div className="p-6 md:p-8">
+          {renderContent()}
+        </div>
       </main>
 
+      {/* ✅ ADMIN1 LOGOUT MODAL UI */}
       {showLogoutConfirm && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/50">
-          <div className="bg-white p-6 rounded-xl">
-            <p className="mb-4">Are you sure you want to logout?</p>
-
-            <div className="flex gap-4">
+        <div className="db-logout-modal-overlay">
+          <div className="db-logout-modal">
+            <div className="db-logout-modal-icon">
+              <LogOut size={28} />
+            </div>
+            <h3>Log Out</h3>
+            <p>Are you sure you want to log out?</p>
+            <div className="db-logout-modal-actions">
               <button
-                onClick={()=>setShowLogoutConfirm(false)}
-                className="px-4 py-2 bg-gray-200 rounded"
+                className="db-btn-cancel"
+                onClick={handleCancelLogout}
               >
                 Cancel
               </button>
-
-              <Link
-                to="/"
-                onClick={()=>{
-                  localStorage.removeItem("adminToken");
-                  sessionStorage.clear();
-                }}
-                className="px-4 py-2 bg-red-600 text-white rounded"
+              <button
+                className="db-btn-confirm"
+                onClick={handleConfirmLogout}
               >
-                Logout
-              </Link>
+                Log Out
+              </button>
             </div>
-
           </div>
         </div>
       )}
-
     </div>
   );
 }
