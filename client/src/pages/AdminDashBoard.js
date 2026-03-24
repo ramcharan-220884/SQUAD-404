@@ -77,15 +77,13 @@ const setAdminResApproved = (arr) =>
 
 // ── Sidebar nav config ──────────────────────────────────────────────────────
 const NAV_SECTIONS = [
-  { id: "home",          label: "Dashboard",            icon: LayoutDashboard },
-  { id: "students",      label: "Student Management",   icon: Users },
-  { id: "companies",     label: "Company Management",   icon: Building },
+  { id: "home",          label: "Home",                 icon: LayoutDashboard },
+  { id: "students",      label: "Student",              icon: Users },
+  { id: "companies",     label: "Company",              icon: Building },
   { id: "announcements", label: "Announcements",        icon: Megaphone },
   { id: "events",        label: "Campus Events",        icon: Calendar },
   { id: "competitions",  label: "Competitions",         icon: Trophy },
-  { id: "assessments",   label: "Assessments",          icon: FileCheck },
-  { id: "interviews",    label: "Interviews",           icon: Mic },
-  { id: "communication", label: "Candidate Comms",      icon: MessageSquare },
+  { id: "communication", label: "Applications",         icon: MessageSquare },
   { id: "settings",      label: "Settings",             icon: SettingsIcon },
   { id: "help",          label: "Help & Support",       icon: HelpCircle },
 ];
@@ -290,7 +288,7 @@ export default function AdminDashboard() {
     return (
       <div id="dashboard-top" className="space-y-8">
         <div>
-          <h2 className="text-3xl font-bold text-gray-900">Overview Dashboard</h2>
+          <h2 className="text-3xl font-bold text-gray-900">Home Overview</h2>
           <p className="text-gray-500 mt-1 font-medium">Welcome back, Admin! Here's what's happening.</p>
         </div>
 
@@ -564,7 +562,7 @@ export default function AdminDashboard() {
             <span className="text-green-800 font-bold">Admin</span>
             <ChevronRight className="w-4 h-4" />
             <span className="text-gray-800 font-semibold capitalize">
-              {NAV_SECTIONS.find(s => s.id === activeSection)?.label || "Dashboard"}
+              {NAV_SECTIONS.find(s => s.id === activeSection)?.label || "Home"}
             </span>
           </div>
           <div className="flex items-center gap-3">
