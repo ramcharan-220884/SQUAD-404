@@ -147,6 +147,19 @@ body {
   padding-left: 9px;
 }
 
+/* Student Dashboard Overrides */
+.student-dashboard .db-nav-item.active {
+  background: linear-gradient(90deg, rgba(128,0,0,0.2) 0%, rgba(128,0,0,0.4) 100%) !important;
+  color: #ffffff !important;
+  border-left: 3px solid #ff4d4d !important;
+  box-shadow: inset 0 0 10px rgba(128,0,0,0.1);
+}
+
+.student-dashboard .db-nav-item:hover {
+  background-color: rgba(255,255,255,0.08) !important;
+  color: #ffffff !important;
+}
+
 .db-nav-item .nav-icon {
   width: 18px;
   height: 18px;
@@ -505,8 +518,8 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: #e6f4ea;
-  color: #1e7e34;
+  background: #fdf2f2;
+  color: #800000;
   font-size: 12px;
   font-weight: 600;
   padding: 5px 14px;
@@ -518,7 +531,7 @@ body {
   content: '';
   width: 7px;
   height: 7px;
-  background: #28a745;
+  background: #800000;
   border-radius: 50%;
   display: inline-block;
 }
@@ -553,7 +566,7 @@ body {
 }
 
 .home-stat-icon.maroon { background: #fdf2f2; color: #800000; }
-.home-stat-icon.green { background: #e6f4ea; color: #1e7e34; }
+.home-stat-icon.green { background: #fef2f2; color: #800000; }
 .home-stat-icon.purple { background: #f0ebfc; color: #7c3aed; }
 
 .home-stat-value {
@@ -1058,8 +1071,9 @@ body {
 }
 
 .bj-status-applied {
-  background: #e6f4ea;
-  color: #1e7e34;
+  background: #fdf2f2;
+  color: #800000;
+  border: 1px solid #fee2e2;
 }
 
 .bj-status-not-applied {
@@ -1563,6 +1577,29 @@ body {
 .job-status-badge.rejected {
   background: #fee2e2;
   color: #dc2626;
+}
+
+/* Student Dashboard Status Overrides */
+.student-dashboard .job-status-badge {
+  background-color: transparent !important;
+  background-image: none !important;
+  color: #e5e7eb !important;
+  border: 1px solid #475569 !important;
+  padding: 4px 8px !important;
+  border-radius: 6px !important;
+}
+
+.student-dashboard .job-status-badge.active {
+  border-color: #800000 !important;
+  color: #800000 !important;
+  font-weight: 800;
+}
+
+.student-dashboard .job-status-badge.selected {
+  border-color: #800000 !important;
+  background-color: rgba(128,0,0,0.05) !important;
+  color: #800000 !important;
+  font-weight: 800;
 }
 
 /* Progress Bar */
