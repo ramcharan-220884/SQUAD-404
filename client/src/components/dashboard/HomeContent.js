@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { authFetch } from '../../services/api';
 import { useNotification } from '../../context/NotificationContext';
+import { applyForJob } from '../../services/studentService';
 import { JobTable } from './JobTable';
 
 function StatCard({ value, label, iconClass, icon }) {
@@ -67,30 +68,16 @@ export default function HomeContent() {
       return;
     }
     if (applyingJobId === jobId) return; // prevent double-click
-    const token = localStorage.getItem("token");
-    if (!token) {
-      showNotification("Please log in to apply for jobs.", "warning", "student");
-      return;
-    }
     setApplyingJobId(jobId);
     try {
-      const res = await authFetch("/applications/apply", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ job_id: jobId })
-      });
-      const data = await res.json();
-      if (res.ok) {
-        showNotification("Application submitted successfully!", "success", "student");
-        setStats(prev => ({ ...prev, applicationsSent: prev.applicationsSent + 1 }));
-        // Mark job as applied in local state
-        setJobs(prev => prev.map(j => j.id === jobId ? { ...j, applied: true } : j));
-      } else {
-        showNotification(data.message || "Failed to apply.", "error", "student");
-      }
+      await applyForJob(jobId);
+      showNotification("Application submitted successfully!", "success", "student");
+      setStats(prev => ({ ...prev, applicationsSent: prev.applicationsSent + 1 }));
+      // Mark job as applied in local state
+      setJobs(prev => prev.map(j => j.id === jobId ? { ...j, applied: true } : j));
     } catch (err) {
       console.error("Error applying:", err);
-      showNotification("Error submitting application.", "error", "student");
+      showNotification(err.message || "Error submitting application.", "error", "student");
     } finally {
       setApplyingJobId(null);
     }
