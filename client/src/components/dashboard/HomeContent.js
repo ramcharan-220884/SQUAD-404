@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { authFetch } from '../../services/api';
 import { useNotification } from '../../context/NotificationContext';
+import { JobTable } from './JobTable';
 
 function StatCard({ value, label, iconClass, icon }) {
   return (
@@ -14,34 +15,7 @@ function StatCard({ value, label, iconClass, icon }) {
   );
 }
 
-function CompanyLogo({ opp }) {
-  return (
-    <div
-      className="job-logo-abbr"
-      style={{ background: '#800000', width: '40px', height: '40px', fontSize: '13px' }}
-    >
-      {(opp.company_name || opp.company || 'CO').slice(0, 2).toUpperCase()}
-    </div>
-  );
-}
-
-function getDeadlineInfo(dateString) {
-  if (!dateString) return { text: 'Open', color: '#38a169', bg: '#c6f6d5' };
-  const deadline = new Date(dateString);
-  const now = new Date();
-
-  deadline.setHours(0, 0, 0, 0);
-  now.setHours(0, 0, 0, 0);
-
-  const diffTime = deadline - now;
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-  if (diffDays < 0) return { text: 'Closed', color: '#8492a6', bg: '#f4f7fb' };
-  if (diffDays === 0) return { text: 'Last Day', color: '#e53e3e', bg: '#fed7d7' };
-  if (diffDays < 3) return { text: `${diffDays} Days Left`, color: '#e53e3e', bg: '#fed7d7' };
-  if (diffDays <= 6) return { text: `${diffDays} Days Left`, color: '#d69e2e', bg: '#fefcbf' };
-  return { text: `${diffDays} Days Left`, color: '#38a169', bg: '#c6f6d5' };
-}
+// Local CompanyLogo and getDeadlineInfo removed as we move to JobTable
 
 export default function HomeContent() {
   const { showNotification } = useNotification();
@@ -169,48 +143,15 @@ export default function HomeContent() {
       {/* Open Opportunities — Live from Database */}
       <div className="home-opp-section">
         <h2 className="home-opp-title">Open Opportunities</h2>
-        {jobs.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '40px', color: '#888' }}>
-            <p style={{ fontWeight: 600 }}>No open opportunities at the moment.</p>
-          </div>
-        ) : (
-          <div className="home-opp-grid">
-            {jobs.map(opp => {
-              const deadlineInfo = getDeadlineInfo(opp.deadline || opp.created_at);
-              return (
-                <div key={opp.id} className="home-opp-card">
-                  <div className="home-opp-header">
-                    <CompanyLogo opp={opp} />
-                    <div className="home-opp-meta">
-                      <h3 className="home-opp-comp">{opp.company_name || 'Company'}</h3>
-                      <p className="home-opp-role">{opp.title}</p>
-                    </div>
-                    <div 
-                      className="home-opp-deadline" 
-                      style={{ color: deadlineInfo.color, backgroundColor: deadlineInfo.bg }}
-                    >
-                      {deadlineInfo.text}
-                    </div>
-                  </div>
-
-                  <div className="home-opp-details">
-                    <div className="home-opp-pill">🎓 Min CGPA: {opp.min_cgpa || 'Any'}</div>
-                    <div className="home-opp-pill">💰 {opp.ctc || 'Not specified'}</div>
-                  </div>
-
-                <button 
-                    className="home-opp-btn" 
-                    onClick={() => handleApply(opp.id)}
-                    disabled={applyingJobId === opp.id || opp.applied || !hasPhone}
-                    style={(applyingJobId === opp.id || opp.applied || !hasPhone) ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
-                  >
-                    {!hasPhone ? 'Phone Required' : opp.applied ? 'Applied ✓' : applyingJobId === opp.id ? 'Applying...' : 'Apply Now →'}
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-        )}
+        <div className="bj-content" style={{ marginTop: '16px' }}>
+          <JobTable 
+            jobs={jobs} 
+            applyingId={applyingJobId} 
+            hasPhone={hasPhone} 
+            handleApply={handleApply}
+            emptyMessage="No open opportunities at the moment."
+          />
+        </div>
       </div>
     </div>
   );
