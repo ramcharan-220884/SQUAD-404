@@ -15,10 +15,10 @@ import {
   XCircle,
   Megaphone,
   Trophy,
-  Mic,
   MessageSquare,
   LogOut,
-  ChevronRight
+  ChevronRight,
+  Mic
 } from "lucide-react";
 import { useNotification } from "../context/NotificationContext";
 
@@ -27,12 +27,13 @@ import CompanyManagement from "../components/dashboard/CompanyManagement";
 import Announcements from "../components/dashboard/Announcements";
 import Settings from "../components/dashboard/Settings";
 import HelpSupport from "../components/dashboard/HelpSupport";
-import ThemeToggle from "../components/dashboard/ThemeToggle";
+
 import Competitions from "../components/dashboard/Competitions";
 import Events from "../components/dashboard/Events";
 import Assessments from "../components/dashboard/Assessments";
 import Interviews from "../components/dashboard/Interviews";
 import CandidateCommunication from "../components/dashboard/CandidateCommunication";
+import ThemeToggle from "../components/dashboard/ThemeToggle";
 
 import {
   BarChart,
@@ -53,7 +54,8 @@ import {
   getPendingUsers,
   approveUser,
   rejectUser,
-  getPlacementAnalytics
+  getPlacementAnalytics,
+  getAllStudents
 } from "../services/adminService";
 
 const PIE_COLORS = ["#16a34a", "#facc15", "#dc2626"];
@@ -76,15 +78,13 @@ const setAdminResApproved = (arr) =>
 
 // ── Sidebar nav config ──────────────────────────────────────────────────────
 const NAV_SECTIONS = [
-  { id: "home",          label: "Dashboard",            icon: LayoutDashboard },
-  { id: "students",      label: "Student Management",   icon: Users },
-  { id: "companies",     label: "Company Management",   icon: Building },
+  { id: "home",          label: "Home",                 icon: LayoutDashboard },
+  { id: "students",      label: "Student",              icon: Users },
+  { id: "companies",     label: "Company",              icon: Building },
   { id: "announcements", label: "Announcements",        icon: Megaphone },
   { id: "events",        label: "Campus Events",        icon: Calendar },
   { id: "competitions",  label: "Competitions",         icon: Trophy },
-  { id: "assessments",   label: "Assessments",          icon: FileCheck },
-  { id: "interviews",    label: "Interviews",           icon: Mic },
-  { id: "communication", label: "Candidate Comms",      icon: MessageSquare },
+  { id: "communication", label: "Applications",         icon: MessageSquare },
   { id: "settings",      label: "Settings",             icon: SettingsIcon },
   { id: "help",          label: "Help & Support",       icon: HelpCircle },
 ];
@@ -102,6 +102,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [pendingResources, setPendingResources] = useState(getAdminResPending());
+  const [studentStats, setStudentStats] = useState({ placed: 0, unplaced: 0 });
 
   // ✅ ADMIN1 LOGOUT (FINAL)
   const handleConfirmLogout = () => {
@@ -122,14 +123,30 @@ export default function AdminDashboard() {
   const fetchData = React.useCallback(async () => {
     setLoading(true);
     try {
-      const [statsData, pendingData, analyticsData] = await Promise.all([
+      const [statsData, pendingData, analyticsData, studentsData] = await Promise.all([
         getStats(),
         getPendingUsers(),
-        getPlacementAnalytics().catch(() => [])
+        getPlacementAnalytics().catch(() => []),
+        getAllStudents(1, 10000).catch(() => ({ data: [] }))
       ]);
 
       setStats(statsData);
       setPlacementAnalytics(analyticsData);
+
+      // Process real student data for Pie Chart
+      const studentsList = studentsData.data || studentsData;
+      if (Array.isArray(studentsList)) {
+        let placed = 0;
+        let unplaced = 0;
+        studentsList.forEach(s => {
+          if (s.status === 'Selected' || s.placed_status === 'Placed') {
+            placed++;
+          } else {
+            unplaced++;
+          }
+        });
+        setStudentStats({ placed, unplaced });
+      }
 
       setPendingStudents(
         pendingData.filter((u) => u.type === "student")
@@ -281,15 +298,14 @@ export default function AdminDashboard() {
     ];
 
     const pieData = [
-      { name: "Placed", value: stats?.placedStudents ?? 0 },
-      { name: "In Progress", value: stats?.inProgressStudents ?? 0 },
-      { name: "Unplaced", value: stats?.unplacedStudents ?? 0 },
+      { name: "Placed", value: studentStats.placed },
+      { name: "Unplaced", value: studentStats.unplaced }
     ];
 
     return (
       <div id="dashboard-top" className="space-y-8">
         <div>
-          <h2 className="text-3xl font-bold text-gray-900">Overview Dashboard</h2>
+          <h2 className="text-3xl font-bold text-gray-900">Home Overview</h2>
           <p className="text-gray-500 mt-1 font-medium">Welcome back, Admin! Here's what's happening.</p>
         </div>
 
@@ -344,54 +360,8 @@ export default function AdminDashboard() {
         </div>
 
         {/* Pending Approvals */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Pending Students */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-50 flex items-center justify-between">
-              <h3 className="font-bold text-gray-800 flex items-center gap-2">
-                <UserPlus className="w-5 h-5 text-green-600" />
-                Pending Students ({pendingStudents.length})
-              </h3>
-            </div>
-            <div className="divide-y divide-gray-50">
-              {pendingStudents.length === 0 ? (
-                <p className="text-center text-gray-400 font-medium py-8">No pending students</p>
-              ) : (
-                pendingStudents.slice(0, 5).map((u) => (
-                  <div key={u.id} className="px-6 py-4 flex items-center justify-between">
-                    <div>
-                      <p className="font-bold text-gray-800 text-sm">{u.name}</p>
-                      <p className="text-xs text-gray-400">{u.email}</p>
-                    </div>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => handleApproveUser(u.id, "student")}
-                        className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
-                      >
-                        <CheckCircle className="w-5 h-5" />
-                      </button>
-                      <button
-                        onClick={() => handleRejectUser(u.id, "student")}
-                        className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                      >
-                        <XCircle className="w-5 h-5" />
-                      </button>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-            {pendingStudents.length > 5 && (
-              <div className="px-6 py-3 border-t border-gray-50">
-                <button
-                  onClick={() => setActiveSection("students")}
-                  className="text-sm text-green-600 font-bold hover:underline flex items-center gap-1"
-                >
-                  View all {pendingStudents.length} pending students <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-            )}
-          </div>
+        <div className="grid grid-cols-1 gap-6">
+
 
           {/* Pending Recruiters */}
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
@@ -442,27 +412,46 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Quick Nav Cards */}
-        <div>
-          <h3 className="text-lg font-bold text-gray-800 mb-4">Quick Access</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-            {NAV_SECTIONS.filter(s => s.id !== "home").map((section) => {
-              const Icon = section.icon;
-              return (
-                <button
-                  key={section.id}
-                  onClick={() => setActiveSection(section.id)}
-                  className="flex flex-col items-center gap-2 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-green-200 hover:-translate-y-1 transition-all group"
-                >
-                  <div className="p-2 bg-green-50 text-green-700 rounded-xl group-hover:bg-green-100 transition-colors">
-                    <Icon className="w-5 h-5" />
+        {/* Pending Resource Requests */}
+        {pendingResources.length > 0 && (
+          <div style={{ marginTop: '40px', paddingTop: '32px', borderTop: '2px dashed #93c5fd' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+              <div style={{ padding: '8px', background: '#dbeafe', borderRadius: '12px', display: 'flex', alignItems: 'center' }}>
+                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" /></svg>
+              </div>
+              <div>
+                <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#1e293b', margin: 0 }}>Pending Resource Requests</h3>
+                <p style={{ fontSize: '12px', color: '#2563eb', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0 }}>Submitted by students — awaiting your approval</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {pendingResources.map(r => (
+                <div key={r.id} style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '16px', padding: '20px', position: 'relative', boxShadow: '0 2px 8px rgba(37,99,235,0.06)', transition: 'box-shadow 0.2s' }}>
+                  <span style={{ position: 'absolute', top: '12px', right: '12px', background: '#dbeafe', color: '#1d4ed8', padding: '2px 10px', borderRadius: '20px', fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', border: '1px solid #bfdbfe' }}>Pending</span>
+                  <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '10px' }}>
+                    <span style={{ background: '#e0e7ff', color: '#3730a3', padding: '2px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 700, border: '1px solid #c7d2fe' }}>{r.branch}</span>
+                    <span style={{ background: '#f0fdf4', color: '#15803d', padding: '2px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 700, border: '1px solid #bbf7d0' }}>{r.category}</span>
                   </div>
-                  <span className="text-xs font-bold text-gray-600 text-center leading-tight">{section.label}</span>
-                </button>
-              );
-            })}
+                  <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#1e293b', marginBottom: '8px', paddingRight: '60px', lineHeight: 1.4 }}>{r.title}</h4>
+                  <a href={r.link.startsWith('http') ? r.link : `https://${r.link}`} target="_blank" rel="noopener noreferrer"
+                    style={{ fontSize: '12px', color: '#2563eb', fontWeight: 600, wordBreak: 'break-all', display: 'block', marginBottom: '16px' }}>{r.link}</a>
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <button onClick={() => approveResource(r.id)}
+                      style={{ flex: 1, padding: '9px', background: '#22c55e', color: '#fff', border: 'none', borderRadius: '10px', fontWeight: 700, fontSize: '13px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                      <CheckCircle size={15} /> Approve
+                    </button>
+                    <button onClick={() => rejectResource(r.id)}
+                      style={{ flex: 1, padding: '9px', background: '#fff', color: '#dc2626', border: '1px solid #fecaca', borderRadius: '10px', fontWeight: 700, fontSize: '13px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                      <XCircle size={15} /> Reject
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
+
+
       </div>
     );
   };
@@ -481,10 +470,17 @@ export default function AdminDashboard() {
           {NAV_SECTIONS.map((section) => {
             const Icon = section.icon;
             const isActive = activeSection === section.id;
+            const isHome = section.id === "home";
+            
             return (
               <button
                 key={section.id}
-                onClick={() => setActiveSection(section.id)}
+                onClick={() => {
+                  setActiveSection(section.id);
+                  if (isHome) {
+                    document.getElementById("dashboard-top")?.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
                 className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${
                   isActive
                     ? "bg-green-700 text-white shadow-sm"
@@ -517,7 +513,7 @@ export default function AdminDashboard() {
             <span className="text-green-800 font-bold">Admin</span>
             <ChevronRight className="w-4 h-4" />
             <span className="text-gray-800 font-semibold capitalize">
-              {NAV_SECTIONS.find(s => s.id === activeSection)?.label || "Dashboard"}
+              {NAV_SECTIONS.find(s => s.id === activeSection)?.label || "Home"}
             </span>
           </div>
           <div className="flex items-center gap-3">
