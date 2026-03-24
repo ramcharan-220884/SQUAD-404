@@ -176,8 +176,8 @@ const CompanyRegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
 
   // Common modal wrapper
   const renderModalWrapper = (children) => (
-    <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md overflow-y-auto">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-y-auto max-h-[95vh] relative border border-white/20 animate-in fade-in zoom-in duration-300">
+    <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden relative border border-white/20 animate-in fade-in zoom-in duration-300">
 
         {/* Close Button */}
         <button
@@ -190,10 +190,10 @@ const CompanyRegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
           </svg>
         </button>
 
-        <div className="p-6 lg:p-8 font-['Poppins']">
+        <div className="p-4 font-['Poppins']">
           {/* Header */}
-          <div className="mb-7 flex flex-col items-center text-center">
-            <div className="flex items-center justify-center mb-5 gap-3 px-4 py-2 rounded-2xl bg-gray-50/50 border border-gray-100/50">
+          <div className="mb-2 flex flex-col items-center text-center">
+            <div className="flex items-center justify-center mb-2 gap-2 px-3 py-1 rounded-2xl bg-gray-50/50 border border-gray-100/50">
               <div className="w-12 h-12 bg-gradient-to-tr from-violet-500 to-purple-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-violet-500/20 transform -rotate-3 hover:rotate-0 transition-transform duration-300">
                 <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
@@ -308,7 +308,7 @@ const CompanyRegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
   // ── STEP 1: Registration Form ─────────────────────────────────────────────
   return renderModalWrapper(
     <>
-      <div className="w-full flex justify-center mb-6">
+      <div className="w-full flex justify-center mb-2">
         <GoogleLogin 
           onSuccess={handleGoogleSuccess} 
           onError={() => showNotification("Google Sign-Up failed to connect.", "error")}
@@ -319,7 +319,7 @@ const CompanyRegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
         />
       </div>
 
-      <div className="flex items-center w-full mb-6">
+      <div className="flex items-center w-full mb-2">
         <div className="flex-1 border-t border-gray-200"></div>
         <span className="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Or standard signup</span>
         <div className="flex-1 border-t border-gray-200"></div>
@@ -336,9 +336,9 @@ const CompanyRegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
       )}
 
       {/* Form */}
-      <form onSubmit={handleSendOTP} className="space-y-5">
+      <form onSubmit={handleSendOTP} className="space-y-1.5">
         {/* Company Name */}
-        <div className="space-y-2">
+        <div className="space-y-0.5">
           <label className="block text-[11px] font-extrabold text-[#052c42] uppercase tracking-[0.2em] ml-1">Company Name</label>
           <div className="relative group">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-300 group-focus-within:text-violet-500 transition-colors duration-300">
@@ -353,13 +353,13 @@ const CompanyRegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
               onChange={handleChange}
               required
               placeholder="e.g. Acme Corp"
-              className="pl-12 w-full px-4 py-3.5 bg-gray-50/50 border-2 border-gray-100/80 rounded-2xl focus:bg-white focus:ring-[6px] focus:ring-violet-500/5 focus:border-violet-500 outline-none transition-all duration-300 text-sm font-medium placeholder:text-gray-300"
+              className="pl-12 w-full px-4 py-2 bg-gray-50/50 border-2 border-gray-100/80 rounded-2xl focus:bg-white focus:ring-[6px] focus:ring-violet-500/5 focus:border-violet-500 outline-none transition-all duration-300 text-sm font-medium placeholder:text-gray-300"
             />
           </div>
         </div>
 
         {/* Email */}
-        <div className="space-y-2">
+        <div className="space-y-0.5">
           <label className="block text-[11px] font-extrabold text-[#052c42] uppercase tracking-[0.2em] ml-1">Email Address</label>
           <div className="relative group">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-300 group-focus-within:text-violet-500 transition-colors duration-300">
@@ -374,13 +374,13 @@ const CompanyRegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
               onChange={handleChange}
               required
               placeholder="e.g. recruiter@company.com"
-              className="pl-12 w-full px-4 py-3.5 bg-gray-50/50 border-2 border-gray-100/80 rounded-2xl focus:bg-white focus:ring-[6px] focus:ring-violet-500/5 focus:border-violet-500 outline-none transition-all duration-300 text-sm font-medium placeholder:text-gray-300"
+              className="pl-12 w-full px-4 py-2 bg-gray-50/50 border-2 border-gray-100/80 rounded-2xl focus:bg-white focus:ring-[6px] focus:ring-violet-500/5 focus:border-violet-500 outline-none transition-all duration-300 text-sm font-medium placeholder:text-gray-300"
             />
           </div>
         </div>
 
         {/* Password */}
-        <div className="space-y-2">
+        <div className="space-y-0.5">
           <label className="block text-[11px] font-extrabold text-[#052c42] uppercase tracking-[0.2em] ml-1">Password</label>
           <div className="relative group">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-300 group-focus-within:text-violet-500 transition-colors duration-300">
@@ -395,14 +395,14 @@ const CompanyRegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
               onChange={handleChange}
               required
               placeholder="••••••••"
-              className="pl-12 w-full px-4 py-3.5 bg-gray-50/50 border-2 border-gray-100/80 rounded-2xl focus:bg-white focus:ring-[6px] focus:ring-violet-500/5 focus:border-violet-500 outline-none transition-all duration-300 text-sm font-medium placeholder:text-gray-300"
+              className="pl-12 w-full px-4 py-2 bg-gray-50/50 border-2 border-gray-100/80 rounded-2xl focus:bg-white focus:ring-[6px] focus:ring-violet-500/5 focus:border-violet-500 outline-none transition-all duration-300 text-sm font-medium placeholder:text-gray-300"
             />
           </div>
           <p className="text-[10px] text-gray-400 font-medium ml-1 mt-1">Min 8 chars, include a number and a special character (e.g. !@#$)</p>
         </div>
 
         {/* Confirm Password */}
-        <div className="space-y-2">
+        <div className="space-y-0.5">
           <label className="block text-[11px] font-extrabold text-[#052c42] uppercase tracking-[0.2em] ml-1">Confirm Password</label>
           <div className="relative group">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-300 group-focus-within:text-violet-500 transition-colors duration-300">
@@ -417,7 +417,7 @@ const CompanyRegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
               onChange={handleChange}
               required
               placeholder="••••••••"
-              className="pl-12 w-full px-4 py-3.5 bg-gray-50/50 border-2 border-gray-100/80 rounded-2xl focus:bg-white focus:ring-[6px] focus:ring-violet-500/5 focus:border-violet-500 outline-none transition-all duration-300 text-sm font-medium placeholder:text-gray-300"
+              className="pl-12 w-full px-4 py-2 bg-gray-50/50 border-2 border-gray-100/80 rounded-2xl focus:bg-white focus:ring-[6px] focus:ring-violet-500/5 focus:border-violet-500 outline-none transition-all duration-300 text-sm font-medium placeholder:text-gray-300"
             />
           </div>
         </div>
@@ -430,12 +430,12 @@ const CompanyRegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
               ? 'bg-gray-300 cursor-not-allowed'
               : 'bg-gradient-to-r from-violet-600 to-purple-600 hover:shadow-2xl hover:shadow-violet-500/30 hover:-translate-y-0.5'
             }`}
-          style={{ padding: '1rem' }}
+          style={{ padding: '0.625rem' }}
         >
           {loading ? 'Sending Verification Code...' : 'Continue'}
         </button>
 
-        <p className="mt-5 text-center text-[12px] text-gray-400 font-medium">
+        <p className="mt-2 text-center text-[12px] text-gray-400 font-medium">
           Already have an account?{" "}
           <button
             type="button"

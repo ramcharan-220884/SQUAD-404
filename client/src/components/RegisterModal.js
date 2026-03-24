@@ -86,7 +86,7 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
 
   return (
     <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-y-auto max-h-[95vh] relative border border-white/20 animate-in fade-in zoom-in duration-300 my-auto">
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden relative border border-white/20 animate-in fade-in zoom-in duration-300 my-auto">
 
         {/* Close Button */}
         <button
@@ -99,10 +99,10 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
           </svg>
         </button>
 
-        <div className="p-6 font-['Poppins']">
+        <div className="p-4 font-['Poppins']">
           {/* Header */}
-          <div className="mb-3 flex flex-col items-center text-center">
-            <div className="flex items-center justify-center mb-3 gap-2 px-4 py-1.5 rounded-2xl bg-gray-50/50 border border-gray-100/50">
+          <div className="mb-2 flex flex-col items-center text-center">
+            <div className="flex items-center justify-center mb-2 gap-2 px-3 py-1 rounded-2xl bg-gray-50/50 border border-gray-100/50">
               <div className="w-10 h-10 bg-gradient-to-tr from-[#346b41] to-[#4caf50] rounded-2xl flex items-center justify-center text-white shadow-lg shadow-[#346b41]/20 transform -rotate-3 hover:rotate-0 transition-transform duration-300">
                 <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.989-2.386l-.548-.547z" />
@@ -120,7 +120,7 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
             </div>
           </div>
 
-          <div className="w-full flex justify-center mb-3">
+          <div className="w-full flex justify-center mb-2">
             <GoogleLogin 
               onSuccess={handleGoogleSuccess} 
               onError={() => showNotification("Google Sign-Up failed to connect.", "error")}
@@ -131,7 +131,7 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
             />
           </div>
 
-          <div className="flex items-center w-full mb-3">
+          <div className="flex items-center w-full mb-2">
             <div className="flex-1 border-t border-gray-200"></div>
             <span className="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Or standard signup</span>
             <div className="flex-1 border-t border-gray-200"></div>
@@ -148,9 +148,9 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
           )}
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-2.5">
+          <form onSubmit={handleSubmit} className="space-y-1.5">
             {/* Full Name */}
-            <div className="space-y-2">
+            <div className="space-y-0.5">
               <label className="block text-[11px] font-extrabold text-[#052c42] uppercase tracking-[0.2em] ml-1">Full Name</label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-300 group-focus-within:text-[#346b41] transition-colors duration-300">
@@ -165,13 +165,13 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
                   onChange={handleChange}
                   required
                   placeholder="e.g. John Doe"
-                  className="pl-12 w-full px-4 py-3.5 bg-gray-50/50 border-2 border-gray-100/80 rounded-2xl focus:bg-white focus:ring-[6px] focus:ring-[#346b41]/5 focus:border-[#346b41] outline-none transition-all duration-300 text-sm font-medium placeholder:text-gray-300"
+                  className="pl-12 w-full px-4 py-2 bg-gray-50/50 border-2 border-gray-100/80 rounded-2xl focus:bg-white focus:ring-[6px] focus:ring-[#346b41]/5 focus:border-[#346b41] outline-none transition-all duration-300 text-sm font-medium placeholder:text-gray-300"
                 />
               </div>
             </div>
 
             {/* Email */}
-            <div className="space-y-2">
+            <div className="space-y-0.5">
               <label className="block text-[11px] font-extrabold text-[#052c42] uppercase tracking-[0.2em] ml-1">Email Address</label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-300 group-focus-within:text-[#346b41] transition-colors duration-300">
@@ -186,13 +186,13 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
                   onChange={handleChange}
                   required
                   placeholder="e.g. name@example.com"
-                  className="pl-12 w-full px-4 py-3.5 bg-gray-50/50 border-2 border-gray-100/80 rounded-2xl focus:bg-white focus:ring-[6px] focus:ring-[#346b41]/5 focus:border-[#346b41] outline-none transition-all duration-300 text-sm font-medium placeholder:text-gray-300"
+                  className="pl-12 w-full px-4 py-2 bg-gray-50/50 border-2 border-gray-100/80 rounded-2xl focus:bg-white focus:ring-[6px] focus:ring-[#346b41]/5 focus:border-[#346b41] outline-none transition-all duration-300 text-sm font-medium placeholder:text-gray-300"
                 />
               </div>
             </div>
 
             {/* Password */}
-            <div className="space-y-2">
+            <div className="space-y-0.5">
               <label className="block text-[11px] font-extrabold text-[#052c42] uppercase tracking-[0.2em] ml-1">Password</label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-300 group-focus-within:text-[#346b41] transition-colors duration-300">
@@ -207,14 +207,14 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
                   onChange={handleChange}
                   required
                   placeholder="••••••••"
-                  className="pl-12 w-full px-4 py-3.5 bg-gray-50/50 border-2 border-gray-100/80 rounded-2xl focus:bg-white focus:ring-[6px] focus:ring-[#346b41]/5 focus:border-[#346b41] outline-none transition-all duration-300 text-sm font-medium placeholder:text-gray-300"
+                  className="pl-12 w-full px-4 py-2 bg-gray-50/50 border-2 border-gray-100/80 rounded-2xl focus:bg-white focus:ring-[6px] focus:ring-[#346b41]/5 focus:border-[#346b41] outline-none transition-all duration-300 text-sm font-medium placeholder:text-gray-300"
                 />
               </div>
               <p className="text-[10px] text-gray-400 font-medium ml-1 mt-1">Min 8 chars, include a number and a special character (e.g. !@#$)</p>
             </div>
 
             {/* Confirm Password */}
-            <div className="space-y-2">
+            <div className="space-y-0.5">
               <label className="block text-[11px] font-extrabold text-[#052c42] uppercase tracking-[0.2em] ml-1">Confirm Password</label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-300 group-focus-within:text-[#346b41] transition-colors duration-300">
@@ -229,7 +229,7 @@ const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }) => {
                   onChange={handleChange}
                   required
                   placeholder="••••••••"
-                  className="pl-12 w-full px-4 py-3.5 bg-gray-50/50 border-2 border-gray-100/80 rounded-2xl focus:bg-white focus:ring-[6px] focus:ring-[#346b41]/5 focus:border-[#346b41] outline-none transition-all duration-300 text-sm font-medium placeholder:text-gray-300"
+                  className="pl-12 w-full px-4 py-2 bg-gray-50/50 border-2 border-gray-100/80 rounded-2xl focus:bg-white focus:ring-[6px] focus:ring-[#346b41]/5 focus:border-[#346b41] outline-none transition-all duration-300 text-sm font-medium placeholder:text-gray-300"
                 />
               </div>
             </div>

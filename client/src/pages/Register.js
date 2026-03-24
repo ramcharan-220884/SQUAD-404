@@ -73,7 +73,7 @@ export default function Register() {
 
   return (
     <div 
-      className="min-h-screen flex items-center justify-center py-4 px-4 relative font-sans overflow-y-auto"
+      className="h-screen flex items-center justify-center py-2 px-4 relative font-sans overflow-hidden"
     >
       {/* Background with blur and light overlay */}
       <div 
@@ -85,7 +85,7 @@ export default function Register() {
       ></div>
       <div className="absolute inset-0 z-0 bg-white/60"></div>
 
-      <div className="w-full max-w-md bg-white rounded-lg shadow-2xl relative z-10 p-6 border border-gray-100 overflow-y-auto" style={{maxHeight: '95vh'}}>
+      <div className="w-full max-w-md bg-white rounded-lg shadow-2xl relative z-10 p-4 border border-gray-100 overflow-hidden" style={{maxHeight: '98vh'}}>
         
         {/* Logo and Branding */}
         <div className="flex items-center justify-center mb-3 gap-2">
@@ -99,7 +99,7 @@ export default function Register() {
         </div>
 
         {/* Role Tabs */}
-        <div className="flex border border-gray-800 rounded-lg overflow-hidden mb-3 w-full">
+        <div className="flex border border-gray-800 rounded-lg overflow-hidden mb-2 w-full">
           <button
             type="button"
             onClick={() => handleRoleChange("student")}
@@ -130,14 +130,14 @@ export default function Register() {
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-600 px-3 py-2 rounded-md mb-3 text-sm">
+          <div className="bg-red-50 border border-red-200 text-red-600 px-3 py-1.5 rounded-md mb-2 text-xs">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-3">
+        <form onSubmit={handleSubmit} className="space-y-1.5">
           <div>
-            <label className="block text-sm font-bold text-gray-900 mb-1">
+            <label className="block text-xs font-bold text-gray-900 mb-0.5">
               {role === "company" ? "Company/Organization Name" : "Full Name"}
             </label>
             <div className="relative">
@@ -147,14 +147,14 @@ export default function Register() {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-[#800000] focus:border-[#800000] outline-none transition-colors"
+                className="w-full px-4 py-1.5 border border-gray-300 rounded-md focus:ring-1 focus:ring-[#800000] focus:border-[#800000] outline-none transition-colors"
                 placeholder=""
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-gray-900 mb-1">Email</label>
+            <label className="block text-xs font-bold text-gray-900 mb-0.5">Email</label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -167,14 +167,14 @@ export default function Register() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-[#800000] focus:border-[#800000] outline-none transition-colors"
+                className="pl-10 w-full px-4 py-1.5 border border-gray-300 rounded-md focus:ring-1 focus:ring-[#800000] focus:border-[#800000] outline-none transition-colors"
                 placeholder=""
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-gray-900 mb-1">Password</label>
+            <label className="block text-xs font-bold text-gray-900 mb-0.5">Password</label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -187,7 +187,7 @@ export default function Register() {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-[#800000] focus:border-[#800000] outline-none transition-colors"
+                className="pl-10 w-full px-4 py-1.5 border border-gray-300 rounded-md focus:ring-1 focus:ring-[#800000] focus:border-[#800000] outline-none transition-colors"
                 placeholder=""
               />
             </div>
@@ -195,7 +195,7 @@ export default function Register() {
 
           {role === "company" && (
             <div>
-              <label className="block text-sm font-bold text-gray-900 mb-1">Description</label>
+              <label className="block text-xs font-bold text-gray-900 mb-0.5">Description</label>
               <textarea
                 name="description"
                 value={formData.description}
@@ -209,16 +209,16 @@ export default function Register() {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-2.5 px-4 rounded-md text-white font-medium transition-colors ${
+            className={`w-full py-2 px-4 rounded-md text-white font-medium transition-colors ${
               loading ? "bg-gray-400 cursor-not-allowed" : "bg-[#800000] hover:bg-[#4a0000]"
-            } mt-2`}
+            } mt-1`}
           >
             {loading ? "Registering..." : `Register as ${role.charAt(0).toUpperCase() + role.slice(1)}`}
           </button>
         </form>
         {/* Footer */}
-        <div className="mt-3 w-full text-center z-10 flex flex-col gap-1 items-center">
-          <p className="text-gray-900 font-medium text-[15px]">
+        <div className="mt-2 w-full text-center z-10 flex flex-col gap-0.5 items-center">
+          <p className="text-gray-900 font-medium text-xs">
             Already have an account?{" "}
             <Link to="/login" className="text-[#800000] font-semibold hover:underline">
               Login
