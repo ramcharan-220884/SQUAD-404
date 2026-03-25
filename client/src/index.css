@@ -34,6 +34,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--bg-primary);
   color: var(--text-primary);
+  overflow-y: auto;
 }
 
 /* Global Transitions */
@@ -78,3 +79,27 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+/* Admin Sidebar Active and Hover Styles */
+.active, .sidebar-link:hover {
+  background-color: #1B5E20 !important;
+  color: #ffffff !important;
+  border-radius: 10px;
+  position: relative;
+}
+
+.active::before, .sidebar-link:hover::before {
+  content: "";
+  position: absolute;
+  left: -6px;
+  top: 10%;
+  height: 80%;
+  width: 4px;
+  background-color: #2E7D32;
+  border-radius: 10px;
+}
+
+.sidebar-link {
+  transition: all 0.2s ease;
+}
+

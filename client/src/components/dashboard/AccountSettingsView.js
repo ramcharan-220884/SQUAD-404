@@ -69,19 +69,6 @@ export default function AccountSettingsView({ profile, onBack, onUpdate }) {
 
       <div className="bg-white dark:bg-slate-800 shadow-sm border border-gray-100 dark:border-slate-700 rounded-2xl p-8 space-y-8">
         
-        {/* Dark Mode Toggle */}
-        <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-slate-900/50 rounded-xl">
-          <div>
-            <h4 className="font-bold text-gray-900 dark:text-white">Dark Mode</h4>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Switch between light and dark themes</p>
-          </div>
-          <button 
-            onClick={handleToggleDarkMode}
-            className={`w-14 h-8 flex items-center rounded-full p-1 transition-colors duration-300 ${darkMode ? 'bg-[#800000]' : 'bg-gray-300'}`}
-          >
-            <div className={`w-6 h-6 bg-white rounded-full shadow-md transform transition-transform duration-300 ${darkMode ? 'translate-x-6' : ''}`} />
-          </button>
-        </div>
 
         <form onSubmit={handleSave} className="space-y-6">
           <div>

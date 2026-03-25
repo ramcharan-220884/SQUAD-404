@@ -23,7 +23,6 @@ import {
 import Announcements from "../components/dashboard/Announcements";
 import Competitions from "../components/dashboard/Competitions";
 import Events from "../components/dashboard/Events";
-import ThemeToggle from "../components/dashboard/ThemeToggle";
 import CompanySidebar from "../components/dashboard/CompanySidebar";
 import { 
   BarChart, 
@@ -63,6 +62,7 @@ export default function CompanyDashboard() {
     experience: "",
     min_cgpa: ""
   });
+  const [formErrors, setFormErrors] = useState({});
 
   // Rounds Management State
   const [showRoundsModal, setShowRoundsModal] = useState(false);
@@ -277,9 +277,23 @@ export default function CompanyDashboard() {
   const handlePostJob = async (e) => {
     e.preventDefault();
     if (isSubmitting) return;
-    // Validation
-    if (!postJobFormData.title || !postJobFormData.department || !postJobFormData.deadline) {
-      showNotification("Please fill in the required fields (Title, Department, Deadline)", "warning", "company");
+    
+    // Comprehensive Validation
+    const errors = {};
+    const requiredFields = [
+      'title', 'department', 'location', 'type', 'salary', 
+      'deadline', 'experience', 'min_cgpa', 'description'
+    ];
+    
+    requiredFields.forEach(field => {
+      if (!postJobFormData[field] || postJobFormData[field].toString().trim() === "") {
+        errors[field] = "Please fill this field";
+      }
+    });
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      showNotification("Please fill in all required fields", "warning", "company");
       return;
     }
 
@@ -377,6 +391,7 @@ export default function CompanyDashboard() {
     });
     setIsEditing(false);
     setEditJobId(null);
+    setFormErrors({});
     setShowPostJobModal(false);
   };
 
@@ -401,6 +416,14 @@ export default function CompanyDashboard() {
   const handlePostJobChange = (e) => {
     const { name, value } = e.target;
     setPostJobFormData(prev => ({ ...prev, [name]: value }));
+    // Clear error when user starts typing
+    if (formErrors[name]) {
+      setFormErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
   };
 
   const handleStatusUpdate = async (applicationId, status) => {
@@ -495,7 +518,6 @@ export default function CompanyDashboard() {
               <h2 className="text-4xl font-black text-gray-900 tracking-tight">Welcome back, {companyProfile.name}!</h2>
               <p className="text-gray-500 text-lg mt-2 font-medium">Here's what's happening with your recruitment today.</p>
             </div>
-            <ThemeToggle role="company" />
           </div>
           
           {/* Dashboard Statistics Cards */}
@@ -1677,12 +1699,12 @@ export default function CompanyDashboard() {
                   <input
                     type="text"
                     name="title"
-                    required
                     value={postJobFormData.title}
                     onChange={handlePostJobChange}
                     placeholder="e.g. Senior Frontend Engineer"
-                    className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#3b82f6] focus:bg-white outline-none transition-all font-medium"
+                    className={`w-full px-4 py-3 bg-gray-50 border-2 rounded-xl focus:bg-white outline-none transition-all font-medium ${formErrors.title ? 'border-red-500' : 'border-transparent focus:border-[#3b82f6]'}`}
                   />
+                  {formErrors.title && <p className="text-red-500 text-xs mt-1 font-bold">{formErrors.title}</p>}
                 </div>
 
                 {/* Department */}
@@ -1691,53 +1713,57 @@ export default function CompanyDashboard() {
                   <input
                     type="text"
                     name="department"
-                    required
                     value={postJobFormData.department}
                     onChange={handlePostJobChange}
                     placeholder="e.g. Engineering"
-                    className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#3b82f6] focus:bg-white outline-none transition-all font-medium"
+                    className={`w-full px-4 py-3 bg-gray-50 border-2 rounded-xl focus:bg-white outline-none transition-all font-medium ${formErrors.department ? 'border-red-500' : 'border-transparent focus:border-[#3b82f6]'}`}
                   />
+                  {formErrors.department && <p className="text-red-500 text-xs mt-1 font-bold">{formErrors.department}</p>}
                 </div>
 
                 {/* Job Location */}
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Job Location</label>
+                  <label className="block text-sm font-bold text-gray-700 mb-2">Job Location *</label>
                   <input
                     type="text"
                     name="location"
                     value={postJobFormData.location}
                     onChange={handlePostJobChange}
                     placeholder="e.g. Remote / New York, NY"
-                    className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#3b82f6] focus:bg-white outline-none transition-all font-medium"
+                    className={`w-full px-4 py-3 bg-gray-50 border-2 rounded-xl focus:bg-white outline-none transition-all font-medium ${formErrors.location ? 'border-red-500' : 'border-transparent focus:border-[#3b82f6]'}`}
                   />
+                  {formErrors.location && <p className="text-red-500 text-xs mt-1 font-bold">{formErrors.location}</p>}
                 </div>
 
                 {/* Job Type */}
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Job Type</label>
+                  <label className="block text-sm font-bold text-gray-700 mb-2">Job Type *</label>
                   <select
                     name="type"
                     value={postJobFormData.type}
                     onChange={handlePostJobChange}
-                    className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#346b41] focus:bg-white outline-none transition-all font-medium appearance-none"
+                    className={`w-full px-4 py-3 bg-gray-50 border-2 rounded-xl focus:bg-white outline-none transition-all font-medium appearance-none ${formErrors.type ? 'border-red-500' : 'border-transparent focus:border-[#346b41]'}`}
                   >
+                    <option value="">Select Type</option>
                     <option value="Full-time">Full-time</option>
                     <option value="Part-time">Part-time</option>
                     <option value="Internship">Internship</option>
                   </select>
+                  {formErrors.type && <p className="text-red-500 text-xs mt-1 font-bold">{formErrors.type}</p>}
                 </div>
 
                 {/* Salary Range */}
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Salary Range</label>
+                  <label className="block text-sm font-bold text-gray-700 mb-2">Salary Range *</label>
                   <input
                     type="text"
                     name="salary"
                     value={postJobFormData.salary}
                     onChange={handlePostJobChange}
                     placeholder="e.g. $80k - $120k"
-                    className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#346b41] focus:bg-white outline-none transition-all font-medium"
+                    className={`w-full px-4 py-3 bg-gray-50 border-2 rounded-xl focus:bg-white outline-none transition-all font-medium ${formErrors.salary ? 'border-red-500' : 'border-transparent focus:border-[#346b41]'}`}
                   />
+                  {formErrors.salary && <p className="text-red-500 text-xs mt-1 font-bold">{formErrors.salary}</p>}
                 </div>
 
                 {/* Deadline */}
@@ -1746,50 +1772,53 @@ export default function CompanyDashboard() {
                   <input
                     type="date"
                     name="deadline"
-                    required
                     value={postJobFormData.deadline}
                     onChange={handlePostJobChange}
-                    className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#346b41] focus:bg-white outline-none transition-all font-medium"
+                    className={`w-full px-4 py-3 bg-gray-50 border-2 rounded-xl focus:bg-white outline-none transition-all font-medium ${formErrors.deadline ? 'border-red-500' : 'border-transparent focus:border-[#346b41]'}`}
                   />
+                  {formErrors.deadline && <p className="text-red-500 text-xs mt-1 font-bold">{formErrors.deadline}</p>}
                 </div>
 
                 {/* Experience Required */}
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Experience Required</label>
+                  <label className="block text-sm font-bold text-gray-700 mb-2">Experience Required *</label>
                   <input
                     type="text"
                     name="experience"
                     value={postJobFormData.experience}
                     onChange={handlePostJobChange}
                     placeholder="e.g. 3+ years"
-                    className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#346b41] focus:bg-white outline-none transition-all font-medium"
+                    className={`w-full px-4 py-3 bg-gray-50 border-2 rounded-xl focus:bg-white outline-none transition-all font-medium ${formErrors.experience ? 'border-red-500' : 'border-transparent focus:border-[#346b41]'}`}
                   />
+                  {formErrors.experience && <p className="text-red-500 text-xs mt-1 font-bold">{formErrors.experience}</p>}
                 </div>
 
                 {/* Minimum CGPA Required */}
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Minimum CGPA Required</label>
+                  <label className="block text-sm font-bold text-gray-700 mb-2">Minimum CGPA Required *</label>
                   <input
                     type="text"
                     name="min_cgpa"
                     value={postJobFormData.min_cgpa}
                     onChange={handlePostJobChange}
                     placeholder="e.g. 7.5"
-                    className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#3b82f6] focus:bg-white outline-none transition-all font-medium"
+                    className={`w-full px-4 py-3 bg-gray-50 border-2 rounded-xl focus:bg-white outline-none transition-all font-medium ${formErrors.min_cgpa ? 'border-red-500' : 'border-transparent focus:border-[#3b82f6]'}`}
                   />
+                  {formErrors.min_cgpa && <p className="text-red-500 text-xs mt-1 font-bold">{formErrors.min_cgpa}</p>}
                 </div>
 
                 {/* Job Description */}
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Job Description</label>
+                  <label className="block text-sm font-bold text-gray-700 mb-2">Job Description *</label>
                   <textarea
                     name="description"
                     rows="4"
                     value={postJobFormData.description}
                     onChange={handlePostJobChange}
                     placeholder="Describe the role and responsibilities..."
-                    className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:border-[#346b41] focus:bg-white outline-none transition-all font-medium resize-none"
+                    className={`w-full px-4 py-3 bg-gray-50 border-2 rounded-xl focus:bg-white outline-none transition-all font-medium resize-none ${formErrors.description ? 'border-red-500' : 'border-transparent focus:border-[#346b41]'}`}
                   ></textarea>
+                  {formErrors.description && <p className="text-red-500 text-xs mt-1 font-bold">{formErrors.description}</p>}
                 </div>
 
                 {/* Required Skills */}

@@ -72,6 +72,33 @@ export const registerForEvent = async (event_id) => {
   return handleResponse(res);
 };
 
+export const submitEvent = async (data) => {
+  const res = await authFetch(`/students/events`, {
+    method: "POST",
+    body: JSON.stringify(data)
+  });
+  return handleResponse(res);
+};
+
+export const submitResource = async (data) => {
+  const res = await authFetch(`/students/resources`, {
+    method: "POST",
+    body: JSON.stringify(data)
+  });
+  return handleResponse(res);
+};
+
+export const getResources = async () => {
+  const res = await authFetch(`/students/resources`);
+  return handleResponse(res);
+};
+
+export const getMySubmissions = async () => {
+  const res = await authFetch(`/students/my-submissions`);
+  return handleResponse(res);
+};
+
+
 // Competitions
 export const getCompetitions = async () => {
   const res = await authFetch(`/students/competitions`);
@@ -82,6 +109,14 @@ export const registerForCompetition = async (competition_id) => {
   const res = await authFetch(`/students/competitions/register`, {
     method: "POST",
     body: JSON.stringify({ competition_id })
+  });
+  return handleResponse(res);
+};
+
+export const submitCompetition = async (data) => {
+  const res = await authFetch(`/students/competitions`, {
+    method: "POST",
+    body: JSON.stringify(data)
   });
   return handleResponse(res);
 };
@@ -132,3 +167,13 @@ export const getStudentApplicationRounds = async (applicationId) => {
   return handleResponse(res);
 };
 
+// Notification Endpoints
+export const getNotifications = async () => {
+  const res = await authFetch(`/students/notifications`);
+  return handleResponse(res);
+};
+
+export const markNotificationRead = async (id) => {
+  const res = await authFetch(`/students/notifications/${id}/read`, { method: "PATCH" });
+  return handleResponse(res);
+};

@@ -1,22 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { getEvents, registerForEvent } from '../../services/studentService';
+import { getEvents, registerForEvent, submitEvent } from '../../services/studentService';
 import { getAdminEvents, createEvent, updateEvent, deleteEvent } from '../../services/adminService';
 import {
   Plus, Trash2, Calendar, Users, Loader2, AlertCircle,
-  Edit2, Eye, CheckCircle, Search, Clock, XCircle, Link as LinkIcon
+  Edit2, Eye, CheckCircle, Search, Link as LinkIcon
 } from 'lucide-react';
 import { useNotification } from '../../context/NotificationContext';
-
-// ─── localStorage helpers ────────────────────────────────────────────────────
-const LS_PENDING  = "pendingEvents";
-const LS_APPROVED = "approvedEvents";
-
-const getLSPending  = () => JSON.parse(localStorage.getItem(LS_PENDING))  || [];
-const getLSApproved = () => JSON.parse(localStorage.getItem(LS_APPROVED)) || [];
-
-const setLSPending  = (arr) => localStorage.setItem(LS_PENDING,  JSON.stringify(arr));
-const setLSApproved = (arr) => localStorage.setItem(LS_APPROVED, JSON.stringify(arr));
-// ─────────────────────────────────────────────────────────────────────────────
 
 const TYPE_STYLES = {
   'Seminar':         'bg-purple-100 text-purple-700 border-purple-200',
@@ -33,10 +22,6 @@ export default function Events({ role = "student" }) {
 
   // Backend-fetched events
   const [backendEvents, setBackendEvents] = useState([]);
-  // localStorage-approved events (student-submitted & admin-approved)
-  const [lsApproved, setLsApproved] = useState(getLSApproved);
-  // Pending student submissions (admin only)
-  const [pendingEvs, setPendingEvs] = useState(getLSPending);
 
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -65,23 +50,8 @@ export default function Events({ role = "student" }) {
 
   useEffect(() => { fetchEvents(); }, [fetchEvents]);
 
-  // Sync localStorage whenever it changes in another tab
-  useEffect(() => {
-    const sync = () => {
-      setPendingEvs(getLSPending());
-      setLsApproved(getLSApproved());
-    };
-    window.addEventListener('storage', sync);
-    return () => window.removeEventListener('storage', sync);
-  }, []);
-
-  // ── Approved list: merge backend + localStorage-approved ───────────────────
-  const backendApproved = backendEvents.filter(ev => ev.status === 'approved' || !ev.status);
-  const allApproved = [
-    ...backendApproved,
-    ...lsApproved.filter(le => !backendApproved.some(be => be.id === le.id))
-  ];
-  const filteredEvents = allApproved.filter(ev =>
+  // Use only backend events directly
+  const filteredEvents = backendEvents.filter(ev =>
     ev.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -119,19 +89,12 @@ export default function Events({ role = "student" }) {
       setActionLoading(true);
 
       if (role === 'student') {
-        // Save to localStorage pending queue — NO approval here
-        const newEvent = {
-          id: `student-ev-${Date.now()}`,
-          ...formData,
-          status: 'pending',
-          submittedAt: new Date().toISOString()
-        };
-        const updated = [...getLSPending(), newEvent];
-        setLSPending(updated);
-        setPendingEvs(updated);
+        // Send to backend via student service
+        await submitEvent(formData);
         showNotification("Event submitted for admin approval!", "success", "student");
         setShowModal(false);
         resetForm();
+        fetchEvents();
         return;
       }
 
@@ -170,32 +133,6 @@ export default function Events({ role = "student" }) {
       link: ev.link || ""
     });
     setShowModal(true);
-  };
-
-  // ── Admin: Approve student submission ──────────────────────────────────────
-  const approveEvent = (id) => {
-    const pending = getLSPending();
-    const evToApprove = pending.find(ev => ev.id === id);
-    if (!evToApprove) return;
-
-    const approved = { ...evToApprove, status: 'approved' };
-    const newPending  = pending.filter(ev => ev.id !== id);
-    const newApproved = [...getLSApproved(), approved];
-
-    setLSPending(newPending);
-    setLSApproved(newApproved);
-    setPendingEvs(newPending);
-    setLsApproved(newApproved);
-
-    showNotification("Event approved — now visible to students!", "success", "admin");
-  };
-
-  // ── Admin: Reject student submission ───────────────────────────────────────
-  const rejectEvent = (id) => {
-    const newPending = getLSPending().filter(ev => ev.id !== id);
-    setLSPending(newPending);
-    setPendingEvs(newPending);
-    showNotification("Event rejected.", "error", "admin");
   };
 
   if (loading) return (
@@ -321,66 +258,6 @@ export default function Events({ role = "student" }) {
               </div>
             </div>
           ))}
-        </div>
-      )}
-
-      {/* ── Admin Only: Pending Student Submissions ──────────────────────────── */}
-      {role === 'admin' && pendingEvs.length > 0 && (
-        <div className="mt-12 pt-8 border-t-2 border-dashed border-blue-200 dark:border-blue-900/50">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 bg-blue-100 text-blue-600 rounded-xl">
-              <Clock className="w-6 h-6" />
-            </div>
-            <div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">Pending Event Requests</h3>
-              <p className="text-xs text-blue-600 font-bold uppercase tracking-wider">Submitted by students — awaiting your approval</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {pendingEvs.map(ev => (
-              <div key={ev.id} className="bg-blue-50/50 dark:bg-blue-900/10 p-6 rounded-[2rem] border border-blue-200/60 dark:border-blue-800/30 relative shadow-sm hover:shadow-md transition-all">
-                <span className="absolute top-4 right-4 bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-[9px] font-black uppercase flex items-center gap-1 border border-blue-200">
-                  <Clock className="w-3 h-3" /> Pending
-                </span>
-                <div className="mb-2">
-                  <span className={`px-2 py-1 rounded-lg text-[9px] font-black uppercase border ${getTypeStyle(ev.type)}`}>{ev.type}</span>
-                </div>
-                <h4 className="font-bold text-gray-900 dark:text-white text-lg mb-1 leading-tight pr-20">{ev.title}</h4>
-                <p className="text-xs text-gray-600 dark:text-gray-400 mb-4 line-clamp-2 leading-relaxed">{ev.description}</p>
-
-                <div className="flex items-center gap-2 mb-4 text-[10px] font-bold text-gray-500 uppercase">
-                  <Calendar className="w-3.5 h-3.5" />
-                  <span>{ev.date ? new Date(ev.date).toLocaleDateString() : 'TBD'}</span>
-                </div>
-
-                {ev.link && (
-                  <a
-                    href={ev.link.startsWith('http') ? ev.link : `https://${ev.link}`}
-                    target="_blank" rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 text-[10px] font-bold text-blue-600 mb-4 hover:underline"
-                  >
-                    <LinkIcon className="w-3.5 h-3.5" /> Event Link
-                  </a>
-                )}
-
-                <div className="flex gap-3 mt-auto">
-                  <button
-                    onClick={() => approveEvent(ev.id)}
-                    className="flex-1 py-2.5 bg-green-500 hover:bg-green-600 text-white rounded-xl font-bold text-xs transition flex items-center justify-center gap-1.5 shadow-sm active:scale-95"
-                  >
-                    <CheckCircle className="w-4 h-4" /> Approve
-                  </button>
-                  <button
-                    onClick={() => rejectEvent(ev.id)}
-                    className="flex-1 py-2.5 bg-white border border-red-200 hover:bg-red-50 text-red-600 rounded-xl font-bold text-xs transition flex items-center justify-center gap-1.5 shadow-sm active:scale-95"
-                  >
-                    <XCircle className="w-4 h-4" /> Reject
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       )}
 

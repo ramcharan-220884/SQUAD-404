@@ -33,8 +33,8 @@ const AdminLoginModal = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md overflow-hidden">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden relative border border-white/20 animate-in fade-in zoom-in duration-300">
+    <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-y-auto max-h-[95vh] relative border border-white/20 animate-in fade-in zoom-in duration-300 my-auto">
 
         {/* Close Button */}
         <button
@@ -47,11 +47,11 @@ const AdminLoginModal = ({ isOpen, onClose }) => {
           </svg>
         </button>
 
-        <div className="p-6 lg:p-8 font-['Poppins']">
+        <div className="p-6 font-['Poppins']">
           {/* Header */}
-          <div className="mb-7 flex flex-col items-center text-center">
-            <div className="flex items-center justify-center mb-5 gap-3 px-4 py-2 rounded-2xl bg-gray-50/50 border border-gray-100/50">
-              <div className="w-12 h-12 bg-gradient-to-tr from-emerald-500 to-teal-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-emerald-500/20 transform -rotate-3 hover:rotate-0 transition-transform duration-300">
+          <div className="mb-4 flex flex-col items-center text-center">
+            <div className="flex items-center justify-center mb-4 gap-2 px-4 py-1.5 rounded-2xl bg-gray-50/50 border border-gray-100/50">
+              <div className="w-10 h-10 bg-gradient-to-tr from-emerald-500 to-teal-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-emerald-500/20 transform -rotate-3 hover:rotate-0 transition-transform duration-300">
                 <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
@@ -62,7 +62,7 @@ const AdminLoginModal = ({ isOpen, onClose }) => {
               </div>
             </div>
 
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-600 text-[10px] font-extrabold uppercase tracking-[0.2em]">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 text-[10px] font-extrabold uppercase tracking-[0.2em]">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
               Admin Login
             </div>
@@ -70,7 +70,7 @@ const AdminLoginModal = ({ isOpen, onClose }) => {
 
           {/* Error */}
           {error && (
-            <div className="bg-red-50 border-2 border-red-100 text-red-600 px-4 py-3 rounded-2xl text-xs font-semibold flex items-center gap-3 mb-5">
+            <div className="bg-red-50 border-2 border-red-100 text-red-600 px-3 py-2 rounded-2xl text-[10px] font-semibold flex items-center gap-2 mb-4">
               <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -79,7 +79,7 @@ const AdminLoginModal = ({ isOpen, onClose }) => {
           )}
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-3">
             {/* Email / Username */}
             <div className="space-y-2">
               <label className="block text-[11px] font-extrabold text-[#052c42] uppercase tracking-[0.2em] ml-1">Admin Email or Username</label>
@@ -129,7 +129,7 @@ const AdminLoginModal = ({ isOpen, onClose }) => {
                   ? 'bg-gray-300 cursor-not-allowed'
                   : 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:shadow-2xl hover:shadow-emerald-500/30 hover:-translate-y-0.5'
               }`}
-              style={{ padding: '1rem' }}
+              style={{ padding: '0.75rem' }}
             >
               {loading ? 'Logging in...' : 'Login as Admin'}
             </button>

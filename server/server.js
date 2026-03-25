@@ -35,17 +35,31 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const httpServer = createServer(app);
+
+const allowedOrigins = process.env.FRONTEND_URL
+  ? [process.env.FRONTEND_URL]
+  : ["http://localhost:3000", "http://localhost:3001"];
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests with no origin (e.g. curl, Postman) or matching origins
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`CORS: origin '${origin}' not allowed`));
+    }
+  },
+  credentials: true,
+};
+
 const io = new Server(httpServer, {
-  cors: {
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
-    credentials: true
-  }
+  cors: corsOptions
 });
 
 const PORT = process.env.PORT || 5000;
 
 app.use(helmet({ crossOriginResourcePolicy: false }));
-app.use(cors({ origin: process.env.FRONTEND_URL || "http://localhost:3000", credentials: true }));
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 app.use(responseHandler);
@@ -134,6 +148,29 @@ async function testDB() {
 }
 
 testDB();
+
+// Auto-create notifications table if not exists
+async function ensureNotificationsTable() {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS \`notifications\` (
+        \`id\` int(11) NOT NULL AUTO_INCREMENT,
+        \`user_id\` int(11) NOT NULL,
+        \`message\` text NOT NULL,
+        \`type\` varchar(50) DEFAULT 'general',
+        \`is_read\` tinyint(1) DEFAULT 0,
+        \`job_id\` int(11) DEFAULT NULL,
+        \`created_at\` timestamp NOT NULL DEFAULT current_timestamp(),
+        PRIMARY KEY (\`id\`),
+        KEY \`user_id\` (\`user_id\`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+    `);
+    console.log("[Notifications] Table ready.");
+  } catch (err) {
+    console.error("[Notifications] Failed to ensure table:", err.message);
+  }
+}
+ensureNotificationsTable();
 
 // Cleanup expired password reset tokens every hour
 // Retry once on ECONNRESET — happens when the Aiven pool connection is stale after idle time

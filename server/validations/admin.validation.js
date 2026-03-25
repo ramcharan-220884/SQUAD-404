@@ -83,10 +83,20 @@ export const createCompetitionSchema = {
   body: Joi.object({
     title: Joi.string().min(3).max(150).required(),
     description: Joi.string().optional().allow(''),
-    deadline: Joi.date().iso().required(),
-    prize: Joi.string().optional().allow(''),
-    status: Joi.string().valid('Open', 'Closed').default('Open')
+    date: Joi.date().iso().required(),
+    category: Joi.string().optional().allow(''),
+    registrationLink: Joi.string().uri().optional().allow(''),
+    status: Joi.string().valid('pending', 'approved', 'rejected').default('pending')
   }).unknown(true)
+};
+
+export const updateCompetitionStatusSchema = {
+  params: Joi.object({
+    id: Joi.number().integer().positive().required()
+  }),
+  body: Joi.object({
+    status: Joi.string().valid('pending', 'approved', 'rejected').required()
+  })
 };
 
 export const createAssessmentSchema = {
@@ -113,5 +123,12 @@ export const notifyCandidatesSchema = {
     candidateIds: Joi.array().items(Joi.number().integer().positive()).min(1).required(),
     type: Joi.string().valid('orientation', 'interview').required(),
     details: Joi.object().required()
+  })
+};
+
+export const approveSubmissionSchema = {
+  params: Joi.object({
+    type: Joi.string().valid('event', 'competition', 'resource').required(),
+    id: Joi.number().integer().positive().required()
   })
 };

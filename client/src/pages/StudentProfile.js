@@ -21,8 +21,7 @@ const steps = [
   "Projects",
   "Internships & Experience",
   "Certifications & Documents",
-  "Resume Preview",
-  "All Done"
+  "Resume Preview"
 ];
 
 export default function StudentProfile({ isPortal = false }) {
@@ -59,6 +58,7 @@ export default function StudentProfile({ isPortal = false }) {
           countryCode: data.country_code || '+91',
           location: data.location || '',
           college: data.college || '',
+          branch: data.branch || '',
           agreed: true,
           notRobot: true
         });
@@ -132,6 +132,7 @@ export default function StudentProfile({ isPortal = false }) {
     countryCode: '+91',
     location: '',
     college: '',
+    branch: '',
     agreed: false,
     notRobot: false
   });
@@ -246,30 +247,43 @@ export default function StudentProfile({ isPortal = false }) {
     const element = document.getElementById('resume-preview-content');
     if (!element) return;
     
-    // Ensure element is visible and has white background for capture
+    // Preparation for capture
     const originalStyle = element.style.cssText;
     element.style.boxShadow = 'none';
     element.style.border = 'none';
+    element.style.margin = '0';
     
     try {
       const canvas = await html2canvas(element, { 
-        scale: 3, // Higher scale for better quality
+        scale: 3, // Increase scale for better resolution
         useCORS: true,
         logging: false,
-        backgroundColor: '#ffffff'
+        backgroundColor: '#ffffff',
+        width: element.offsetWidth,
+        height: element.offsetHeight,
+        onclone: (clonedDoc) => {
+          const clonedElement = clonedDoc.getElementById('resume-preview-content');
+          if (clonedElement) {
+            clonedElement.style.margin = '0';
+            clonedElement.style.boxShadow = 'none';
+          }
+        }
       });
       
-      const imgData = canvas.toDataURL('image/png');
+      const imgData = canvas.toDataURL('image/jpeg', 1.0);
       const pdf = new jsPDF('p', 'mm', 'a4');
       
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
+      
+      // Calculate dimensions to fit on one page
       const imgWidth = pdfWidth;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
       
-      // If image is taller than PDF page, scale it down to fit one page
-      let finalHeight = imgHeight;
       let finalWidth = imgWidth;
+      let finalHeight = imgHeight;
+      
+      // If image is taller than PDF page, scale it down proportionally to fit
       if (imgHeight > pdfHeight) {
         const ratio = pdfHeight / imgHeight;
         finalHeight = pdfHeight;
@@ -277,11 +291,13 @@ export default function StudentProfile({ isPortal = false }) {
       }
       
       const xOffset = (pdfWidth - finalWidth) / 2;
+      const yOffset = 0;
       
-      pdf.addImage(imgData, 'PNG', xOffset, 0, finalWidth, finalHeight);
+      pdf.addImage(imgData, 'JPEG', xOffset, yOffset, finalWidth, finalHeight);
       pdf.save(`${basicInfo.firstName}_${basicInfo.lastName}_Resume.pdf`);
     } catch (error) {
       console.error("PDF Generation Error:", error);
+      alert("Failed to generate PDF. Please try again.");
     } finally {
       element.style.cssText = originalStyle;
     }
@@ -330,6 +346,7 @@ export default function StudentProfile({ isPortal = false }) {
         specialization: education.specialization,
         edu_start_year: education.startYear,
         edu_end_year: education.endYear,
+        branch: basicInfo.branch,
         cgpa: education.cgpa,
         skills: skills,
         tools_technologies: tools,
@@ -344,9 +361,11 @@ export default function StudentProfile({ isPortal = false }) {
       const data = await updateProfile(payload);
 
       if (data) {
-        setCurrentStep(8); // "All Done" is the last step
-        // Refresh profile data to avoid stale state if user switches views
-        setTimeout(fetchInitialData, 2000);
+        // Merge payload into profileData to ensure immediate consistency across views
+        setProfileData(prev => ({ ...prev, ...payload }));
+        setViewMode("card");
+        // Refresh profile data to ensure absolute server-side consistency (e.g., for auto-generated IDs or titles)
+        setTimeout(fetchInitialData, 500);
       } else {
         throw new Error("Failed to save profile");
       }
@@ -360,6 +379,110 @@ export default function StudentProfile({ isPortal = false }) {
   const prevStep = () => {
     setCurrentStep(prev => Math.max(prev - 1, 0));
   };
+
+  const renderResumeContent = () => (
+    <div id="resume-preview-content" className="bg-white text-black p-10 mx-auto shadow-sm border border-gray-200" style={{ width: '210mm', minHeight: '297mm', fontFamily: 'Arial, sans-serif', fontSize: '13px', lineHeight: '1.5', color: '#000' }}>
+      {/* Header Section */}
+      <div className="text-center mb-4">
+        <h1 className="text-3xl font-bold uppercase mb-1" style={{ letterSpacing: '2px' }}>{basicInfo.firstName} {basicInfo.lastName}</h1>
+        <p className="text-xl font-semibold text-gray-700 mb-2">{basicInfo.branch || "Professional"}</p>
+        <div className="flex justify-center flex-wrap gap-4 text-sm font-medium">
+          <span className="flex items-center gap-1">📞 {basicInfo.phone}</span>
+          <span className="flex items-center gap-1">✉️ {basicInfo.email}</span>
+          <span className="flex items-center gap-1">📍 {basicInfo.location}</span>
+        </div>
+        <hr className="mt-4 border-t-2 border-black" />
+      </div>
+
+      {/* ABOUT ME */}
+      {summary && (
+        <div className="mb-6">
+          <h2 className="text-sm font-bold uppercase tracking-widest border-b-2 border-black pb-1 mb-2">ABOUT ME</h2>
+          <p className="text-justify leading-relaxed">{summary}</p>
+        </div>
+      )}
+
+      {/* EDUCATION */}
+      <div className="mb-6">
+        <h2 className="text-sm font-bold uppercase tracking-widest border-b-2 border-black pb-1 mb-3">EDUCATION</h2>
+        <div className="mb-4">
+          <div className="flex justify-between items-baseline">
+            <h3 className="font-bold text-lg">{education.college}</h3>
+            <span className="font-bold">{education.startYear} – {education.endYear}</span>
+          </div>
+          <div className="flex justify-between items-baseline mt-1 text-gray-800">
+            <p className="font-semibold">{education.degree} in {education.specialization}</p>
+            <p className="font-bold">CGPA: {education.cgpa}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* WORK EXPERIENCE */}
+      {experiences.length > 0 && (
+        <div className="mb-6">
+          <h2 className="text-sm font-bold uppercase tracking-widest border-b-2 border-black pb-1 mb-3">WORK EXPERIENCE</h2>
+          {experiences.map((exp, i) => (
+            <div key={i} className="mb-4">
+              <div className="flex justify-between items-baseline">
+                <h3 className="font-bold text-lg">{exp.company}</h3>
+                <span className="font-bold">{exp.startDate} – {exp.endDate}</span>
+              </div>
+              <p className="font-bold text-[#800000] italic">{exp.role}</p>
+              <ul className="mt-2 space-y-1 list-disc ml-5 text-gray-800">
+                {exp.description.split('\n').filter(Boolean).map((line, idx) => (
+                  <li key={idx}>{line.startsWith('•') ? line.substring(1).trim() : line.trim()}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* SKILLS */}
+      {(skills || tools) && (
+        <div className="mb-6">
+          <h2 className="text-sm font-bold uppercase tracking-widest border-b-2 border-black pb-1 mb-3">SKILLS</h2>
+          <div className="grid grid-cols-3 gap-y-2 font-medium">
+            {[...skills.split(','), ...tools.split(',')].map(s => s.trim()).filter(Boolean).map((skill, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <span className="text-[#800000] font-bold">•</span> {skill}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* PROJECTS if any */}
+      {projectList.length > 0 && (
+        <div className="mb-6">
+          <h2 className="text-sm font-bold uppercase tracking-widest border-b-2 border-black pb-1 mb-3">PROJECTS</h2>
+          {projectList.map((p, i) => (
+            <div key={i} className="mb-3">
+              <div className="flex justify-between items-baseline">
+                <h3 className="font-bold">{p.title}</h3>
+                <span className="text-xs font-bold text-gray-500 uppercase">{p.technologies}</span>
+              </div>
+              <p className="mt-1 leading-snug">• {p.description}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* CERTIFICATIONS if any */}
+      {certifications && (
+        <div className="mb-6">
+          <h2 className="text-sm font-bold uppercase tracking-widest border-b-2 border-black pb-1 mb-3">CERTIFICATIONS</h2>
+          <div className="space-y-1 font-medium">
+            {certifications.split('\n').filter(Boolean).map((cert, idx) => (
+              <div key={idx} className="flex items-start gap-2">
+                <span>•</span> <span>{cert}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 
   if (isLoading) {
     return (
@@ -383,8 +506,34 @@ export default function StudentProfile({ isPortal = false }) {
                 setCurrentStep(0);
                 setViewMode("wizard");
               }} 
-              onSettings={() => setViewMode("settings")} 
+              onViewResume={() => setViewMode("resume")} 
             />
+          )}
+
+          {viewMode === "resume" && (
+            <div className="animate-fade-in space-y-6">
+              <div className="flex justify-between items-center bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700">
+                <div className="flex items-center gap-4">
+                  <button onClick={() => setViewMode("card")} className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full transition-colors">
+                    <svg className="w-6 h-6 text-gray-600 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                  </button>
+                  <h2 className="text-2xl font-bold text-[#800000] dark:text-gray-100">Resume Preview</h2>
+                </div>
+                <button onClick={generateResumePDF} className="bg-green-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-green-700 transition-colors shadow-sm flex items-center gap-2">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  Download PDF
+                </button>
+              </div>
+              <div className="flex justify-center bg-gray-100 dark:bg-slate-900/50 p-8 rounded-2xl overflow-x-auto print:p-0 print:bg-white">
+                <div className="resume-capture-wrapper">
+                  {renderResumeContent()}
+                </div>
+              </div>
+            </div>
           )}
 
           {viewMode === "settings" && profileData && (
@@ -459,10 +608,14 @@ export default function StudentProfile({ isPortal = false }) {
                           <input type="text" name="location" value={basicInfo.location} onChange={handleBasicChange} className="w-full p-3 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-[#800000] focus:border-transparent outline-none dark:bg-slate-900" placeholder="E.g. Mumbai, Maharashtra" />
                           {basicErrors.location && <p className="text-red-500 text-xs mt-1">{basicErrors.location}</p>}
                         </div>
-                        <div className="md:col-span-2">
+                        <div className="md:col-span-1">
                           <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">College</label>
                           <input type="text" name="college" value={basicInfo.college} onChange={handleBasicChange} className="w-full p-3 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-[#800000] focus:border-transparent outline-none dark:bg-slate-900" placeholder="College Name" />
                           {basicErrors.college && <p className="text-red-500 text-xs mt-1">{basicErrors.college}</p>}
+                        </div>
+                        <div className="md:col-span-1">
+                          <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Role / Title</label>
+                          <input type="text" name="branch" value={basicInfo.branch} onChange={handleBasicChange} className="w-full p-3 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-[#800000] focus:border-transparent outline-none dark:bg-slate-900" placeholder="e.g. Software Developer" />
                         </div>
                       </div>
                       <div className="space-y-2 mt-4">
@@ -725,98 +878,8 @@ export default function StudentProfile({ isPortal = false }) {
                            Download PDF
                         </button>
                       </div>
-                      <div id="resume-preview-content" className="bg-white text-black p-6 md:p-8 w-full max-w-[8.26in] mx-auto overflow-hidden shadow-none border-0" style={{ fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif', minHeight: '11.69in', color: '#000000', backgroundColor: '#ffffff', lineHeight: '1.4' }}>
-                        {/* Header Section */}
-                        <div className="text-center mb-3">
-                          <h1 className="font-bold uppercase tracking-tight mb-0.5" style={{ fontSize: '22px' }}>{basicInfo.firstName} {basicInfo.lastName}</h1>
-                          <div className="flex justify-center items-center flex-wrap gap-x-2" style={{ fontSize: '12px' }}>
-                            <span>{basicInfo.email}</span>
-                            <span>|</span>
-                            <span>{basicInfo.countryCode} {basicInfo.phone}</span>
-                            <span>|</span>
-                            <span>{basicInfo.location}</span>
-                          </div>
-                          <hr className="border-t border-black mt-1.5 mb-0" />
-                        </div>
-
-                        {/* Professional Summary */}
-                        {summary && (
-                          <div className="mb-3">
-                            <h3 className="font-bold uppercase border-b border-black mb-1 pb-0.5" style={{ fontSize: '14px' }}>Summary</h3>
-                            <p className="text-justify" style={{ fontSize: '12px' }}>{summary}</p>
-                          </div>
-                        )}
-
-                        {/* Education */}
-                        <div className="mb-3">
-                          <h3 className="font-bold uppercase border-b border-black mb-1 pb-0.5" style={{ fontSize: '14px' }}>Education</h3>
-                          <div className="mb-1">
-                            <div className="flex justify-between items-start" style={{ fontSize: '12px' }}>
-                              <div className="font-bold">{education.college}</div>
-                              <div className="text-right whitespace-nowrap">{education.startYear} – {education.endYear}</div>
-                            </div>
-                            <div className="flex justify-between items-start" style={{ fontSize: '12px' }}>
-                              <div>{education.degree} in {education.specialization}</div>
-                              <div className="text-right font-bold whitespace-nowrap">CGPA: {education.cgpa}</div>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Technical Skills */}
-                        {(skills || tools) && (
-                          <div className="mb-3">
-                            <h3 className="font-bold uppercase border-b border-black mb-1 pb-0.5" style={{ fontSize: '14px' }}>Technical Skills</h3>
-                            <div className="space-y-0.5" style={{ fontSize: '12px' }}>
-                              {skills && <p><span className="font-bold">Languages/Frameworks:</span> {skills}</p>}
-                              {tools && <p><span className="font-bold">Tools & Technologies:</span> {tools}</p>}
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Projects */}
-                        {projectList.length > 0 && (
-                          <div className="mb-3">
-                            <h3 className="font-bold uppercase border-b border-black mb-1 pb-0.5" style={{ fontSize: '14px' }}>Projects</h3>
-                            {projectList.map((p, i) => (
-                              <div key={i} className="mb-2">
-                                <div className="font-bold" style={{ fontSize: '12px' }}>{p.title}</div>
-                                <div style={{ fontSize: '12px' }}>
-                                  <p className="leading-snug">• {p.description}</p>
-                                  {p.technologies && <p className="leading-snug text-xs italic">• Tech: {p.technologies}</p>}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-
-                        {/* Experience */}
-                        {experiences.length > 0 && (
-                          <div className="mb-3">
-                            <h3 className="font-bold uppercase border-b border-black mb-1 pb-0.5" style={{ fontSize: '14px' }}>Experience</h3>
-                            {experiences.map((exp, i) => (
-                              <div key={i} className="mb-2">
-                                <div className="flex justify-between items-baseline font-bold" style={{ fontSize: '12px' }}>
-                                  <span>{exp.company} — {exp.role}</span>
-                                  <span className="whitespace-nowrap">{exp.startDate} – {exp.endDate}</span>
-                                </div>
-                                <p className="mt-0.5 leading-snug" style={{ fontSize: '12px' }}>• {exp.description}</p>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-
-                        {/* Certifications */}
-                        {certifications && (
-                          <div className="mb-3">
-                            <h3 className="font-bold uppercase border-b border-black mb-1 pb-0.5" style={{ fontSize: '14px' }}>Certifications</h3>
-                            <div className="whitespace-pre-wrap leading-snug" style={{ fontSize: '12px' }}>
-                              {certifications.split('\n').filter(Boolean).map((cert, idx) => (
-                                <span key={idx} className="block">• {cert}</span>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
+                      
+                      {renderResumeContent()}
 
                       <div className="flex justify-between pt-8">
                         <button onClick={prevStep} className="px-8 py-3 rounded-lg font-bold text-[#800000] bg-[#800000]/10 hover:bg-[#800000]/20 transition-colors">Previous</button>
@@ -825,23 +888,6 @@ export default function StudentProfile({ isPortal = false }) {
                     </div>
                   )}
 
-                  {/* Step 8: All Done */}
-                  {currentStep === 8 && (
-                    <div className="text-center space-y-6 animate-fade-in py-10">
-                      <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
-                        <svg className="w-12 h-12 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
-                        </svg>
-                      </div>
-                      <h2 className="text-4xl font-extrabold text-[#800000] dark:text-gray-100 mb-2">Profile Completed!</h2>
-                      <p className="text-gray-600 dark:text-gray-400 text-lg font-semibold">Your resume-based profile has been updated successfully.</p>
-                      
-                      <div className="flex justify-center gap-4 mt-8">
-                        <button onClick={() => setViewMode("card")} className="bg-[#800000] text-white px-8 py-3 rounded-xl font-bold">View My Card</button>
-                        <button onClick={generateResumePDF} className="bg-green-600 text-white px-8 py-3 rounded-xl font-bold">Download Resume PDF</button>
-                      </div>
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
