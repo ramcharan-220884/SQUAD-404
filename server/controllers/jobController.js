@@ -51,11 +51,21 @@ export const getJobs = async (req, res, next) => {
     const [rows] = await pool.query(query, [...params, limit, offset]);
     const [[{ total }]] = await pool.query(countQuery, params);
 
+    // --- Off-Campus Integration ---
+    let offCampusJobs = [];
+    if (page === 1) {
+        const [scrapedRows] = await pool.query(
+            "SELECT id, company_name, job_title as title, location, source_url as job_link, 'Off-Campus' as type, is_off_campus FROM scraped_jobs WHERE is_notified = 1 ORDER BY scraped_at DESC LIMIT 5"
+        );
+        offCampusJobs = scrapedRows.map(j => ({ ...j, is_off_campus: true }));
+    }
+    // --- End Off-Campus Integration ---
+
     const data = {
-      jobs: rows,
-      totalPages: Math.ceil(total / limit),
+      jobs: [...offCampusJobs, ...rows],
+      totalPages: Math.ceil((total + offCampusJobs.length) / limit),
       currentPage: page,
-      totalJobs: total
+      totalJobs: total + offCampusJobs.length
     };
 
     if (res.sendResponse) return res.sendResponse(data, "Jobs fetched successfully");

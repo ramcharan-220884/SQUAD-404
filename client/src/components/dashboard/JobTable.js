@@ -19,8 +19,14 @@ export const JobTableRow = ({ job, applyingId, hasPhone, handleApply }) => (
       <CompanyLogo job={job} />
     </td>
     <td>
-      <div className="bj-role-text">{job.role || job.title}</div>
-      <div className="bj-company-text">{job.company_name || job.company || 'Company'}</div>
+      <div className="bj-role-text">
+        {job.role || job.title}
+        {job.is_off_campus && <span style={{ marginLeft: '8px', fontSize: '12px' }} title="Off-Campus Opportunity">🚀</span>}
+      </div>
+      <div className="bj-company-text">
+        {job.company_name || job.company || 'Company'}
+        {job.is_off_campus && <span style={{ marginLeft: '8px', fontSize: '10px', color: '#800000', fontWeight: 'bold' }}>[Off-Campus]</span>}
+      </div>
     </td>
     <td className="bj-desc-cell">
       {job.description ? (
@@ -31,24 +37,33 @@ export const JobTableRow = ({ job, applyingId, hasPhone, handleApply }) => (
        {job.package || job.ctc || 'N/A'}
     </td>
     <td className="bj-cgpa-text">
-      {job.eligibility_cgpa || job.min_cgpa || 'Any'}
+      {job.is_off_campus ? 'Any' : (job.eligibility_cgpa || job.min_cgpa || 'Any')}
     </td>
     <td className="bj-deadline-text">
       {job.deadline ? new Date(job.deadline).toLocaleDateString() : 'N/A'}
     </td>
     <td>
       <span className={`bj-status-badge ${job.applied ? 'bj-status-applied' : 'bj-status-not-applied'}`}>
-        {job.applied ? 'Applied' : 'Not Applied'}
+        {job.is_off_campus ? 'External' : (job.applied ? 'Applied' : 'Not Applied')}
       </span>
     </td>
     <td className="bj-action-cell">
-      <button 
-        className="bj-table-apply-btn" 
-        onClick={() => handleApply(job.id)}
-        disabled={applyingId === job.id || job.applied || !hasPhone}
-      >
-        {!hasPhone ? 'Phone Required' : job.applied ? 'Applied' : applyingId === job.id ? 'Applying...' : 'Apply Now'}
-      </button>
+      {job.is_off_campus ? (
+        <button 
+          className="bj-table-apply-btn" 
+          onClick={() => window.open(job.job_link || job.source_url, '_blank')}
+        >
+          Apply Externally
+        </button>
+      ) : (
+        <button 
+          className="bj-table-apply-btn" 
+          onClick={() => handleApply(job.id)}
+          disabled={applyingId === job.id || job.applied || !hasPhone}
+        >
+          {!hasPhone ? 'Phone Required' : job.applied ? 'Applied' : applyingId === job.id ? 'Applying...' : 'Apply Now'}
+        </button>
+      )}
     </td>
   </tr>
 );

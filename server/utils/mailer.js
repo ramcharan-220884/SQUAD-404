@@ -7,10 +7,19 @@ dotenv.config();
 
 // Initialize Transporter
 const transporter = nodemailer.createTransport({
-  service: 'gmail', // Use SMTP configs if not using Gmail
+  service: 'gmail',
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS 
+  }
+});
+
+// Verify connection configuration
+transporter.verify((error, success) => {
+  if (error) {
+    console.error("[Mailer] Transporter Error Details:", error);
+  } else {
+    console.log("[Mailer] SMTP Server is ready to take messages");
   }
 });
 
@@ -19,17 +28,18 @@ const transporter = nodemailer.createTransport({
  */
 export const sendEmail = async ({ to, subject, html }) => {
   try {
+    console.log(`[Mailer] Attempting to send email to ${to}...`);
     const info = await transporter.sendMail({
-      from: `"EDUVATE Support" <${process.env.EMAIL_USER}>`,
+      from: `"PLACEMENT CELL - EDUVATE" <${process.env.EMAIL_USER}>`,
       to,
       subject,
       html
     });
-    console.log(`Email sent successfully to ${to} (MessageID: ${info.messageId})`);
+    console.log(`[Mailer] Email sent successfully to ${to} (MessageID: ${info.messageId})`);
     return true;
   } catch (error) {
-    console.error(`Failed to send email to ${to}:`, error.message);
-    throw new Error('Email dispatch failed');
+    console.error(`[Mailer] CRITICAL ERROR for ${to}:`, error);
+    throw new Error(`Email dispatch failed: ${error.message}`);
   }
 };
 
@@ -217,4 +227,57 @@ export const sendJobOutreachEmail = async (toEmail, jobData) => {
         console.error(`[Mailer] Delivery failed to ${toEmail}:`, error.message);
         throw error;
     }
+};
+
+/**
+ * Sends automated credentials to a newly onboarded company
+ */
+export const sendCompanyCredentialsEmail = async (email, companyName, password) => {
+  const loginUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/login`;
+  
+  const html = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body style="margin: 0; padding: 0; background-color: #f4f6f8; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+      <div style="padding: 40px 20px;">
+        <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); border: 1px solid #e5e7eb;">
+          
+          <div style="background-color: #ffffff; padding: 30px; text-align: center; border-bottom: 3px solid #10b981;">
+            <h1 style="margin: 0; font-size: 26px; font-weight: 800; color: #111827; letter-spacing: -0.5px;">EDUVATE</h1>
+            <p style="margin: 5px 0 0; font-size: 13px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 1.5px;">Account Activated</p>
+          </div>
+
+          <div style="padding: 40px 30px;">
+            <p style="margin: 0 0 20px; font-size: 18px; color: #1f2937; font-weight: 600;">Welcome to EDUVATE, ${companyName}!</p>
+            <p style="margin: 0 0 30px; font-size: 16px; line-height: 1.6; color: #4b5563;">
+              An administrator has approved your partnership request and created a verified company account for you. You can now access our talent portal using the temporary credentials below.
+            </p>
+            
+            <div style="background-color: #f9fafb; padding: 25px; border-radius: 8px; border: 1px solid #e5e7eb; margin-bottom: 30px;">
+                <p style="margin: 0 0 10px; font-size: 14px; color: #6b7280;"><strong>Email:</strong> ${email}</p>
+                <p style="margin: 0; font-size: 14px; color: #6b7280;"><strong>Temporary Password:</strong> <code style="background: #eee; padding: 2px 6px; border-radius: 4px; font-weight: bold; color: #111827;">${password}</code></p>
+            </div>
+
+            <div style="text-align: center; margin: 35px 0;">
+              <a href="${loginUrl}" style="display: inline-block; padding: 14px 32px; background-color: #10b981; color: #ffffff; font-weight: 600; text-decoration: none; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
+                Login to Portal
+              </a>
+            </div>
+            
+            <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #ef4444; font-weight: 600;">
+              Important: Please change your password immediately after your first login for security.
+            </p>
+          </div>
+          
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  return sendEmail({ to: email, subject: "Your Company Portal is Ready - EDUVATE", html });
 };

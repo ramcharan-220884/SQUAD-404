@@ -2,11 +2,36 @@ import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { pool as db } from '../config/db.js';
 
-/**
- * Minimal Regex utility to extract the first email found in a block of text.
- * @param {string} text 
- * @returns {string|null}
- */
+const SOURCES = [
+    {
+        name: 'Y-Combinator',
+        url: 'https://www.ycombinator.com/jobs',
+        item_selector: 'li.flex.flex-col',
+        title_selector: 'div.job-name a',
+        company_selector: 'span.company-name',
+        location_selector: 'span.job-location',
+        link_selector: 'div.job-name a'
+    },
+    {
+        name: 'RemoteOK',
+        url: 'https://remoteok.com/remote-dev-jobs',
+        item_selector: 'tr.job',
+        title_selector: 'h2',
+        company_selector: 'h3',
+        location_selector: 'div.location',
+        link_selector: 'a.preventLink'
+    },
+    {
+        name: 'We Work Remotely',
+        url: 'https://weworkremotely.com/remote-jobs',
+        item_selector: 'li.feature',
+        title_selector: 'span.title',
+        company_selector: 'span.company',
+        location_selector: 'span.region',
+        link_selector: 'a'
+    }
+];
+
 const extractEmail = (text) => {
     if (!text) return null;
     const emailRegex = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/i;
@@ -14,89 +39,67 @@ const extractEmail = (text) => {
     return match ? match[0].toLowerCase() : null;
 };
 
-/**
- * Main worker function to scrape all company career pages.
- */
-export const scrapeAllCompanies = async () => {
-    console.log('[Scraper] Initializing scraping job...');
-
+const generateFallbackEmail = (url) => {
     try {
-        // Fetch available scraping configurations from database
-        const [companies] = await db.query('SELECT * FROM company_sources');
+        const domain = new URL(url).hostname.replace('www.', '');
+        return `careers@${domain}`;
+    } catch {
+        return 'careers@company.com';
+    }
+};
 
-        if (!companies || companies.length === 0) {
-            console.log('[Scraper] No company sources configured. Exiting.');
-            return;
-        }
+export const scrapeAllCompanies = async () => {
+    console.log('[Scraper] Initializing Hybrid Scraping job...');
 
-        for (const company of companies) {
-            console.log(`[Scraper] Starting scrape for ${company.company_name} at ${company.careers_url}`);
+    for (const source of SOURCES) {
+        console.log(`[Scraper] Target: ${source.name} | ${source.url}`);
+        try {
+            const { data: html } = await axios.get(source.url, {
+                headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+                timeout: 15000
+            });
 
-            try {
-                // Fetch HTML with headers simulating a browser
-                const { data: html } = await axios.get(company.careers_url, {
-                    headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
-                    timeout: 10000
-                });
+            const $ = cheerio.load(html);
+            const items = $(source.item_selector).slice(0, 10);
+            let addedCount = 0;
 
-                // Load HTML string into Cheerio
-                const $ = cheerio.load(html);
+            for (let i = 0; i < items.length; i++) {
+                const el = items[i];
+                const title = $(el).find(source.title_selector).text().trim();
+                const company = $(el).find(source.company_selector).text().trim();
+                const location = $(el).find(source.location_selector).text().trim();
+                const path = $(el).find(source.link_selector).attr('href');
+                
+                if (!title || !company) continue;
 
-                const jobTitles = $(company.title_selector);
-                const jobDescriptions = $(company.description_selector);
-                const jobLocations = company.location_selector ? $(company.location_selector) : null;
-
-                const extractedJobs = [];
-
-                // Extract DOM data
-                jobTitles.each((index, element) => {
-                    const jobTitle = $(element).text().trim();
-                    if (!jobTitle) return;
-
-                    const description = jobDescriptions.eq(index).text().trim() || null;
-                    const location = jobLocations ? jobLocations.eq(index).text().trim() : null;
-
-                    extractedJobs.push({ title: jobTitle, description, location });
-                });
-
-                let jobsAddedCount = 0;
-
-                for (const job of extractedJobs) {
-                    const hrEmail = extractEmail(job.description);
-
-                    // De-duplication check
-                    const [existingJobs] = await db.query(
-                        `SELECT id FROM scraped_jobs WHERE company_name = ? AND job_title = ? LIMIT 1`,
-                        [company.company_name, job.title]
-                    );
-
-                    if (existingJobs.length === 0) {
-                        await db.query(`
-                            INSERT INTO scraped_jobs 
-                            (company_name, job_title, description, location, hr_email, source_url)
-                            VALUES (?, ?, ?, ?, ?, ?)
-                        `, [
-                            company.company_name, 
-                            job.title, 
-                            job.description, 
-                            job.location, 
-                            hrEmail, 
-                            company.careers_url
-                        ]);
-                        jobsAddedCount++;
-                    }
+                let link = path;
+                if (path && !path.startsWith('http')) {
+                    const base = new URL(source.url).origin;
+                    link = base + path;
                 }
 
-                console.log(`[Scraper] ${company.company_name}: Scrape successful. Added ${jobsAddedCount} new job(s).`);
+                // Duplicate check (Composite: Title + Company)
+                const [existing] = await db.query(
+                    'SELECT id FROM scraped_jobs WHERE job_title = ? AND company_name = ? LIMIT 1',
+                    [title, company]
+                );
 
-            } catch (scrapeErr) {
-                console.error(`[Scraper] Failed to fetch/parse ${company.company_name}:`, scrapeErr.message);
+                if (existing.length === 0) {
+                    const email = generateFallbackEmail(link || source.url);
+                    
+                    await db.query(`
+                        INSERT INTO scraped_jobs 
+                        (company_name, source_name, job_title, location, hr_email, email_type, source_url)
+                        VALUES (?, ?, ?, ?, ?, ?, ?)
+                    `, [company, source.name, title, location, email, 'guessed', link]);
+                    
+                    addedCount++;
+                }
             }
+            console.log(`[Scraper] ${source.name}: Added ${addedCount} jobs.`);
+        } catch (err) {
+            console.error(`[Scraper] ${source.name} Failed:`, err.message);
         }
-
-        console.log('[Scraper] Scraping job finished processing all companies.');
-
-    } catch (globalErr) {
-        console.error('[Scraper] Fatal Database Error while initializing scraper:', globalErr);
     }
+    console.log('[Scraper] Hybrid Scraping finished.');
 };

@@ -61,11 +61,13 @@ export const getMyCompanyDetails = async (req, res, next) => {
   }
 };
 
-// Get all jobs posted by this company (with applicant counts)
+// Get all jobs posted by this company (including approved scraped leads)
 export const getCompanyJobs = async (req, res, next) => {
   try {
     const company_id = req.user.id;
+    const company_email = req.user.email;
 
+    // Fetch internal jobs (now includes auto-converted scraped leads)
     const [jobs] = await pool.query(
       `SELECT j.*, COUNT(a.id) AS applicant_count
        FROM jobs j

@@ -104,13 +104,13 @@ export const googleLogin = async (req, res, next) => {
     }
 
     const accessToken = jwt.sign(
-      { id: user.id, role: role },
+      { id: user.id, role: role, email: user.email },
       process.env.JWT_SECRET,
       { expiresIn: "15m" }
     );
 
     const refreshToken = jwt.sign(
-      { id: user.id, role: role, type: 'refresh' },
+      { id: user.id, role: role, email: user.email, type: 'refresh' },
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
@@ -196,13 +196,13 @@ export const login = async (req, res, next) => {
     }
 
     const accessToken = jwt.sign(
-      { id: user.id, role: role },
+      { id: user.id, role: role, email: user.email },
       process.env.JWT_SECRET,
       { expiresIn: "15m" }
     );
 
     const refreshToken = jwt.sign(
-      { id: user.id, role: role, type: 'refresh' },
+      { id: user.id, role: role, email: user.email, type: 'refresh' },
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );

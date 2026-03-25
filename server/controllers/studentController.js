@@ -107,9 +107,16 @@ export const getAvailableJobs = async (req, res, next) => {
       WHERE j.deadline >= CURDATE() OR j.deadline IS NULL
     `, [student_id]);
     
+    // --- Off-Campus Integration --- (Exclude already converted listings)
+    const [offCampusRows] = await pool.query(
+        "SELECT id, company_name, job_title as title, location, source_url as job_link, 'Off-Campus' as type, 1 as is_off_campus FROM scraped_jobs WHERE is_notified = 1 AND status != 'converted' ORDER BY scraped_at DESC LIMIT 10"
+    );
+    
     // Map applied boolean so React disables the button appropriately
-    const formattedData = rows.map(r => ({ ...r, applied: r.applied === 1 }));
-    res.json({ success: true, data: formattedData });
+    const internalJobs = rows.map(r => ({ ...r, applied: r.applied === 1 }));
+    const allJobs = [...offCampusRows, ...internalJobs];
+
+    res.json({ success: true, data: allJobs });
   } catch (err) {
     next(err);
   }

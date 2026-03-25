@@ -17,7 +17,8 @@ export const applyJob = async (req, res) => {
     // 1 & 2. Check Job and Deadline
     const [[job]] = await pool.query("SELECT jobs.*, companies.name AS company_name FROM jobs JOIN companies ON jobs.company_id = companies.id WHERE jobs.id = ?", [job_id]);
     if (!job) return res.status(404).json({ success: false, message: "Job not found" });
-    if (new Date(job.deadline) < new Date(new Date().setHours(0,0,0,0))) {
+    
+    if (job.deadline && new Date(job.deadline) < new Date(new Date().setHours(0,0,0,0))) {
       return res.status(400).json({ success: false, message: "Deadline has expired" });
     }
 
