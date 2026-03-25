@@ -125,3 +125,10 @@ export const notifyCandidatesSchema = {
     details: Joi.object().required()
   })
 };
+
+export const approveSubmissionSchema = {
+  params: Joi.object({
+    type: Joi.string().valid('event', 'competition', 'resource').required(),
+    id: Joi.number().integer().positive().required()
+  })
+};

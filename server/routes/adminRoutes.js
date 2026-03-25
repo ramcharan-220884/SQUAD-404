@@ -10,6 +10,7 @@ import { getAdminCompetitions, createCompetition, updateCompetition, deleteCompe
 import { getAdminEvents, createEvent, updateEvent, deleteEvent } from "../controllers/adminEventController.js";
 import { getAdminAssessments, getAssessmentAttempts, createAssessment, updateAssessment, deleteAssessment } from "../controllers/adminAssessmentController.js";
 import { getSettings, updateSettings, getAdminProfile, updateAdminProfile, changeAdminPassword } from "../controllers/adminSettingsController.js";
+import { getPendingSubmissions, approveSubmission, rejectSubmission } from "../controllers/adminSubmissionController.js";
 
 // ── Phase 3 Domain Controllers ─────────────────────────────────────────────
 import { getPlacementAnalytics } from "../controllers/adminAnalyticsController.js";
@@ -22,7 +23,7 @@ import {
   approveUserSchema, rejectUserSchema, updateStudentAdminSchema, 
   updateCompanyAdminSchema, ticketStatusSchema, settingsSchema, 
   adminProfileSchema, changeAdminPasswordSchema, 
-  createEventSchema, createCompetitionSchema, createAssessmentSchema, createInterviewSchema 
+  createEventSchema, createCompetitionSchema, createAssessmentSchema, createInterviewSchema, approveSubmissionSchema
 } from "../validations/admin.validation.js";
 import { createAnnouncementSchema, updateAnnouncementSchema } from "../validations/announcement.validation.js";
 const router = express.Router();
@@ -75,6 +76,11 @@ router.get("/events", getAdminEvents);
 router.post("/events", validate(createEventSchema), createEvent);
 router.patch("/events/:id", validate(createEventSchema), updateEvent);
 router.delete("/events/:id", deleteEvent);
+
+// ── Submissions Flow ────────────────────────────────────────────────────────────
+router.get("/pending-submissions", getPendingSubmissions);
+router.put("/submissions/:type/:id/approve", validate(approveSubmissionSchema), approveSubmission);
+router.put("/submissions/:type/:id/reject", validate(approveSubmissionSchema), rejectSubmission);
 
 // ── Assessments ────────────────────────────────────────────────────────────
 router.get("/assessments", getAdminAssessments);

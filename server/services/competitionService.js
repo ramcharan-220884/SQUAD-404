@@ -18,7 +18,7 @@ export const fetchApprovedCompetitions = async (studentId) => {
            CASE WHEN cr.id IS NOT NULL THEN 1 ELSE 0 END as registered
     FROM competitions c
     LEFT JOIN competition_registrations cr ON cr.competition_id = c.id AND cr.student_id = ?
-    WHERE c.status = 'approved' AND c.date >= CURDATE()
+    WHERE (c.status = 'approved' OR c.status IS NULL) AND c.date >= CURDATE()
     ORDER BY c.date ASC
   `, [studentId]);
   

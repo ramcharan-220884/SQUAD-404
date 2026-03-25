@@ -72,6 +72,33 @@ export const registerForEvent = async (event_id) => {
   return handleResponse(res);
 };
 
+export const submitEvent = async (data) => {
+  const res = await authFetch(`/students/events`, {
+    method: "POST",
+    body: JSON.stringify(data)
+  });
+  return handleResponse(res);
+};
+
+export const submitResource = async (data) => {
+  const res = await authFetch(`/students/resources`, {
+    method: "POST",
+    body: JSON.stringify(data)
+  });
+  return handleResponse(res);
+};
+
+export const getResources = async () => {
+  const res = await authFetch(`/students/resources`);
+  return handleResponse(res);
+};
+
+export const getMySubmissions = async () => {
+  const res = await authFetch(`/students/my-submissions`);
+  return handleResponse(res);
+};
+
+
 // Competitions
 export const getCompetitions = async () => {
   const res = await authFetch(`/students/competitions`);

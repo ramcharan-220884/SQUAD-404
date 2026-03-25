@@ -60,3 +60,22 @@ export const createCompetitionSchema = {
     registrationLink: Joi.string().uri().optional().allow('')
   }).unknown(true)
 };
+
+export const submitEventSchema = {
+  body: Joi.object({
+    title: Joi.string().min(3).max(150).required(),
+    description: Joi.string().min(10).max(2000).required(),
+    date: Joi.date().iso().required(),
+    type: Joi.string().valid('Workshop', 'Seminar', 'Hackathon', 'Contest').default('Workshop'),
+    link: Joi.string().uri().optional().allow('')
+  }).unknown(true)
+};
+
+export const submitResourceSchema = {
+  body: Joi.object({
+    title: Joi.string().min(3).max(150).required(),
+    link: Joi.string().uri().required(),
+    branch: Joi.string().valid('CSE', 'ECE', 'EEE', 'Mechanical', 'Chemical').required(),
+    category: Joi.string().max(100).required()
+  }).unknown(true)
+};
