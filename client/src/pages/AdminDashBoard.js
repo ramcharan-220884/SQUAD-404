@@ -33,7 +33,6 @@ import Events from "../components/dashboard/Events";
 import Assessments from "../components/dashboard/Assessments";
 import Interviews from "../components/dashboard/Interviews";
 import CandidateCommunication from "../components/dashboard/CandidateCommunication";
-import ThemeToggle from "../components/dashboard/ThemeToggle";
 
 import {
   BarChart,
@@ -517,7 +516,6 @@ export default function AdminDashboard() {
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <ThemeToggle />
           </div>
         </div>
 

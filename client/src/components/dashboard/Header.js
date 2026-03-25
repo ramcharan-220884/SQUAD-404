@@ -1,5 +1,4 @@
 import React from 'react';
-import ThemeToggle from './ThemeToggle';
 
 export default function Header() {
   const currentDate = new Date().toLocaleDateString("en-IN", {
@@ -38,8 +37,6 @@ export default function Header() {
           <span className="db-notif-badge" />
         </button>
 
-        {/* Theme Toggle */}
-        <ThemeToggle role="student" />
 
         {/* Avatar — initials only (no hardcoded image) */}
         <div className="db-avatar" title={userName}>

@@ -160,7 +160,7 @@ const AppliedJobsList = ({ jobs, onRefresh }) => {
                     {rounds.map((round, idx) => (
                       <div key={idx} className="relative">
                         <div className={`absolute -left-[30px] top-1 w-4 h-4 rounded-full border-2 border-white ${
-                            round.status === 'Passed' ? 'bg-green-500' : 
+                            round.status === 'Passed' ? 'bg-[#800000]' : 
                             round.status === 'Failed' ? 'bg-red-500' :
                             round.status === 'Completed' ? 'bg-blue-500' :
                             'bg-yellow-400'
@@ -172,7 +172,7 @@ const AppliedJobsList = ({ jobs, onRefresh }) => {
                             <span className="flex items-center gap-1"><Calendar size={12}/> {round.time}</span>
                             <span className="flex items-center gap-1"><MapPin size={12}/> {round.location}</span>
                             <span className={`font-bold uppercase tracking-wider ${
-                              round.status === 'Passed' ? 'text-green-600' : 
+                              round.status === 'Passed' ? 'text-[#800000]' : 
                               round.status === 'Failed' ? 'text-red-600' :
                               round.status === 'Completed' ? 'text-blue-600' :
                               'text-yellow-600'
