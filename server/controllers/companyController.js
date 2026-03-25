@@ -193,7 +193,7 @@ export const updateCompanyApplicationStatus = async (req, res, next) => {
 
     // Notify student via socket
     const [[appData]] = await pool.query(
-      "SELECT a.student_id, j.title as jobTitle FROM applications a JOIN jobs j ON a.job_id = j.id WHERE a.id = ?",
+      "SELECT a.student_id, j.title as jobTitle, j.company_id FROM applications a JOIN jobs j ON a.job_id = j.id WHERE a.id = ?",
       [applicationId]
     );
     if (appData && req.io) {
@@ -202,6 +202,25 @@ export const updateCompanyApplicationStatus = async (req, res, next) => {
         status,
         jobTitle: appData.jobTitle
       });
+    }
+
+    // Create persistent DB notification for Selected or Shortlisted
+    if (appData && (status === 'Selected' || status === 'Shortlisted')) {
+      try {
+        const [[companyRow]] = await pool.query("SELECT name FROM companies WHERE id = ?", [appData.company_id]);
+        const companyName = companyRow ? companyRow.name : "the company";
+        const message = status === 'Selected'
+          ? `Congratulations, you are selected for ${companyName}`
+          : `You have been shortlisted for ${companyName}`;
+        const notifType = status === 'Selected' ? 'selected' : 'shortlisted';
+        await pool.query(
+          "INSERT INTO notifications (user_id, message, type) VALUES (?, ?, ?)",
+          [appData.student_id, message, notifType]
+        );
+        console.log(`[Notifications] Created ${notifType} notification for student ${appData.student_id}: ${message}`);
+      } catch (notifErr) {
+        console.error("[Notifications] Error creating status notification:", notifErr.message);
+      }
     }
 
     res.json({ success: true, message: "Application status updated successfully" });

@@ -132,3 +132,13 @@ export const getStudentApplicationRounds = async (applicationId) => {
   return handleResponse(res);
 };
 
+// Notification Endpoints
+export const getNotifications = async () => {
+  const res = await authFetch(`/students/notifications`);
+  return handleResponse(res);
+};
+
+export const markNotificationRead = async (id) => {
+  const res = await authFetch(`/students/notifications/${id}/read`, { method: "PATCH" });
+  return handleResponse(res);
+};
