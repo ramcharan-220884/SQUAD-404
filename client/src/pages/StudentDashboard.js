@@ -10,8 +10,11 @@ import Interviews from '../components/dashboard/Interviews';
 import Events from '../components/dashboard/Events';
 import AppliedJobs from '../components/dashboard/AppliedJobs';
 import Competitions from '../components/dashboard/Competitions';
+import MySubmissionsModal from '../components/dashboard/MySubmissionsModal';
 import {
-  getMyApplications
+  getMyApplications,
+  getResources,
+  submitResource
 } from "../services/studentService";
 import { getNotifications, markNotificationRead } from "../services/studentService";
 import BrowseJobs from "../components/dashboard/BrowseJobs";
@@ -99,59 +102,63 @@ const branchCategories = {
   Chemical: ["Aptitude", "Core Subjects"]
 };
 
-// ── localStorage helpers for Resources ───────────────────────────────────────
-const LS_RES_PENDING  = "pendingResources";
-const LS_RES_APPROVED = "approvedResources";
-const getLSResApproved = () => JSON.parse(localStorage.getItem(LS_RES_APPROVED)) || [];
-const getLSResPending  = () => JSON.parse(localStorage.getItem(LS_RES_PENDING))  || [];
-const setLSResPending  = (arr) => localStorage.setItem(LS_RES_PENDING, JSON.stringify(arr));
-
 const ALL_BRANCHES     = Object.keys(branchCategories);
 const getCatsForBranch = (b) => branchCategories[b] || [];
 
 function ResourcesSection() {
+  const { showNotification } = useNotification();
   const [selectedBranch, setSelectedBranch] = useState("CSE");
   const [selectedCategory, setSelectedCategory] = useState("Aptitude");
-  const [approvedResources, setApprovedResources] = useState(getLSResApproved);
+  const [approvedResources, setApprovedResources] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: "", link: "", branch: "CSE", category: "Aptitude"
   });
 
-  // Sync approved list when admin approves in another tab
+  const fetchResources = async () => {
+    try {
+      const data = await getResources();
+      if (Array.isArray(data)) setApprovedResources(data);
+    } catch (err) {
+      console.error("Failed to load approved resources", err);
+    }
+  };
+
   useEffect(() => {
-    const sync = () => setApprovedResources(getLSResApproved());
-    window.addEventListener('storage', sync);
-    return () => window.removeEventListener('storage', sync);
+    fetchResources();
   }, []);
 
   // Merge static resources + admin-approved community resources
-  const staticItems = resourcesData[selectedCategory] || [];
-  const approvedItems = approvedResources.filter(
-    r => r.branch === selectedBranch && r.category === selectedCategory
-  );
-  const mergedItems = [
-    ...staticItems,
-    ...approvedItems.filter(ar => !staticItems.some(s => s.title === ar.title))
-  ];
+  const mergedItems = React.useMemo(() => {
+    const staticItems = resourcesData[selectedCategory] || [];
+    const dbItems = approvedResources.filter(
+      r => r.branch === selectedBranch && r.category === selectedCategory
+    );
+    return [
+      ...staticItems,
+      ...dbItems.filter(db => !staticItems.some(s => s.title === db.title))
+    ];
+  }, [selectedCategory, selectedBranch, approvedResources]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const newRes = {
-      id: `res-${Date.now()}`,
-      ...formData,
-      status: 'pending',
-      submittedAt: new Date().toISOString()
-    };
-    const updated = [...getLSResPending(), newRes];
-    setLSResPending(updated);
-    setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
-      setShowModal(false);
-      setFormData({ title: "", link: "", branch: "CSE", category: "Aptitude" });
-    }, 1800);
+    setActionLoading(true);
+    try {
+      await submitResource(formData);
+      setSubmitted(true);
+      showNotification("Resource submitted for admin approval!", "success", "student");
+      setTimeout(() => {
+        setSubmitted(false);
+        setShowModal(false);
+        setFormData({ title: "", link: "", branch: "CSE", category: "Aptitude" });
+      }, 1500);
+    } catch (err) {
+      showNotification(err.message || "Failed to submit resource", "error", "student");
+    } finally {
+      setActionLoading(false);
+    }
   };
 
   const openLink = (link) => window.open(link, "_blank", "noopener,noreferrer");
@@ -316,9 +323,9 @@ function ResourcesSection() {
                     style={{ padding: '10px 20px', borderRadius: '12px', border: '1px solid #e8ecf0', background: '#f9fafb', fontSize: '13px', fontWeight: 600, cursor: 'pointer', color: '#4b5563' }}>
                     Cancel
                   </button>
-                  <button type="submit"
-                    style={{ padding: '10px 24px', borderRadius: '12px', background: 'linear-gradient(90deg, #800000, #4a0000)', color: '#fff', fontSize: '13px', fontWeight: 700, border: 'none', cursor: 'pointer', boxShadow: '0 4px 12px rgba(128,0,0,0.25)' }}>
-                    Submit for Approval
+                  <button type="submit" disabled={actionLoading}
+                    style={{ padding: '10px 24px', borderRadius: '12px', background: 'linear-gradient(90deg, #800000, #4a0000)', color: '#fff', fontSize: '13px', fontWeight: 700, border: 'none', cursor: 'pointer', boxShadow: '0 4px 12px rgba(128,0,0,0.25)', opacity: actionLoading ? 0.7 : 1 }}>
+                    {actionLoading ? 'Submitting...' : 'Submit for Approval'}
                   </button>
                 </div>
               </form>
@@ -501,6 +508,7 @@ export default function StudentDashboard() {
   const { showNotification } = useNotification();
   const [activePage, setActivePage] = useState('home');
   const [appliedJobs, setAppliedJobs] = useState([]);
+  const [showSubmissionsModal, setShowSubmissionsModal] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [selectedNotification, setSelectedNotification] = useState(null);
 
@@ -625,6 +633,24 @@ export default function StudentDashboard() {
           <RightPanel />
         </div>
       </div>
+
+      {/* Floating Button for My Submissions */}
+      <button 
+        onClick={() => setShowSubmissionsModal(true)}
+        className="fixed bottom-8 right-8 bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-2xl flex items-center justify-center transition-transform hover:scale-105 z-50 group"
+      >
+         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+           <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+         </svg>
+         <span className="w-0 overflow-hidden group-hover:w-auto group-hover:ml-2 whitespace-nowrap hidden md:inline-block transition-all duration-300 font-bold text-sm">
+           My Submissions
+         </span>
+      </button>
+
+      {/* Submissions Modal */}
+      {showSubmissionsModal && (
+        <MySubmissionsModal onClose={() => setShowSubmissionsModal(false)} />
+      )}
     </div>
   );
 }

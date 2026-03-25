@@ -1,4 +1,5 @@
 import { pool } from "../config/db.js";
+import * as competitionService from "../services/competitionService.js";
 
 // Get student profile
 export const getProfile = async (req, res, next) => {
@@ -164,21 +165,28 @@ export const getAnnouncements = async (req, res, next) => {
   }
 };
 
-// Get competitions for student
+// Get competitions for student (only approved and upcoming)
 export const getCompetitions = async (req, res, next) => {
   try {
     const student_id = req.user.id;
-    const [rows] = await pool.query(`
-      SELECT c.*, 
-             CASE WHEN cr.id IS NOT NULL THEN 1 ELSE 0 END as registered
-      FROM competitions c
-      LEFT JOIN competition_registrations cr ON cr.competition_id = c.id AND cr.student_id = ?
-      WHERE c.deadline >= CURDATE()
-      ORDER BY c.deadline ASC
-    `, [student_id]);
-    
-    const formatted = rows.map(r => ({ ...r, registered: r.registered === 1 }));
-    res.json({ success: true, data: formatted });
+    const data = await competitionService.fetchApprovedCompetitions(student_id);
+    res.json({ success: true, data });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Submit a new competition (student)
+export const submitCompetition = async (req, res, next) => {
+  try {
+    const student_id = req.user.id;
+    const competitionData = {
+      ...req.body,
+      createdBy: student_id,
+      status: 'pending'
+    };
+    const data = await competitionService.createCompetitionRecord(competitionData);
+    res.status(201).json({ success: true, message: "Competition submitted for approval", data });
   } catch (err) {
     next(err);
   }
@@ -210,7 +218,7 @@ export const getEvents = async (req, res, next) => {
              CASE WHEN er.id IS NOT NULL THEN 1 ELSE 0 END as registered
       FROM events e
       LEFT JOIN event_registrations er ON er.event_id = e.id AND er.student_id = ?
-      WHERE e.date >= CURDATE()
+      WHERE e.date >= CURDATE() AND (e.status = 'approved' OR e.status IS NULL)
       ORDER BY e.date ASC
     `, [student_id]);
     
@@ -311,6 +319,48 @@ export const getMyApplicationRounds = async (req, res, next) => {
   }
 };
 
+// Submit an event (student)
+export const submitEvent = async (req, res, next) => {
+  try {
+    const student_id = req.user.id;
+    const { title, description, date, type } = req.body;
+    await pool.query(
+      "INSERT INTO events (title, description, date, type, status, submitted_by) VALUES (?, ?, ?, ?, 'pending', ?)",
+      [title, description, date, type || 'Workshop', student_id]
+    );
+    res.status(201).json({ success: true, message: "Event submitted for approval" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Submit a resource (student)
+export const submitResource = async (req, res, next) => {
+  try {
+    const student_id = req.user.id;
+    const { title, link, branch, category } = req.body;
+    await pool.query(
+      "INSERT INTO student_resources (title, link, branch, category, status, submitted_by) VALUES (?, ?, ?, ?, 'pending', ?)",
+      [title, link, branch, category, student_id]
+    );
+    res.status(201).json({ success: true, message: "Resource submitted for approval" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Get approved resources
+export const getResources = async (req, res, next) => {
+  try {
+    const [rows] = await pool.query(
+      "SELECT id, title, link, branch, category, status, created_at FROM student_resources WHERE status = 'approved' ORDER BY created_at DESC"
+    );
+    res.json({ success: true, data: rows });
+  } catch (err) {
+    next(err);
+  }
+};
+
 // Get notifications for the logged-in student
 export const getNotifications = async (req, res, next) => {
   try {
@@ -324,6 +374,24 @@ export const getNotifications = async (req, res, next) => {
 
     console.log(`[Notifications] Found ${rows.length} notifications for student ${user_id}`);
     res.json({ success: true, data: rows });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Get the student's own submissions
+export const getMySubmissions = async (req, res, next) => {
+  try {
+    const student_id = req.user.id;
+    
+    // Ensure aliases match for uniform sorting/mapping in frontend
+    const [events] = await pool.query("SELECT id, title, status, 'event' as category_type, created_at FROM events WHERE submitted_by = ?", [student_id]);
+    const [competitions] = await pool.query("SELECT id, title, status, 'competition' as category_type, created_at FROM competitions WHERE createdBy = ?", [student_id]);
+    const [resources] = await pool.query("SELECT id, title, status, 'resource' as category_type, created_at FROM student_resources WHERE submitted_by = ?", [student_id]);
+    
+    const allSubmissions = [...events, ...competitions, ...resources].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    
+    res.json({ success: true, data: allSubmissions });
   } catch (err) {
     next(err);
   }

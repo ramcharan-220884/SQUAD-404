@@ -54,26 +54,13 @@ import {
   approveUser,
   rejectUser,
   getPlacementAnalytics,
-  getAllStudents
+  getAllStudents,
+  getPendingSubmissions,
+  approveSubmission,
+  rejectSubmission
 } from "../services/adminService";
 
 const PIE_COLORS = ["#16a34a", "#facc15", "#dc2626"];
-
-// LocalStorage helpers
-const LS_RES_PENDING = "pendingResources";
-const LS_RES_APPROVED = "approvedResources";
-
-const getAdminResPending = () =>
-  JSON.parse(localStorage.getItem(LS_RES_PENDING)) || [];
-
-const getAdminResApproved = () =>
-  JSON.parse(localStorage.getItem(LS_RES_APPROVED)) || [];
-
-const setAdminResPending = (arr) =>
-  localStorage.setItem(LS_RES_PENDING, JSON.stringify(arr));
-
-const setAdminResApproved = (arr) =>
-  localStorage.setItem(LS_RES_APPROVED, JSON.stringify(arr));
 
 // ── Sidebar nav config ──────────────────────────────────────────────────────
 const NAV_SECTIONS = [
@@ -98,9 +85,9 @@ export default function AdminDashboard() {
   const [placementAnalytics, setPlacementAnalytics] = useState([]);
   const [pendingStudents, setPendingStudents] = useState([]);
   const [pendingRecruiters, setPendingRecruiters] = useState([]);
+  const [pendingSubmissions, setPendingSubmissions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
-  const [pendingResources, setPendingResources] = useState(getAdminResPending());
   const [studentStats, setStudentStats] = useState({ placed: 0, unplaced: 0 });
 
   // ✅ ADMIN1 LOGOUT (FINAL)
@@ -122,15 +109,17 @@ export default function AdminDashboard() {
   const fetchData = React.useCallback(async () => {
     setLoading(true);
     try {
-      const [statsData, pendingData, analyticsData, studentsData] = await Promise.all([
+      const [statsData, pendingData, analyticsData, studentsData, subsData] = await Promise.all([
         getStats(),
         getPendingUsers(),
         getPlacementAnalytics().catch(() => []),
-        getAllStudents(1, 10000).catch(() => ({ data: [] }))
+        getAllStudents(1, 10000).catch(() => ({ data: [] })),
+        getPendingSubmissions().catch(() => [])
       ]);
 
       setStats(statsData);
       setPlacementAnalytics(analyticsData);
+      setPendingSubmissions(subsData || []);
 
       // Process real student data for Pie Chart
       const studentsList = studentsData.data || studentsData;
@@ -182,46 +171,26 @@ export default function AdminDashboard() {
     }
 
     fetchData();
-
-    const syncResources = () =>
-      setPendingResources(getAdminResPending());
-
-    window.addEventListener("storage", syncResources);
-
-    return () =>
-      window.removeEventListener("storage", syncResources);
   }, [fetchData, location]);
 
-  const approveResource = (id) => {
-    const pending = getAdminResPending();
-    const res = pending.find((r) => r.id === id);
-    if (!res) return;
-
-    const newPending = pending.filter((r) => r.id !== id);
-    const newApproved = [
-      ...getAdminResApproved(),
-      { ...res, status: "approved" }
-    ];
-
-    setAdminResPending(newPending);
-    setAdminResApproved(newApproved);
-    setPendingResources(newPending);
-
-    showNotification(
-      "Resource approved — now visible to students!",
-      "success",
-      "admin"
-    );
+  const handleApproveSubmission = async (type, id) => {
+    try {
+      await approveSubmission(type, id);
+      showNotification(`${type} approved!`, "success", "admin");
+      fetchData();
+    } catch (err) {
+      showNotification(`Failed to approve ${type}`, "error", "admin");
+    }
   };
 
-  const rejectResource = (id) => {
-    const newPending = getAdminResPending().filter(
-      (r) => r.id !== id
-    );
-    setAdminResPending(newPending);
-    setPendingResources(newPending);
-
-    showNotification("Resource rejected.", "error", "admin");
+  const handleRejectSubmission = async (type, id) => {
+    try {
+      await rejectSubmission(type, id);
+      showNotification(`${type} rejected.`, "info", "admin");
+      fetchData();
+    } catch (err) {
+      showNotification(`Failed to reject ${type}`, "error", "admin");
+    }
   };
 
   const handleApproveUser = async (id, type) => {
@@ -292,7 +261,7 @@ export default function AdminDashboard() {
     const statsCards = [
       { label: "Total Students", value: stats?.totalStudents ?? 0, color: "bg-blue-50 text-blue-700" },
       { label: "Total Companies", value: stats?.totalCompanies ?? 0, color: "bg-green-50 text-green-700" },
-      { label: "Pending Approvals", value: (pendingStudents.length + pendingRecruiters.length), color: "bg-orange-50 text-orange-700" },
+      { label: "Pending Approvals", value: (pendingStudents.length + pendingRecruiters.length + pendingSubmissions.length), color: "bg-orange-50 text-orange-700" },
       { label: "Total Placements", value: stats?.totalPlacements ?? 0, color: "bg-purple-50 text-purple-700" },
     ];
 
@@ -411,35 +380,45 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Pending Resource Requests */}
-        {pendingResources.length > 0 && (
+        {/* Pending Community Submissions */}
+        {pendingSubmissions.length > 0 && (
           <div style={{ marginTop: '40px', paddingTop: '32px', borderTop: '2px dashed #93c5fd' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
               <div style={{ padding: '8px', background: '#dbeafe', borderRadius: '12px', display: 'flex', alignItems: 'center' }}>
                 <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" /></svg>
               </div>
               <div>
-                <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#1e293b', margin: 0 }}>Pending Resource Requests</h3>
-                <p style={{ fontSize: '12px', color: '#2563eb', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0 }}>Submitted by students — awaiting your approval</p>
+                <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#1e293b', margin: 0 }}>Pending Community Submissions</h3>
+                <p style={{ fontSize: '12px', color: '#2563eb', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0 }}>Events, Competitions & Resources — awaiting your approval</p>
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {pendingResources.map(r => (
-                <div key={r.id} style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '16px', padding: '20px', position: 'relative', boxShadow: '0 2px 8px rgba(37,99,235,0.06)', transition: 'box-shadow 0.2s' }}>
-                  <span style={{ position: 'absolute', top: '12px', right: '12px', background: '#dbeafe', color: '#1d4ed8', padding: '2px 10px', borderRadius: '20px', fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', border: '1px solid #bfdbfe' }}>Pending</span>
+              {pendingSubmissions.map(sub => (
+                <div key={`${sub.submission_type}-${sub.id}`} style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '16px', padding: '20px', position: 'relative', boxShadow: '0 2px 8px rgba(37,99,235,0.06)', transition: 'box-shadow 0.2s', display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ position: 'absolute', top: '12px', right: '12px', background: '#dbeafe', color: '#1d4ed8', padding: '2px 10px', borderRadius: '20px', fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', border: '1px solid #bfdbfe' }}>{sub.submission_type}</span>
                   <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '10px' }}>
-                    <span style={{ background: '#e0e7ff', color: '#3730a3', padding: '2px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 700, border: '1px solid #c7d2fe' }}>{r.branch}</span>
-                    <span style={{ background: '#f0fdf4', color: '#15803d', padding: '2px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 700, border: '1px solid #bbf7d0' }}>{r.category}</span>
+                    <span style={{ background: '#e0e7ff', color: '#3730a3', padding: '2px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 700, border: '1px solid #c7d2fe' }}>By: {sub.student_name}</span>
+                    {sub.category && <span style={{ background: '#f0fdf4', color: '#15803d', padding: '2px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 700, border: '1px solid #bbf7d0' }}>{sub.category}</span>}
                   </div>
-                  <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#1e293b', marginBottom: '8px', paddingRight: '60px', lineHeight: 1.4 }}>{r.title}</h4>
-                  <a href={r.link.startsWith('http') ? r.link : `https://${r.link}`} target="_blank" rel="noopener noreferrer"
-                    style={{ fontSize: '12px', color: '#2563eb', fontWeight: 600, wordBreak: 'break-all', display: 'block', marginBottom: '16px' }}>{r.link}</a>
-                  <div style={{ display: 'flex', gap: '10px' }}>
-                    <button onClick={() => approveResource(r.id)}
+                  <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#1e293b', marginBottom: '8px', paddingRight: '60px', lineHeight: 1.4 }}>{sub.title}</h4>
+                  
+                  {sub.submission_type !== 'resource' && sub.date && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', color: '#475569', marginBottom: '8px', fontWeight: 600 }}>
+                      <Calendar className="w-3.5 h-3.5" /> {new Date(sub.date).toLocaleDateString()}
+                    </div>
+                  )}
+
+                  {sub.link && (
+                    <a href={sub.link.startsWith('http') ? sub.link : `https://${sub.link}`} target="_blank" rel="noopener noreferrer"
+                      style={{ fontSize: '12px', color: '#2563eb', fontWeight: 600, wordBreak: 'break-all', display: 'block', marginBottom: '16px' }}>Link attached</a>
+                  )}
+
+                  <div style={{ display: 'flex', gap: '10px', marginTop: 'auto' }}>
+                    <button onClick={() => handleApproveSubmission(sub.submission_type, sub.id)}
                       style={{ flex: 1, padding: '9px', background: '#22c55e', color: '#fff', border: 'none', borderRadius: '10px', fontWeight: 700, fontSize: '13px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
                       <CheckCircle size={15} /> Approve
                     </button>
-                    <button onClick={() => rejectResource(r.id)}
+                    <button onClick={() => handleRejectSubmission(sub.submission_type, sub.id)}
                       style={{ flex: 1, padding: '9px', background: '#fff', color: '#dc2626', border: '1px solid #fecaca', borderRadius: '10px', fontWeight: 700, fontSize: '13px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
                       <XCircle size={15} /> Reject
                     </button>
