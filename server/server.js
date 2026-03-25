@@ -20,6 +20,9 @@ import announcementRoutes from "./routes/announcementRoutes.js";
 import settingsRoutes from "./routes/settingsRoutes.js";
 import supportRoutes from "./routes/supportRoutes.js";
 import featureRoutes from "./routes/featureRoutes.js";
+import scrapedJobsRoutes from "./routes/scrapedJobsRoutes.js";
+import cron from 'node-cron';
+import { scrapeAllCompanies } from "./services/scraperService.js";
 import responseHandler from "./middleware/responseHandler.js";
 import errorHandler from "./middleware/errorHandler.js";
 
@@ -118,7 +121,7 @@ app.use("/api/announcements", announcementRoutes);
 app.use("/api/settings", settingsRoutes);
 app.use("/api/support", supportRoutes);
 app.use("/api/features", featureRoutes);
-
+app.use("/api/scraped-jobs", scrapedJobsRoutes);
 // Test database connection
 async function testDB() {
   try {
@@ -149,6 +152,16 @@ async function cleanupExpiredTokens() {
 
 setInterval(cleanupExpiredTokens, 60 * 60 * 1000);
 
+// Background Cron Jobs
+cron.schedule('0 * * * *', async () => {
+    console.log(`\n[Cron Worker] 🚀 Starting automated job: scrapeAllCompanies() at ${new Date().toISOString()}`);
+    try {
+        await scrapeAllCompanies();
+        console.log(`[Cron Worker] ✅ Job scrapeAllCompanies() finished successfully.`);
+    } catch (error) {
+        console.error(`[Cron Worker] ❌ Job scrapeAllCompanies() failure:`, error.message);
+    }
+}, { scheduled: true, timezone: "UTC" });
 // Run once on startup
 pool.query("DELETE FROM password_resets WHERE expires_at < NOW()").catch(() => {});
 

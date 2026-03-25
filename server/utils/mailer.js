@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 import { generateEmailTemplate, generateApplicationConfirmationTemplate } from './templates.js';
+import { getJobOutreachTemplate } from './emailTemplates.js';
 
 dotenv.config();
 
@@ -199,4 +200,21 @@ export const sendApplicationConfirmationEmail = async (student, job, application
     subject: `Application Submitted Successfully – ${job.title}`, 
     html 
   });
+};
+
+/**
+ * Sends a professional outreach email to a hiring manager/HR.
+ */
+export const sendJobOutreachEmail = async (toEmail, jobData) => {
+    try {
+        const html = getJobOutreachTemplate(jobData);
+        return await sendEmail({ 
+            to: toEmail, 
+            subject: `Talent Pipeline: ${jobData.job_title} Role at ${jobData.company_name}`, 
+            html 
+        });
+    } catch (error) {
+        console.error(`[Mailer] Delivery failed to ${toEmail}:`, error.message);
+        throw error;
+    }
 };

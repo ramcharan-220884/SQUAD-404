@@ -32,6 +32,7 @@ import Events from "../components/dashboard/Events";
 import Assessments from "../components/dashboard/Assessments";
 import Interviews from "../components/dashboard/Interviews";
 import CandidateCommunication from "../components/dashboard/CandidateCommunication";
+import AdminScrapedJobs from "../components/dashboard/AdminScrapedJobs.jsx";
 
 import {
   BarChart,
@@ -205,6 +206,7 @@ export default function AdminDashboard() {
           <Link to="/admin-dashboard/announcements" className="flex gap-2"><Megaphone size={18}/> Announcements</Link>
           <Link to="/admin-dashboard/competitions" className="flex gap-2"><Trophy size={18}/> Competitions</Link>
           <Link to="/admin-dashboard/events" className="flex gap-2"><Calendar size={18}/> Events</Link>
+          <Link to="/admin-dashboard/scraped-jobs" className="flex gap-2"><Briefcase size={18}/> Scraped Jobs</Link>
 
           <Link to="/admin-dashboard/assessments" className="flex gap-2"><FileCheck size={18}/> Assessments</Link>
           <Link to="/admin-dashboard/interviews" className="flex gap-2"><Mic size={18}/> Interviews</Link>
@@ -242,6 +244,8 @@ export default function AdminDashboard() {
           <Interviews role="admin" />
         ) : location.pathname === "/admin-dashboard/applications" ? (
           <CandidateCommunication />
+        ) : location.pathname === "/admin-dashboard/scraped-jobs" ? (
+          <AdminScrapedJobs />
         ) : (
           <>
             <div className="flex justify-between mb-6">

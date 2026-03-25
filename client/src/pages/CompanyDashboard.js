@@ -50,6 +50,7 @@ export default function CompanyDashboard() {
   const [isEditing, setIsEditing] = useState(false);
   const [editJobId, setEditJobId] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [suggestedJobs, setSuggestedJobs] = useState([]);
   const [postJobFormData, setPostJobFormData] = useState({
     title: "",
     department: "",
@@ -334,6 +335,31 @@ export default function CompanyDashboard() {
     
     // Reset and close
     closePostJobModal();
+  };
+
+  useEffect(() => {
+    const fetchSuggestedJobs = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            const { data } = await fetch("http://localhost:5000/api/scraped-jobs/company-suggestions", {
+                headers: { Authorization: `Bearer ${token}` }
+            }).then(r => r.json());
+            if (data) setSuggestedJobs(data);
+        } catch (error) {
+            console.error('No auto-fill suggestions available.');
+        }
+    };
+    if (showPostJobModal) fetchSuggestedJobs();
+  }, [showPostJobModal]);
+
+  const handleAutoFill = (job) => {
+      setPostJobFormData(prev => ({
+          ...prev,
+          title: job.job_title,
+          description: job.description || "",
+          skills: job.skills || prev.skills,
+          location: job.location || prev.location
+      }));
   };
 
   const closePostJobModal = () => {
@@ -1626,7 +1652,24 @@ export default function CompanyDashboard() {
               </button>
             </div>
             
-            <form onSubmit={handlePostJob} className="p-8 max-h-[75vh] overflow-y-auto">
+            <div className="p-8 pb-0">
+              {suggestedJobs.length > 0 && (
+                  <div className="mb-6 p-4 bg-blue-50 border border-blue-100 rounded-xl">
+                      <h4 className="text-blue-800 font-bold mb-2">✨ Smart Auto-Fill Suggestions</h4>
+                      <p className="text-blue-600 text-xs mb-3">We found previously scraped listings for you. Click to auto-fill the draft.</p>
+                      <div className="flex gap-4 overflow-x-auto pb-2">
+                          {suggestedJobs.map(job => (
+                              <div key={job.id} className="min-w-[200px] bg-white p-3 rounded-lg shadow-sm border border-blue-200 cursor-pointer hover:border-blue-500" onClick={() => handleAutoFill(job)}>
+                                  <h5 className="font-bold text-gray-800 text-sm truncate">{job.job_title}</h5>
+                                  <p className="text-[10px] text-gray-500 truncate">📍 {job.location || 'Remote'}</p>
+                                  <button type="button" className="mt-2 w-full text-xs bg-blue-100 text-blue-600 py-1.5 rounded-md font-bold">Auto-Fill</button>
+                              </div>
+                          ))}
+                      </div>
+                  </div>
+              )}
+            </div>
+            <form onSubmit={handlePostJob} className="p-8 pt-0 max-h-[75vh] overflow-y-auto">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Job Title */}
                 <div className="md:col-span-2">
