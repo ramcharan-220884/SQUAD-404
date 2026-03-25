@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import socketService from "../services/socketService";
 import { useNotification } from "../context/NotificationContext";
 import Sidebar from '../components/dashboard/Sidebar';
-import Header from '../components/dashboard/Header';
+import Header, { getCompanyInitial } from '../components/dashboard/Header';
 import RightPanel from '../components/dashboard/RightPanel';
 import HomeContent from '../components/dashboard/HomeContent';
 import HelpSupport from '../components/dashboard/HelpSupport';
@@ -13,6 +13,7 @@ import Competitions from '../components/dashboard/Competitions';
 import {
   getMyApplications
 } from "../services/studentService";
+import { getNotifications, markNotificationRead } from "../services/studentService";
 import BrowseJobs from "../components/dashboard/BrowseJobs";
 import StudentProfile from "./StudentProfile";
 import Announcements from "../components/dashboard/Announcements";
@@ -329,12 +330,181 @@ function ResourcesSection() {
   );
 }
 
+// ── Notification Details View ───────────────────────────────────────────────────
+function NotificationDetailsView({ notification, onBack }) {
+  if (!notification) return null;
+
+  const formatTime = (dateStr) => {
+    if (!dateStr) return '';
+    return new Date(dateStr).toLocaleString('en-IN', { 
+      day: 'numeric', month: 'long', year: 'numeric', 
+      hour: '2-digit', minute: '2-digit' 
+    });
+  };
+
+  const title = notification.type === 'job' 
+    ? 'New Job Posting' 
+    : notification.type === 'selected' 
+      ? 'Selection Update' 
+      : notification.type === 'shortlisted' ? 'Application Update' : 'Notification';
+
+  return (
+    <div className="bj-root" style={{ animation: 'fadeSlideIn 0.28s ease both' }}>
+      <div className="bj-top" style={{ marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <button 
+          onClick={onBack}
+          style={{ 
+            background: 'none', border: '1px solid #e8ecf0', cursor: 'pointer', 
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: '8px', borderRadius: '50%', backgroundColor: '#fff',
+            boxShadow: '0 2px 4px rgba(10,37,64,0.04)'
+          }}
+        >
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#4b5563" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <div>
+          <h2 className="bj-title">Notification Details</h2>
+          <p className="bj-sub">View complete information</p>
+        </div>
+      </div>
+
+      <div style={{ 
+        background: '#fff', 
+        borderRadius: '16px', 
+        padding: '32px', 
+        boxShadow: '0 4px 20px rgba(10,37,64,0.06)',
+        border: '1px solid #e8ecf0'
+      }}>
+        <h3 style={{ fontSize: '22px', fontWeight: 800, color: '#0a2540', marginBottom: '16px' }}>
+          {title}
+        </h3>
+        
+        <p style={{ fontSize: '16px', color: '#4b5563', lineHeight: 1.6, marginBottom: '24px' }}>
+          {notification.message}
+        </p>
+        
+        <div style={{ fontSize: '14px', color: '#8492a6', marginBottom: '32px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          {formatTime(notification.created_at)}
+        </div>
+
+        <div style={{ 
+          padding: '16px', 
+          background: '#fdf8f8', 
+          borderRadius: '12px', 
+          borderLeft: '4px solid #800000',
+          display: 'flex', gap: '12px', alignItems: 'center'
+        }}>
+          <div style={{ fontSize: '24px' }}>📧</div>
+          <p style={{ fontSize: '14px', fontWeight: 600, color: '#800000', margin: 0 }}>
+            These details have also been sent to your email.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Notifications Section ─────────────────────────────────────────────────────
+function NotificationsSection({ notifications = [], onNotificationClick }) {
+  const formatTime = (dateStr) => {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    const now = new Date();
+    const diff = Math.floor((now - d) / 60000);
+    if (diff < 1) return 'just now';
+    if (diff < 60) return `${diff}m ago`;
+    if (diff < 1440) return `${Math.floor(diff / 60)}h ago`;
+    return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+  };
+
+  const unreadCount = notifications.filter(n => !n.is_read).length;
+
+  return (
+    <div className="bj-root" style={{ animation: 'fadeSlideIn 0.28s ease both' }}>
+      <div className="bj-top" style={{ marginBottom: '24px' }}>
+        <h2 className="bj-title">Notifications</h2>
+        <p className="bj-sub">
+          {unreadCount > 0 ? `${unreadCount} unread notification${unreadCount > 1 ? 's' : ''}` : 'All caught up!'}
+        </p>
+      </div>
+
+      {notifications.length === 0 ? (
+        <div style={{ textAlign: 'center', padding: '60px 20px', color: '#8492a6' }}>
+          <div style={{ fontSize: '48px', marginBottom: '12px' }}>🔔</div>
+          <p style={{ fontWeight: 600, fontSize: '16px', color: '#4b5563' }}>No notifications yet</p>
+          <p style={{ fontSize: '13px' }}>You'll be notified when companies post jobs matching your skills or update your application status.</p>
+        </div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          {notifications.map(notif => (
+            <div
+              key={notif.id}
+              onClick={() => onNotificationClick && onNotificationClick(notif)}
+              style={{
+                background: notif.is_read ? '#fff' : '#fdf8f8',
+                border: notif.is_read ? '1px solid #e8ecf0' : '1px solid #fecaca',
+                borderLeft: notif.is_read ? '4px solid #e8ecf0' : '4px solid #dc2626',
+                borderRadius: '12px',
+                padding: '16px 18px',
+                cursor: 'pointer',
+                display: 'flex', gap: '14px', alignItems: 'center',
+                transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+                boxShadow: notif.is_read ? 'none' : '0 2px 8px rgba(220,38,38,0.08)',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(10,37,64,0.1)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = notif.is_read ? 'none' : '0 2px 8px rgba(220,38,38,0.08)'; }}
+            >
+              {/* Icon */}
+              <div style={{
+                width: '40px', height: '40px', borderRadius: '50%', flexShrink: 0,
+                background: notif.type === 'selected' ? 'linear-gradient(135deg,#166534,#15803d)' :
+                            notif.type === 'job' ? 'linear-gradient(135deg,#800000,#4a0000)' :
+                            'linear-gradient(135deg,#1d4ed8,#1e40af)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center'
+              }}>
+                <span style={{ color: '#fff', fontSize: '18px', fontWeight: 700 }}>
+                  {getCompanyInitial(notif)}
+                </span>
+              </div>
+
+              {/* Content */}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p style={{ margin: 0, fontSize: '14px', fontWeight: notif.is_read ? 500 : 700, color: '#0a2540', lineHeight: 1.4 }}>
+                  {notif.message}
+                </p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
+                  <span style={{ fontSize: '12px', color: '#8492a6' }}>{formatTime(notif.created_at)}</span>
+                  {!notif.is_read && (
+                    <span style={{ background: '#fee2e2', color: '#dc2626', fontSize: '10px', fontWeight: 700, padding: '1px 7px', borderRadius: '20px', textTransform: 'uppercase' }}>New</span>
+                  )}
+                </div>
+              </div>
+
+              {/* Chevron */}
+              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#8492a6" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+              </svg>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function StudentDashboard() {
   const { showNotification } = useNotification();
   const [activePage, setActivePage] = useState('home');
   const [appliedJobs, setAppliedJobs] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  const [selectedNotification, setSelectedNotification] = useState(null);
 
-  const fetchAppliedJobs = React.useCallback(async () => {
+  const fetchAppliedJobs = useCallback(async () => {
     try {
       const data = await getMyApplications();
       const mapped = Array.isArray(data) ? data.map(mapApplicationToDisplayFormat) : [];
@@ -342,6 +512,31 @@ export default function StudentDashboard() {
     } catch (err) {
       console.error("Error fetching applied jobs:", err);
     }
+  }, []);
+
+  const fetchNotifications = useCallback(async () => {
+    try {
+      const data = await getNotifications();
+      const list = Array.isArray(data) ? data : [];
+      console.log(`[Notifications] Fetched ${list.length} notifications`);
+      setNotifications(list);
+    } catch (err) {
+      console.error("[Notifications] Error fetching:", err);
+    }
+  }, []);
+
+  const handleNotificationClick = useCallback(async (notif) => {
+    // Mark as read
+    try {
+      await markNotificationRead(notif.id);
+      setNotifications(prev => prev.map(n => n.id === notif.id ? { ...n, is_read: true } : n));
+    } catch (err) {
+      console.error("[Notifications] Error marking read:", err);
+    }
+
+    // Details view injection internally
+    setSelectedNotification(notif);
+    setActivePage('notifications');
   }, []);
 
   useEffect(() => {
@@ -352,6 +547,7 @@ export default function StudentDashboard() {
       socketService.on("applicationStatusUpdated", (data) => {
         showNotification(`Application Status Updated: Your application for ${data.jobTitle} is now ${data.status}`, "info", "student");
         fetchAppliedJobs();
+        fetchNotifications();
       });
 
       socketService.on("ticketReply", (data) => {
@@ -364,10 +560,12 @@ export default function StudentDashboard() {
 
       socketService.on("newJobPosted", (data) => {
         showNotification(`New Job Opportunity: ${data.title} at ${data.company_name || 'a recruiter'}`, "success", "student");
+        fetchNotifications();
       });
     }
 
     fetchAppliedJobs();
+    fetchNotifications();
 
     return () => {
       socketService.off("applicationStatusUpdated");
@@ -375,7 +573,7 @@ export default function StudentDashboard() {
       socketService.off("newAnnouncement");
       socketService.off("newJobPosted");
     };
-  }, [fetchAppliedJobs, showNotification]);
+  }, [fetchAppliedJobs, fetchNotifications, showNotification]);
 
   const renderCenter = () => {
     switch (activePage) {
@@ -388,6 +586,11 @@ export default function StudentDashboard() {
       case 'competitions': return <Competitions />;
       case 'announcements': return <Announcements role="student" />;
       case 'resources': return <ResourcesSection />;
+      case 'notifications': 
+        if (selectedNotification) {
+          return <NotificationDetailsView notification={selectedNotification} onBack={() => setSelectedNotification(null)} />;
+        }
+        return <NotificationsSection notifications={notifications} onNotificationClick={handleNotificationClick} />;
       case 'help': return <HelpSupport />;
       default: return <HomeContent />;
     }
@@ -396,11 +599,21 @@ export default function StudentDashboard() {
   return (
     <div className="db-root student-dashboard">
       {/* Sidebar */}
-      <Sidebar activeItem={activePage} onItemClick={setActivePage} />
+      <Sidebar activeItem={activePage} onItemClick={(page) => {
+        setSelectedNotification(null);
+        setActivePage(page);
+      }} />
 
       {/* Main wrapper (header + body) */}
       <div className="db-main-wrapper">
-        <Header />
+        <Header
+          notifications={notifications}
+          onNotificationClick={handleNotificationClick}
+          onViewAll={() => {
+            setSelectedNotification(null);
+            setActivePage('notifications');
+          }}
+        />
 
         <div className="db-body">
           {/* Center content */}
