@@ -7,7 +7,8 @@ import {
   getCompetitions, registerForCompetition, submitCompetition,
   getEvents, registerForEvent, submitEvent, submitResource, getMySubmissions, getResources,
   getAssessments, updateAssessmentStatus,
-  getMyApplicationRounds
+  getMyApplicationRounds,
+  getNotifications, markNotificationRead
 } from "../controllers/studentController.js";
 import { verifyToken, requireRole } from "../middleware/authMiddleware.js";
 import validate from "../middleware/validate.js";
@@ -41,5 +42,9 @@ router.post("/resources", validate(submitResourceSchema), submitResource);
 
 router.get("/assessments", getAssessments);
 router.post("/assessments/status", validate(updateAssessmentStatusSchema), updateAssessmentStatus);
+
+// Notification routes
+router.get("/notifications", getNotifications);
+router.patch("/notifications/:id/read", markNotificationRead);
 
 export default router;

@@ -361,6 +361,24 @@ export const getResources = async (req, res, next) => {
   }
 };
 
+// Get notifications for the logged-in student
+export const getNotifications = async (req, res, next) => {
+  try {
+    const user_id = req.user.id;
+    console.log(`[Notifications] Fetching notifications for student ${user_id}`);
+
+    const [rows] = await pool.query(
+      "SELECT * FROM notifications WHERE user_id = ? ORDER BY created_at DESC",
+      [user_id]
+    );
+
+    console.log(`[Notifications] Found ${rows.length} notifications for student ${user_id}`);
+    res.json({ success: true, data: rows });
+  } catch (err) {
+    next(err);
+  }
+};
+
 // Get the student's own submissions
 export const getMySubmissions = async (req, res, next) => {
   try {
@@ -374,6 +392,28 @@ export const getMySubmissions = async (req, res, next) => {
     const allSubmissions = [...events, ...competitions, ...resources].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     
     res.json({ success: true, data: allSubmissions });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Mark a notification as read
+export const markNotificationRead = async (req, res, next) => {
+  try {
+    const user_id = req.user.id;
+    const { id } = req.params;
+
+    // Ensure the notification belongs to this student
+    const [[notif]] = await pool.query(
+      "SELECT id FROM notifications WHERE id = ? AND user_id = ?",
+      [id, user_id]
+    );
+    if (!notif) {
+      return res.status(404).json({ success: false, message: "Notification not found" });
+    }
+
+    await pool.query("UPDATE notifications SET is_read = 1 WHERE id = ?", [id]);
+    res.json({ success: true, message: "Notification marked as read" });
   } catch (err) {
     next(err);
   }

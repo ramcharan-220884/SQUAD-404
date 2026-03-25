@@ -123,6 +123,51 @@ export const postJob = async (req, res, next) => {
       req.io.to("students").emit("newJobPosted", newJob);
     }
 
+    // --- Skill-match notifications ---
+    try {
+      // Fetch company name for notification message
+      const [[company]] = await pool.query("SELECT name FROM companies WHERE id = ?", [actual_company_id]);
+      const companyName = company ? company.name : "A company";
+
+      // Fetch all active students with skills
+      const [students] = await pool.query("SELECT id, skills FROM students WHERE status = 'Active'");
+
+      // Tokenize job skills
+      const jobSkillsRaw = skills || "";
+      const jobSkillTokens = jobSkillsRaw.toLowerCase().split(/[,;\s]+/).map(s => s.trim()).filter(Boolean);
+
+      let notifiedCount = 0;
+      for (const student of students) {
+        if (!student.skills) continue;
+
+        // Parse student skills (may be JSON array or plain text)
+        let studentSkillStr = student.skills;
+        if (typeof studentSkillStr === "string") {
+          try {
+            const parsed = JSON.parse(studentSkillStr);
+            if (Array.isArray(parsed)) studentSkillStr = parsed.join(" ");
+          } catch (_) {}
+        }
+        const studentSkillTokens = studentSkillStr.toLowerCase().split(/[,;\s]+/).map(s => s.trim()).filter(Boolean);
+
+        // Check overlap between job skills and student skills
+        const hasMatch = jobSkillTokens.some(jt => studentSkillTokens.some(st => st.includes(jt) || jt.includes(st)));
+        if (hasMatch) {
+          const message = `${companyName} posted a job`;
+          await pool.query(
+            "INSERT INTO notifications (user_id, message, type, job_id) VALUES (?, ?, 'job', ?)",
+            [student.id, message, result.insertId]
+          );
+          console.log(`[Notifications] Created job notification for student ${student.id}: ${message}`);
+          notifiedCount++;
+        }
+      }
+      console.log(`[Notifications] Job posted — notified ${notifiedCount} skill-matched students`);
+    } catch (notifErr) {
+      console.error("[Notifications] Error creating job notifications:", notifErr.message);
+    }
+    // --- End skill-match notifications ---
+
     if (res.sendResponse) return res.sendResponse({ job_id: result.insertId }, "Job posted successfully", 201);
 
     res.status(201).json({
@@ -134,4 +179,4 @@ export const postJob = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-};
+};
