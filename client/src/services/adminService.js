@@ -286,6 +286,14 @@ export const updateCompetition = async (id, data) => {
   return handleResponse(res);
 };
 
+export const updateCompetitionStatus = async (id, status) => {
+  const res = await authFetch(`/admin/competitions/${id}/status`, {
+    method: "PATCH",
+    body: JSON.stringify({ status })
+  });
+  return handleResponse(res);
+};
+
 export const updateEvent = async (id, data) => {
   const res = await authFetch(`/admin/events/${id}`, {
     method: "PATCH",
@@ -298,6 +306,26 @@ export const updateAssessment = async (id, data) => {
   const res = await authFetch(`/admin/assessments/${id}`, {
     method: "PATCH",
     body: JSON.stringify(data)
+  });
+  return handleResponse(res);
+};
+
+/* Submissions Workflow */
+export const getPendingSubmissions = async () => {
+  const res = await authFetch(`/admin/pending-submissions`);
+  return handleResponse(res);
+};
+
+export const approveSubmission = async (type, id) => {
+  const res = await authFetch(`/admin/submissions/${type}/${id}/approve`, {
+    method: "PUT"
+  });
+  return handleResponse(res);
+};
+
+export const rejectSubmission = async (type, id) => {
+  const res = await authFetch(`/admin/submissions/${type}/${id}/reject`, {
+    method: "PUT"
   });
   return handleResponse(res);
 };

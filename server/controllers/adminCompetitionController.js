@@ -27,3 +27,11 @@ export const deleteCompetition = async (req, res, next) => {
     res.json({ success: true, message: "Competition deleted successfully" });
   } catch (err) { next(err); }
 };
+
+export const updateCompetitionStatus = async (req, res, next) => {
+  try {
+    const { status } = req.body;
+    await competitionService.updateCompetitionStatus(req.params.id, status);
+    res.json({ success: true, message: `Competition status updated to ${status}` });
+  } catch (err) { next(err); }
+};
