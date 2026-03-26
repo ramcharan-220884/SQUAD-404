@@ -63,6 +63,12 @@ export const getAnnouncements = async () => {
   return handleResponse(res);
 };
 
+// Competitions
+export const getCompetitions = async () => {
+  const res = await authFetch(`/companies/competitions`);
+  return handleResponse(res);
+};
+
 
 // Legacy / Auth
 export const updateJobDetails = async (data) => {

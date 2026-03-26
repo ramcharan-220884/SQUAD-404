@@ -81,7 +81,7 @@ export const approveAndOnboard = async (req, res) => {
         `, [companyId, job.job_title, job.description || 'Auto-generated from lead.', job.location]);
 
         // Update lead status to reflect it's both approved and converted
-        await db.query('UPDATE scraped_jobs SET is_approved = 1, status = "converted" WHERE id = ?', [id]);
+        await db.query("UPDATE scraped_jobs SET is_approved = 1, status = 'converted' WHERE id = ?", [id]);
         res.status(200).json({ success: true, message: message + " Job posting has been automatically activated in their dashboard." });
     } catch (error) {
         console.error('[ScrapedJobs Controller] Onboarding Error:', error);
@@ -140,7 +140,7 @@ export const contactJob = async (req, res) => {
 export const convertJob = async (req, res) => {
     const { id } = req.body;
     try {
-        await db.query('UPDATE scraped_jobs SET status = "converted" WHERE id = ?', [id]);
+        await db.query("UPDATE scraped_jobs SET status = 'converted' WHERE id = ?", [id]);
         res.status(200).json({ success: true, message: 'Job converted.' });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Conversion failed.' });

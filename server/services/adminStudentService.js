@@ -47,6 +47,19 @@ export const updatePlacementStatusById = async (studentId, status) => {
   await pool.query("UPDATE students SET placed_status = ? WHERE id = ?", [status, studentId]);
 };
 
+export const fetchStudentById = async (id) => {
+  const [rows] = await pool.query(`
+    SELECT 
+      s.*, 
+      MAX(COALESCE(a.status, 'None')) as application_status
+    FROM students s
+    LEFT JOIN applications a ON s.id = a.student_id
+    WHERE s.id = ?
+    GROUP BY s.id
+  `, [id]);
+  return rows[0] || null;
+};
+
 export const fetchAllUsers = async () => {
   const [students] = await pool.query("SELECT id, name, email, 'student' as role, created_at FROM students");
   const [companies] = await pool.query("SELECT id, name, email, 'company' as role, created_at FROM companies");
@@ -80,5 +93,14 @@ export const fetchDashboardStats = async () => {
   const [[{ totalJobs }]] = await pool.query("SELECT COUNT(*) as totalJobs FROM jobs");
   const [[{ pendingStudents }]] = await pool.query("SELECT COUNT(*) as pendingStudents FROM students WHERE status = 'Pending'");
   const [[{ pendingCompanies }]] = await pool.query("SELECT COUNT(*) as pendingCompanies FROM companies WHERE status = 'Pending'");
-  return { totalStudents, activeCompanies, totalApplications, totalJobs, pendingApprovals: pendingStudents + pendingCompanies };
+  const [[{ totalPlacements }]] = await pool.query("SELECT COUNT(*) as totalPlacements FROM applications WHERE status = 'Selected'");
+  
+  return { 
+    totalStudents, 
+    activeCompanies, 
+    totalApplications, 
+    totalJobs, 
+    totalPlacements,
+    pendingApprovals: pendingStudents + pendingCompanies 
+  };
 };

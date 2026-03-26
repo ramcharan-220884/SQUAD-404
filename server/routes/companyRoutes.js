@@ -2,7 +2,7 @@ import express from "express";
 import { 
   updateJobDetails, getMyCompanyDetails, 
   getCompanyStats, getCompanyJobs, getCompanyApplicants,
-  updateCompanyApplicationStatus, getCompanyAnnouncements,
+  updateCompanyApplicationStatus, getCompanyAnnouncements, getCompanyCompetitions,
   getApplicationRounds, createApplicationRound, updateApplicationRound
 } from "../controllers/companyController.js";
 import { postJob } from "../controllers/jobController.js";
@@ -33,6 +33,9 @@ router.get("/stats", getCompanyStats);
 
 // Announcements (read-only for company role)
 router.get("/announcements", getCompanyAnnouncements);
+
+// Competitions
+router.get("/competitions", getCompanyCompetitions);
 
 // Rounds
 router.get("/applications/:id/rounds", getApplicationRounds);

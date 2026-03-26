@@ -23,3 +23,16 @@ export const updateCompanyById = async (id, { name, email, status, package: pkg,
     [name, email, status, pkg, deadline, id]
   );
 };
+
+export const fetchCompanyById = async (id) => {
+  const [rows] = await pool.query(`
+    SELECT 
+      c.*,
+      (SELECT COUNT(*) FROM jobs WHERE company_id = c.id) as totalJobs,
+      (SELECT COUNT(*) FROM applications a JOIN jobs j ON a.job_id = j.id WHERE j.company_id = c.id) as totalApplications,
+      (SELECT COUNT(*) FROM applications a JOIN jobs j ON a.job_id = j.id WHERE j.company_id = c.id AND a.status = 'Selected') as studentsSelected
+    FROM companies c
+    WHERE c.id = ?
+  `, [id]);
+  return rows[0] || null;
+};

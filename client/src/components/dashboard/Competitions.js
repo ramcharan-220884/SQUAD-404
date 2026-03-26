@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { getCompetitions, registerForCompetition, submitCompetition } from '../../services/studentService';
+import { getCompetitions as getStudentCompetitions, registerForCompetition, submitCompetition } from '../../services/studentService';
 import { getAdminCompetitions, createCompetition, updateCompetition, deleteCompetition, updateCompetitionStatus } from '../../services/adminService';
+import { getCompetitions as getCompanyCompetitions } from '../../services/companyService';
 import {
   Plus, Trash2, Calendar, Trophy, AlertCircle, Loader2,
   Edit2, Eye, CheckCircle, Search, Users, Clock, XCircle, Link as LinkIcon
@@ -37,7 +38,9 @@ export default function Competitions({ role = "student" }) {
       setLoading(true);
       const data = role === 'admin'
         ? await getAdminCompetitions()
-        : await getCompetitions();
+        : role === 'company'
+          ? await getCompanyCompetitions()
+          : await getStudentCompetitions();
       setCompetitions(Array.isArray(data) ? data : (data.data || []));
     } catch (err) {
       console.error("Error loading competitions", err);

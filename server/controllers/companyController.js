@@ -12,6 +12,22 @@ export const getCompanyAnnouncements = async (req, res, next) => {
   }
 };
 
+// Get competitions for company (all approved and upcoming)
+export const getCompanyCompetitions = async (req, res, next) => {
+  try {
+    const [rows] = await pool.query(`
+      SELECT c.*, s.name as creator_name
+      FROM competitions c
+      LEFT JOIN students s ON c.createdBy = s.id
+      WHERE (c.status = 'approved' OR c.status IS NULL) AND c.date >= CURDATE()
+      ORDER BY c.date ASC
+    `);
+    res.json({ success: true, data: rows });
+  } catch (err) {
+    next(err);
+  }
+};
+
 
 // Update company profile fields
 export const updateJobDetails = async (req, res, next) => {

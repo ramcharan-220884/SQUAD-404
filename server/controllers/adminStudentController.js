@@ -50,6 +50,14 @@ export const getAllStudents = async (req, res, next) => {
   } catch (err) { next(err); }
 };
 
+export const getStudentById = async (req, res, next) => {
+  try {
+    const data = await studentService.fetchStudentById(req.params.id);
+    if (!data) return res.status(404).json({ success: false, message: "Student not found" });
+    res.json({ success: true, data });
+  } catch (err) { next(err); }
+};
+
 export const updateStudentAdmin = async (req, res, next) => {
   try {
     await studentService.updateStudentById(req.params.id, req.body);
